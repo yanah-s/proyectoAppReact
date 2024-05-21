@@ -2,19 +2,22 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const CrearUsuario = () => {
-    const [formData, setFormData] = useState({
+    const [formulario, setFormulario] = useState({
         nombre: '',
         email: '',
         fNacimiento: '',
-        password: ''
+        password: '',
+        observaciones: '',
+        patologias: '',
+        entrevistaPresencial: false
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
+    const [mensaje, setMensaje] = useState(null);
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
+    const eventoCambio = (e) => {
+        setFormulario({
+            ...formulario,
             [e.target.name]: e.target.value
         });
     };
@@ -23,12 +26,12 @@ const CrearUsuario = () => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        setSuccessMessage(null);
+        setMensaje(null);
         console.log('Llamada a la API');
         try {
-            const response = await axios.post('http://localhost:3000/api/usuarios/', formData);
-            console.log('Respuesta:', response.data);
-            setSuccessMessage('Usuario registrado exitosamente.');
+            const respuesta = await axios.post('http://localhost:3000/api/usuarios/', formulario);
+            console.log('Respuesta:', respuesta.data);
+            setMensaje('Usuario registrado exitosamente.');
         } catch (err) {
             console.error('Error', err);
             setError('Error en registro: ' + err.message);
@@ -47,18 +50,8 @@ const CrearUsuario = () => {
                     <input
                         type="text"
                         name="nombre"
-                        value={formData.nombre}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Correo:</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
+                        value={formulario.nombre}
+                        onChange={eventoCambio}
                         required
                     />
                 </div>
@@ -68,27 +61,66 @@ const CrearUsuario = () => {
                     <input
                         type="date"
                         name="fNacimiento"
-                        value={formData.fNacimiento}
-                        onChange={handleChange}
+                        value={formulario.fNacimiento}
+                        onChange={eventoCambio}
                         required
                     />
                 </div>
-
+                <div>
+                    <label>Usted posee patologias?</label>
+                    <input
+                        type="text"
+                        name="patologias"
+                        value={formulario.patologias}
+                        onChange={eventoCambio}
+                    />
+                </div>
+                <div>
+                    <label>Observaciones</label>
+                    <input
+                        type="text"
+                        name="observaciones"
+                        value={formulario.observaciones}
+                        onChange={eventoCambio}
+                    />
+                </div>
+                <div>
+                    <label>prefiere cita virtual</label>
+                    <input
+                        type="checkbox"
+                        name="citaVirtual"
+                        value={formulario.entrevistaPresencial}
+                        onChange={eventoCambio}
+                    />
+                </div>
+                <div>
+                    <label>Correo:</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value={formulario.email}
+                        onChange={eventoCambio}
+                        required
+                    />
+                </div>
+                
                 <div>
                     <label>Password</label>
                     <input
                         type="password"
                         name="password"
-                        value={formData.password}
-                        onChange={handleChange}
+                        value={formulario.password}
+                        onChange={eventoCambio}
                         required
                     />
                 </div>
+
+
                 <button type="submit" disabled={loading}>Registrar</button>
             </form>
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
-            {successMessage && <p>{successMessage}</p>}
+            {mensaje && <p>{mensaje}</p>}
         </div>
     );
 };

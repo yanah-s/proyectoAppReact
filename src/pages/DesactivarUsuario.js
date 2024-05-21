@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const EditarUsuario = () => {
+const DesactivarUsuario = () => {
     const [formulario, setFormulario] = useState({
-        nombre: '',
+      
         email: '',
-        password: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -18,17 +17,17 @@ const EditarUsuario = () => {
         });
     };
 
-    const editarUsuario = async (e) => {
+    const desactivaUsuario = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
         setMensaje(null);
         console.log('Llamada a la API');
         try {
-           const respuesta = await axios.put(`http://localhost:3000/api/usuarios/${formulario.email}`, formulario);
+           const respuesta = await axios.delete(`http://localhost:3000/api/usuarios/${formulario.email}`);
            
            console.log('Respuesta:', respuesta.data);
-            setMensaje('Usuario editado exitosamente.');
+            setMensaje('Usuario eliminado exitosamente.');
         } catch (err) {
             console.error('Error', err);
             setError('Error en edición: ' + err.message);
@@ -40,18 +39,9 @@ const EditarUsuario = () => {
 
     return (
         <div>
-            <h1>Edición de Usuarios</h1>
-            <form onSubmit={editarUsuario}>
-                <div>
-                    <label>Nombre:</label>
-                    <input
-                        type="text"
-                        name="nombre"
-                        value={formulario.nombre}
-                        onChange={eventoCambio}
-                        required
-                    />
-                </div>
+            <h1>Eliminar Usuarios</h1>
+            <form onSubmit={desactivaUsuario}>
+
                 <div>
                     <label>Correo:</label>
                     <input
@@ -62,17 +52,8 @@ const EditarUsuario = () => {
                         required
                     />
                 </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        name="password"
-                        value={formulario.password}
-                        onChange={eventoCambio}
-                        required
-                    />
-                </div>
-                <button type="submit" disabled={loading}>Editar</button>
+               
+                <button type="submit" disabled={loading}>Eliminar usuario</button>
             </form>
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
@@ -81,4 +62,4 @@ const EditarUsuario = () => {
     );
 };
 
-export default EditarUsuario;
+export default DesactivarUsuario;

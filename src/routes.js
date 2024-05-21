@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import ListarUsuarios from './pages/ListarUsuarios';
 import CrearUsuario from './pages/CrearUsuario';
 import EditarUsuario from './pages/EditarUsuario';
+import DesactivarUsuario from './pages/DesactivarUsuario';
 
 const AppRoutes = () => {
     return (
@@ -13,7 +14,7 @@ const AppRoutes = () => {
                 <Route path="/ListarUsuarios" element={<ListarUsuarios />} />
                 <Route path="/CrearUsuario" element={<CrearUsuario />} />
                 <Route path="/EditarUsuario" element={<EditarUsuario />} />
-
+                <Route path="/DesactivarUsuario" element={<DesactivarUsuario />} />
             </Routes>
         </Router>
     );
