@@ -3,7 +3,7 @@ import AppRoutes from './routes'; // Asegúrate de que esta ruta es correcta
 import { Button, AppBar, Toolbar, Typography, Container } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-const theme = createTheme({
+const tema = createTheme({
     palette: {
         primary: {
             main: '#424242', // Gris oscuro
@@ -33,7 +33,7 @@ const theme = createTheme({
 
 function App() {
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={tema}>
             <div className="App">
                 <AppBar position="static">
                     <Toolbar>
