@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button, CircularProgress } from '@mui/material';
 import axios from 'axios';
 
 const CrearUsuario = () => {
@@ -116,7 +117,16 @@ const CrearUsuario = () => {
                 </div>
 
 
-                <button type="submit" disabled={loading}>Registrar</button>
+                {/* <button type="submit" disabled={loading}>Registrar</button> */}
+                <Button
+        variant="contained"
+        color="primary"
+        type="submit"
+        disabled={loading}
+        // onClick={eventoCambio}
+      >
+        {loading ? <CircularProgress size={24} color="inherit" /> : 'Registrar'}
+      </Button>
             </form>
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
