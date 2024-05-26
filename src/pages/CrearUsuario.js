@@ -8,9 +8,9 @@ const CrearUsuario = () => {
         email: '',
         fNacimiento: '',
         password: '',
-        observaciones: '',
-        patologias: '',
-        entrevistaPresencial: false
+        observaciones: '',  //pasar a agenda?
+        patologias: '',  //pasar a agenda
+        entrevistaPresencial: false   //pasar a agenda
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -34,8 +34,8 @@ const CrearUsuario = () => {
             console.log('Respuesta:', respuesta.data);
             setMensaje('Usuario registrado exitosamente.');
         } catch (err) {
-            console.error('Error', err);
-            setError('Error en registro: ' + err.message);
+            console.error('Error:', err); 
+            setError('Error: ' + err.response.data.error); 
         } finally {
             setLoading(false);
             console.log('Finalizado exitosamente');

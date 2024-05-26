@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Button, CircularProgress } from '@mui/material';
+// import { Alert, AlertTitle } from '@mui/material';
+
 
 const EditarUsuario = () => {
     const [formulario, setFormulario] = useState({
         nombre: '',
-        email: '',
+        email: '',  //aca capturar el mail
         password: ''
     });
     const [loading, setLoading] = useState(false);
@@ -29,10 +32,10 @@ const EditarUsuario = () => {
            
            console.log('Respuesta:', respuesta.data);
             setMensaje('Usuario editado exitosamente.');
-        } catch (err) {
-            console.error('Error', err);
-            setError('Error en edición: ' + err.message);
-        } finally {
+        }  catch (err) {
+            console.error('Error:', err); 
+            setError('Error en edición: ' + err.response.data.error); // Captura el mensaje de error desde la respuesta de la API
+        }  finally {
             setLoading(false);
             console.log('Finalizado exitosamente');
         }
@@ -72,12 +75,46 @@ const EditarUsuario = () => {
                         required
                     />
                 </div>
-                <button type="submit" disabled={loading}>Editar</button>
+                <div>
+                    <label>Alumno:</label>
+                    <input
+                        type="checkbox"
+                        name="alumno"
+                        value={formulario.alumno}
+                        onChange={eventoCambio}
+                    />
+                </div>
+                {/* <button type="submit" disabled={loading}>Editar</button> */}
+
+                <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                disabled={loading}
+                onClick={editarUsuario}
+                >
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Editar usuario'}
+                </Button>
             </form>
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
             {mensaje && <p>{mensaje}</p>}
+
+{/* 
+                    {error && (
+            <Alert severity="error">
+                <AlertTitle>Error</AlertTitle>
+                {error}
+            </Alert>
+            )}
+            {valor && (
+                <Alert severity="success">
+                    <AlertTitle>Éxito</AlertTitle>
+                    Usuario actualizado correctamente
+                </Alert>
+            )} */}
         </div>
+        
     );
 };
 
