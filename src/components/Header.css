@@ -1,0 +1,46 @@
+.navbar-brand {
+    color: white;
+}
+  
+.nav-link {
+    color: white;
+}
+  
+.nav-link:hover {
+    color: #aaa;
+}
+  
+.fixed-top {
+    background-color: black;
+    border-bottom: 2px solid white; 
+}
+
+.navbar-logo {
+    height: 40px; 
+    margin-right: 10px; 
+}
+
+#pestañas_hamburguesa{
+    text-align: left;
+}
+
+.offcanvas-body {
+    display: flex;
+    flex-direction: column;
+}
+  
+  
+.offcanvas-body .nav.flex-column.mt-auto {
+    margin-top: auto;
+}
+
+#boton_hamburguesa {
+    background-color: #212529; 
+    border-color: white; 
+}
+  
+#boton_hamburguesa:hover {
+    background-color: black; 
+    border-color: white;
+    transform: scale(1.1);
+}
