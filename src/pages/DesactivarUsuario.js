@@ -28,9 +28,25 @@ const DesactivarUsuario = () => {
            
            console.log('Respuesta:', respuesta.data);
             setMensaje('Usuario eliminado exitosamente.');
-        } catch (err) {
-            console.error('Error', err);
-            setError('Error en edición: ' + err.message);
+        }  catch (err) {
+            console.error('Error:', err);
+            let errorMsg = 'Error de conexión';
+            
+            //Verificamos si hay respuesta del servidor
+            if (err.response) {
+                 if (err.response.data && err.response.data.mensaje) {
+                    errorMsg = err.response.data.mensaje;
+                } else if (err.response.data && err.response.data.error) {
+                    errorMsg = err.response.data.error;
+                } else if (err.response.data && err.response.data.message) {
+                    errorMsg = err.response.data.message;
+                } else {
+                    // cualquier otro caso de error
+                    errorMsg = `Error: ${err.response.status} ${err.response.statusText}`;
+                }
+            }
+            
+            setError(errorMsg);
         } finally {
             setLoading(false);
             console.log('Finalizado exitosamente');

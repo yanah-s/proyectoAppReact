@@ -38,7 +38,7 @@ function App() {
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="h6">
-                            Mi Aplicación
+                            Avance.FIT
                         </Typography>
                     </Toolbar>
                 </AppBar>
