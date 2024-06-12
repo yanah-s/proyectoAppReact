@@ -2,7 +2,7 @@ import React from 'react';
 import AppRoutes from './routes'; // Asegúrate de que esta ruta es correcta
 import { Button, AppBar, Toolbar, Typography, Container } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import './App.css';
 const tema = createTheme({
     palette: {
         primary: {
@@ -30,8 +30,6 @@ const tema = createTheme({
         },
     },
 });
-import './App.css';
-
 
 function App() {
     return (
@@ -45,9 +43,7 @@ function App() {
                     </Toolbar>
                 </AppBar>
                 <header className="App-header">
-                    <Container>
                         <AppRoutes />
-                    </Container>
                 </header>
             </div>
         </ThemeProvider>

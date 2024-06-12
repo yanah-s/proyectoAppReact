@@ -17,16 +17,12 @@ body, html {
     text-align: center;
     height: 100%;
     width: 100%;
-    margin-top: 64px; /* Ajusta el espacio para el Header */
-    /*min-height: calc(100vh - 64px); */
     background-color: black;
-    overflow-y: auto;
 }
 
 
 .center-image-container {
     text-align: center;
-
 }
 
 .agenda-image {

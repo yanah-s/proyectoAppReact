@@ -11,7 +11,7 @@ const AppRoutes = () => {
             <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/DisponibilidadAgenda" element={<DisponibilidadAgenda />} />
+                <Route path="/disponibilidadagenda" element={<DisponibilidadAgenda />} />
             </Routes>
         </Router>
     );
