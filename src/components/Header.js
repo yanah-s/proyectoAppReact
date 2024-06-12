@@ -31,7 +31,7 @@ const Header = () => {
                 <Link className="nav-link" to="/agenda"><i className="bi bi-calendar-week"></i> Agenda</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/disponibilidad"><i class="bi bi-calendar2-check"></i> Disponibilidad</Link>
+                <Link className="nav-link" to="/disponibilidadagenda"><i class="bi bi-calendar2-check"></i> Disponibilidad</Link>
               </li>
             </ul>
             <ul className="nav flex-column mt-auto" id="pestañas_hamburguesa">

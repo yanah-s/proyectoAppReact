@@ -1,7 +1,14 @@
 import React from 'react';
+import { Button } from '@mui/material';
+
 import './Home.css';
 
 const Home = () => {
+    const agendar = () => {
+        // Lógica para manejar el click del botón
+        console.log('¡Agéndate!');
+    };
+
     return (
         <div className="home-container">
             <div className="bienvenida">
