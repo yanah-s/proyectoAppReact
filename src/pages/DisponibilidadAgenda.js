@@ -230,7 +230,7 @@ const DisponibilidadAgenda = () => {
                 {Object.entries(formulario.datos).map(([fecha, horario], index) => (
                 <TableRow key={index}>
                   <TableCell style={{ color: tema.palette.text.primary }}>
-                    {dayjs(fecha).format('YYYY-MM-DD')}
+                    {dayjs(fecha).format('DD/MM/YYYY')}
                   </TableCell>
                   <TableCell style={{ color: tema.palette.text.primary }}>
                     {horario.hora_desde ? dayjs(horario.hora_desde).format('HH:mm') : ''}
