@@ -34,13 +34,18 @@
     margin-top: auto;
 }
 
+.offcanvas-translucent-dark {
+    background-color: rgba(0, 0, 0, 0.5) !important; /* negro con 50% de transparencia */
+}
+
 #boton_hamburguesa {
-    background-color: #212529; 
+    background-color: black; 
     border-color: white; 
+    transition: 1s;
 }
   
 #boton_hamburguesa:hover {
-    background-color: black; 
+    background-color: grey; 
     border-color: white;
     transform: scale(1.1);
 }

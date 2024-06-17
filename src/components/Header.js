@@ -17,7 +17,7 @@ const Header = () => {
           <i className="bi bi-list"></i>
         </button>
 
-        <div className="offcanvas offcanvas-end" data-bs-theme="dark" data-bs-scroll="true" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div className="offcanvas offcanvas-end offcanvas-translucent-dark" data-bs-theme="dark" data-bs-scroll="true" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasRightLabel">Avance.Fit Menú</h5>
             <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
