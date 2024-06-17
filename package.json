@@ -5,14 +5,25 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+<<<<<<< HEAD
     "@mui/material": "^5.15.18",
     "@mui/x-date-pickers": "^7.7.0",
+=======
+    "@mui/lab": "^5.0.0-alpha.170",
+    "@mui/material": "^5.15.19",
+    "@mui/x-date-pickers": "^7.6.2",
+>>>>>>> usuarios
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.8",
+<<<<<<< HEAD
     "dayjs": "^1.11.11",
     "moment-timezone": "^0.5.45",
+=======
+    "date-fns": "^2.23.0",
+    "dayjs": "^1.11.11",
+>>>>>>> usuarios
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
