@@ -24,8 +24,9 @@ import {
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import dayjs from 'dayjs';
-import { LocalizationProvider, DateCalendar, TimePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider, DateCalendar } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers';
 
 const tema = createTheme({
   palette: {
@@ -70,13 +71,13 @@ const AgendaUsuarios = () => {
   useEffect(() => {
     const fetchDisponibilidad = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/obtenerDisponibilidad'); 
-        setDisponibilidad(response.data);
+        const response = await axios.get('http://localhost:3000/api/agenda'); 
+       setDisponibilidad(response.data);
       } catch (error) {
         console.error('Error al obtener la disponibilidad de agenda:', error);
       }
     };
-
+    
     fetchDisponibilidad();
   }, []);
  
@@ -124,7 +125,8 @@ const AgendaUsuarios = () => {
         //como lo es observaciones y el check de si prefiere virtual
       };
   
-      await axios.post('http://localhost:3000/api/agendarTurnos', data);
+      console.log(data);
+      await axios.post('http://localhost:3000/api/agendas/', data);
   
       setMensaje('Turno agendado!');
       setSelectedTurnos({});
@@ -147,135 +149,12 @@ const AgendaUsuarios = () => {
       setLoading(false);
     }
   };
-  
   const shouldDisableDate = (date) => {
-    // const formattedDate = dayjs(date).format('YYYY-MM-DD');
-    // return !disponibilidad.some(turno => turno.fecha === formattedDate);
-    return false;
-    //EN ESTE MOMENTO DEVUELVE FALSE PARA PODERLO USAR, PERO SI DA TRUE NO DEJA SELECCIONAR FECHA
+    const formattedDate = dayjs(date).format('YYYY-MM-DD');
+  
+    return !disponibilidad.some(turno => dayjs(turno.fecha).format('YYYY-MM-DD') === formattedDate);
   };
 
- // return (
-//     <ThemeProvider theme={tema}>
-//       <Grid container component="main" sx={{ height: '100vh' }}>
-//         <CssBaseline />
-//         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-
-      
-           
-//               ACA!!!
-
-//           <Box
-//             sx={{
-//               my: 8,
-//               mx: 4,
-//               display: 'flex',
-//               flexDirection: 'column',
-//               alignItems: 'center',
-//             }}
-//           >
-//             <Typography component="h1" variant="h5">
-//               Agenda tu turno!
-//             </Typography>
-//             <Box component="form" noValidate sx={{ mt: 1 }}>
-//               <LocalizationProvider dateAdapter={AdapterDayjs}>
-//                 <DateCalendar
-//                   value={fechaSeleccionada}
-//                   onChange={(newValue) => {
-//                     setFechaSeleccionada(newValue);
-//                     eventoFechaClick(newValue);
-//                   }}
-//                   shouldDisableDate={shouldDisableDate}
-//                 />
-//               </LocalizationProvider>
-             
-//               {error.length > 0 && (
-//                 <Alert severity="error">
-//                   {error.map((e, i) => (
-//                     <div key={i}>{e}</div>
-//                   ))}
-//                 </Alert>
-//               )}
-//               {mensaje && <Typography color="success.main">{mensaje}</Typography>}
-//             </Box>
-//           </Box>
-//         </Grid>
-//         <Grid item xs={12} sm={12} md={7}>
-//           <Box
-//             sx={{
-//               my: 8,
-//               mx: 4,
-//               display: 'flex',
-//               flexDirection: 'column',
-//               alignItems: 'center',
-//             }}
-//           >
-//           </Box>
-//         </Grid>
-//       </Grid>
-//       <Modal
-//   open={openModal}
-//   onClose={handleCloseModal}
-//   aria-labelledby="modal-modal-title"
-//   aria-describedby="modal-modal-description"
-//   closeAfterTransition
-//   BackdropComponent={Backdrop}
-//   BackdropProps={{
-//     timeout: 500,
-//   }}
-// >
-//   <Fade in={openModal}>
-//     <Box sx={{ width: 400, bgcolor: 'background.paper', p: 2 }}>
-//       <Typography id="modal-modal-title" variant="h6" component="h2">
-//         Horas disponibles para el {fechaSeleccionada && fechaSeleccionada.format('DD/MM/YYYY')}
-//       </Typography>
-//       <TableContainer component={Paper} sx={{ mt: 2 }}>
-//         <Table>
-//           <TableHead>
-//             <TableRow>
-//               <TableCell>Hora</TableCell>
-//               <TableCell>Seleccionar</TableCell>
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>
-//             {turnosDisponiblesParaFecha.map((turno, index) => (
-//               <TableRow key={index}>
-//                 <TableCell>{turno.hora}</TableCell>
-//                 <TableCell>
-//                   <Checkbox
-//                     checked={!!selectedTurnos[turno.hora]}
-//                     onChange={() => handleTurnoChange(turno)}
-//                   />
-//                 </TableCell>
-//               </TableRow>
-//             ))}
-//           </TableBody>
-//         </Table>
-//       </TableContainer>
-//       <Button
-//         type="submit"
-//         fullWidth
-//         variant="contained"
-//         sx={{ mt: 3, mb: 2 }}
-//         disabled={loading}
-//         onClick={agendar}
-//       >
-//         {loading ? <CircularProgress size={24} color="inherit" /> : 'Agendar'}
-//       </Button>
-//       {error.length > 0 && (
-//         <Alert severity="error">
-//           {error.map((e, i) => (
-//             <div key={i}>{e}</div>
-//           ))}
-//         </Alert>
-//       )}
-//       {mensaje && <Typography color="success.main">{mensaje}</Typography>}
-//     </Box>
-//   </Fade>
-// </Modal>
-//     </ThemeProvider>
-//   );
-// };
 
 return (
   <ThemeProvider theme={tema}>
@@ -381,7 +260,7 @@ return (
                     <TableBody>
                       {disponibilidad.map((turno, index) => (
                         <TableRow key={index}>
-                          <TableCell>{turno.hora}</TableCell>
+                          <TableCell>{turno.hora_desde}</TableCell>
                           <TableCell>
                             <Checkbox
                               checked={!!selectedTurnos[turno.hora]}
