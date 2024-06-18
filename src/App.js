@@ -1,5 +1,5 @@
 import React from 'react';
-import AppRoutes from './routes'; // Asegúrate de que esta ruta es correcta
+import AppRoutes from './routes'; 
 import { Button, AppBar, Toolbar, Typography, Container } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './App.css';
@@ -38,7 +38,7 @@ function App() {
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="h6">
-                            Mi Aplicación
+                            Avance.FIT
                         </Typography>
                     </Toolbar>
                 </AppBar>
