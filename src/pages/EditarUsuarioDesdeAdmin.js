@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect } from 'react';
 import axios from '../configuracion/axiosconfig';
 import { Button, CssBaseline, TextField, Grid, Paper, Box, Typography, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -31,16 +31,25 @@ const tema = createTheme({
   },
 });
 
-const EditarUsuario = () => {
+
+   
+
+const EditarUsuarioDesdeAdmin = () => {
+
+  
   const [formulario, setFormulario] = useState({
-    nombre: '',
-    email: '',
-    password: ''
+    // nombre: '',
+    // email: '',
+    // password: ''
+    patologias: '',
+    observaciones: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [mensaje, setMensaje] = useState(null);
-  const { email } = useParams();
+  const { id } = useParams();
+const [usuario, setUsuario] = useState(null);
+
 
   const eventoCambio = (e) => {
     setFormulario({
@@ -54,18 +63,21 @@ const EditarUsuario = () => {
     setLoading(true);
     setError(null);
     setMensaje(null);
+   
 
     try {
+      console.log(id);
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario')); 
-      const respuesta = await axios.put(`http://localhost:3000/api/usuarios/${formulario.email}`, formulario, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'User-ID': usuario.id
-        }
-      });
-      
-      
+
+      const respuesta = await axios.put(`http://localhost:3000/api/usuarios/editarUsuario/${id}`, formulario, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'usuario': usuario.id
+          }
+        });
+
+      console.log(respuesta);
       setMensaje('Usuario editado exitosamente.');
     } catch (err) {
       let errorMsg = 'Error de conexión';
@@ -108,35 +120,23 @@ const EditarUsuario = () => {
                 margin="normal"
                 required
                 fullWidth
-                id="nombre"
-                label="Nombre completo"
-                name="nombre"
-                autoComplete="nombre"
+                id="observaciones"
+                label="observaciones"
+                name="observaciones"
+                autoComplete="observaciones"
                 autoFocus
-                value={formulario.nombre}
+                value={formulario.observaciones}
                 onChange={eventoCambio}
               />
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
-                value={formulario.email}
-                onChange={eventoCambio}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="new-password"
-                value={formulario.password}
+                id="patologias"
+                label="patologias"
+                name="patologias"
+                autoComplete="patologias"
+                value={formulario.patologias}
                 onChange={eventoCambio}
               />
               <Button
@@ -161,4 +161,4 @@ const EditarUsuario = () => {
     </ThemeProvider>
   );
 };
-export default EditarUsuario;
+export default EditarUsuarioDesdeAdmin;

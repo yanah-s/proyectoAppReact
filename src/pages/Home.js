@@ -12,13 +12,13 @@ const Home = () => {
     return (
         <main className="container-fluid">
 			<section className="row text-center pb-5">
-				<h1 className="col-12 mt-3">
+				<h1 className="col-12 mt-3 h1Home">
 					¡Bienvenido a Avance.fit, un espacio de transformación! Aquí nos dedicaremos a potenciar tu salud y ayudarte alcanzar tus metas fitness. Con un programa personalizado y un enfoque integral, te guiaremos en cada paso hacia una versión más fuerte, más saludable y más feliz de ti mismo. Unete y comienza tu viaje hacia una vida activa y plena.
 				</h1>
 				<nav className="col-12 mb-5">
 					<ul className="list-unstyled list-inline text-center">
 						<li className="list-inline-item">
-                            <Link className="p-2 rounded" to="/agenda">Agendate YA!</Link>
+                            <Link className="p-2 rounded" to="/AgendaUsuarios">Agendate YA!</Link>
 						</li>
 					</ul>
 				</nav>

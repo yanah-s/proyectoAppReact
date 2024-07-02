@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import {
   Button,
   Link,
@@ -14,6 +13,8 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import imagenLogin from '../imagenes/imagenLogin.png';
 import RecuperarPassword from './RecuperarPassword';
+import axios from '../configuracion/axiosconfig';
+import { useNavigate } from 'react-router-dom';
 
 const tema = createTheme({
   palette: {
@@ -44,7 +45,6 @@ const tema = createTheme({
 });
 
 const Login = () => {
-  const [modalOpen, setModalOpen] = useState(false);
   const [formulario, setFormulario] = useState({
     email: '',
     password: '',
@@ -52,7 +52,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [mensaje, setMensaje] = useState(null);
-
+  const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => setModalOpen(false);
 
@@ -70,9 +71,19 @@ const Login = () => {
     setMensaje(null);
 
     try {
-      const respuesta = await axios.post('http://localhost:3000/api/autentificacion', formulario);
-      console.log('Respuesta:', respuesta.data);
+      const response = await axios.post('http://localhost:3000/api/autentificacion', formulario);
+      console.log('Respuesta:', response.data.usuario.admin);
+      const isAdmin = response.data.usuario.admin; 
+      console.log('isAdmin:', isAdmin);
       setMensaje('Ingreso con éxito.');
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('usuario', JSON.stringify(response.data.usuario));
+      localStorage.setItem('admin', isAdmin.toString());
+      
+      window.dispatchEvent(new Event('sesionIniciada'));
+      navigate('/');
+      
+      console.log(localStorage);
     } catch (err) {
       console.error('Error:', err);
       let errorMsg = 'Error de conexión';

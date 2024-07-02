@@ -1,0 +1,7 @@
+.tablaDisponibilidad {
+    background-color: #00000090; 
+    width: 100%;
+}
+.tablaDisponibilidad .MuiTableCell-root {
+    width: auto; /* Ajusta el ancho de las celdas de manera automática */
+  }

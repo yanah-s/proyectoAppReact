@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-
+import axios from '../configuracion/axiosconfig';
 const DesactivarUsuario = () => {
     const [formulario, setFormulario] = useState({
       
@@ -24,8 +23,15 @@ const DesactivarUsuario = () => {
         setMensaje(null);
         console.log('Llamada a la API');
         try {
-           const respuesta = await axios.delete(`http://localhost:3000/api/usuarios/${formulario.email}`);
-           
+
+            const token = localStorage.getItem('token'); 
+            const usuario = JSON.parse(localStorage.getItem('usuario')); 
+           const respuesta = await axios.delete(`http://localhost:3000/api/usuarios/${formulario.email}`,{
+           headers: {
+              'Authorization': `Bearer ${token}`,
+              'User-ID': usuario.id
+            }
+          });
            console.log('Respuesta:', respuesta.data);
             setMensaje('Usuario eliminado exitosamente.');
         }  catch (err) {

@@ -29,13 +29,16 @@ header nav ul li a{
 }
 
 header nav ul li a:hover{
-	background-color: grey;
+	/* //background-color: grey; */
+	background-color:#1d1d1d;
 	color: white;
 	text-decoration: none;
 }
 
-h1{
-	background-color: #00000090;
+.h1Home{
+	/* background-color: #00000090; */
+	background-color: black;
+
 }
 h1 span img{
 	width: 60px;
@@ -98,11 +101,11 @@ section:nth-child(6){
 	background-color: #edacad;
 }
 
-input[type="text"]{
+/* input[type="text"]{
 	background-color: white;
 	color: #c4383a;
 	border:0;
-}
+} */
 
 input::placeholder{
 	color: #c4383a;
@@ -126,7 +129,9 @@ section:nth-child(5){
 /*FOOTER*/
 
 footer{
-	background-color: #212529;
+	/* background-color: #212529; */  
+	/* DE SANTI VER EN REUNION */
+	background-color:#1d1d1d;
     border-top: 2px solid white; 
 }
 

@@ -1,33 +1,47 @@
+// AppRoutes.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Header from './components/Header';
 import DisponibilidadAgenda from './pages/DisponibilidadAgenda';
 import AgendaUsuarios from './pages/AgendaUsuarios';
 import ListarUsuarios from './pages/ListarUsuarios';
-import CrearUsuario from './pages/CrearUsuario';
 import EditarUsuario from './pages/EditarUsuario';
 import DesactivarUsuario from './pages/DesactivarUsuario';
 import Login from './pages/Login';
 import RecuperarPassword from './pages/RecuperarPassword';
-
+import EditarUsuarioDesdeAdmin from './pages/EditarUsuarioDesdeAdmin';
+import Logout from './pages/Logout';
 const AppRoutes = () => {
+    const isAuthenticated = !!localStorage.getItem('token');
+   const isAdmin =  localStorage.getItem('admin') === 'true';
     return (
-        <Router>
-            <Header />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/DisponibilidadAgenda" element={<DisponibilidadAgenda />} />
-                <Route path="/AgendaUsuarios" element={<AgendaUsuarios />} />
-                <Route path="/ListarUsuarios" element={<ListarUsuarios />} />
-                <Route path="/CrearUsuario" element={<CrearUsuario />} />
-                <Route path="/EditarUsuario/:email" element={<EditarUsuario />} />
-                <Route path="/RecuperarPassword" element={<RecuperarPassword />} />
-                <Route path="/DesactivarUsuario" element={<DesactivarUsuario />} />
-                <Route path="/Login" element={<Login />} />
-            </Routes>
-        </Router>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/recuperar-password" element={<RecuperarPassword />} />
+          <Route path="/" element={<Home />} />
+          {/* <Route path="/CrearUsuario" element={<CrearUsuario />} /> */}
+          <Route path="/AgendaUsuarios" element={<AgendaUsuarios />} />
+          {isAuthenticated && isAdmin &&(
+            <>
+              <Route path="/DisponibilidadAgenda" element={<DisponibilidadAgenda />} />
+              <Route path="/ListarUsuarios" element={<ListarUsuarios />} />
+              <Route path="/editar-usuario/:email" element={<EditarUsuario />} />
+              <Route path="/DesactivarUsuario" element={<DesactivarUsuario />} />
+              <Route path="/EditarUsuarioDesdeAdmin/:id" element={<EditarUsuarioDesdeAdmin />} />
+           
+            </>
+          )} {isAuthenticated && 
+
+            <Route path="/Logout" element={<Logout />} /> 
+          }
+          
+        </Routes>
+      </Router>
     );
-};
+  };
+  
 
 export default AppRoutes;

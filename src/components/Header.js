@@ -4,13 +4,75 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Link } from 'react-router-dom';
 import './Header.css';
+import { useState, useEffect } from 'react';
+// const Header = () => {
+  
+//   const [isAuthenticated, setIsAuthenticated] = useState(false);
+//   const isAdmin = localStorage.getItem('admin') === 'true';
+
+//   useEffect(() => {
+    
+//     const token = localStorage.getItem('token');
+//     const isAdmin = localStorage.getItem('admin');
+    
+//     setIsAuthenticated(!!token);
+//   }, []);
+
+//   const handleLogout = () => {
+//     localStorage.removeItem('token');
+//     localStorage.removeItem('usuario');
+//     localStorage.removeItem('admin');
+//     setIsAuthenticated(false);
+//   };
+
+  
+
+
+
+
+// export default Header;
+
 
 const Header = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    // Función para actualizar el estado de autenticación y administrador desde localStorage
+    const updateAuthState = () => {
+      const token = localStorage.getItem('token');
+      const admin = localStorage.getItem('admin') === 'true';
+      setIsAuthenticated(!!token);
+      setIsAdmin(admin);
+    };
+
+    // Actualizar al montar el componente
+    updateAuthState();
+
+    // Escuchar la señal de inicio de sesión
+    const handleSesionIniciada = () => {
+      updateAuthState(); // Actualizar el estado cuando se inicia sesión
+    };
+
+    window.addEventListener('sesionIniciada', handleSesionIniciada);
+
+    return () => {
+      window.removeEventListener('sesionIniciada', handleSesionIniciada);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    localStorage.removeItem('admin');
+    setIsAuthenticated(false);
+    setIsAdmin(false);
+  };
+
   return (
     <nav className="navbar navbar-dark bg-dark fixed-top">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          <img src="logos/logo.png" alt="logo" className="navbar-logo" />
           Avance.fit
         </Link>
         <button className="btn btn-primary" id="boton_hamburguesa" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
@@ -27,23 +89,42 @@ const Header = () => {
               <li className="nav-item">
                 <Link className="nav-link" to="/"><i className="bi bi-house-door"></i> Home</Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/agenda"><i className="bi bi-calendar-week"></i> Agenda</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/disponibilidadagenda"><i class="bi bi-calendar2-check"></i> Disponibilidad</Link>
-              </li>
+              {!isAuthenticated && (
+                <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/Login"><i className="bi bi-box-arrow-in-right"></i> Login</Link>
+                </li>
+                 <li className="nav-item">
+                 <Link className="nav-link" to="/AgendaUsuarios" ><i className="bi bi-calendar-week"></i> Agenda</Link>
+               </li>
+               </>
+              )}
+              {isAuthenticated && isAdmin &&(
+                <>
+                 
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/DisponibilidadAgenda"><i className="bi bi-calendar2-check"></i> Disponibilidad</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/DesactivarUsuario"><i className="bi bi-calendar-week"></i> Desactivar Usuario</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/ListarUsuarios"><i className="bi bi-person-lines-fill"></i> Listar Usuarios</Link>
+                  </li>
+                </>
+              )}
             </ul>
-            <ul className="nav flex-column mt-auto" id="pestañas_hamburguesa">
-              <li className="nav-item">
-                <Link className="nav-link" to="/logout"><i className="bi bi-lock"></i> Cerrar Sesion</Link>
-              </li>
-            </ul>
+            {isAuthenticated && (
+              <ul className="nav flex-column mt-auto" id="pestañas_hamburguesa">
+                <li className="nav-item">
+                  <Link className="nav-link" to="/" onClick={handleLogout}><i className="bi bi-lock"></i> Cerrar Sesion</Link>
+                </li>
+              </ul>
+            )}
           </div>
         </div>
       </div>
     </nav>
   );
 };
-
 export default Header;
