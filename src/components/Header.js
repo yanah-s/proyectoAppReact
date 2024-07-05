@@ -5,33 +5,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import { useState, useEffect } from 'react';
-// const Header = () => {
-  
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-//   const isAdmin = localStorage.getItem('admin') === 'true';
-
-//   useEffect(() => {
-    
-//     const token = localStorage.getItem('token');
-//     const isAdmin = localStorage.getItem('admin');
-    
-//     setIsAuthenticated(!!token);
-//   }, []);
-
-//   const handleLogout = () => {
-//     localStorage.removeItem('token');
-//     localStorage.removeItem('usuario');
-//     localStorage.removeItem('admin');
-//     setIsAuthenticated(false);
-//   };
-
-  
-
-
-
-
-// export default Header;
-
 
 const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -73,7 +46,7 @@ const Header = () => {
     <nav className="navbar navbar-dark bg-dark fixed-top">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          Avance.fit
+          <img src="logos/logo.jpeg" alt="logo" className="navbar-logo" />
         </Link>
         <button className="btn btn-primary" id="boton_hamburguesa" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
           <i className="bi bi-list"></i>
@@ -111,6 +84,12 @@ const Header = () => {
                   <li className="nav-item">
                     <Link className="nav-link" to="/ListarUsuarios"><i className="bi bi-person-lines-fill"></i> Listar Usuarios</Link>
                   </li>
+                  <li className="nav-item">
+                <Link className="nav-link" to="/ejercicios"> <img src="/iconos/ejercicio.png" alt="Ejercicio Icono" style={{ width: '25px' }} /> Ejercicios</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/rutinas"> <img src="/iconos/rutina.png" alt="Rutina Icono" style={{ width: '25px' }} /> Rutinas</Link>
+                </li>
                 </>
               )}
             </ul>

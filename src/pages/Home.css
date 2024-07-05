@@ -35,10 +35,17 @@ header nav ul li a:hover{
 	text-decoration: none;
 }
 
-.h1Home{
-	/* background-color: #00000090; */
+section:nth-child(1){
+	margin-top: 50px;
 	background-color: black;
+	/*background-image: url("../img/casas.png");*/
+	background-size: 200px 200px;
+	background-position: right bottom;
+	background-repeat: no-repeat;
+}
 
+h2{
+	background-color: #00000090;
 }
 h1 span img{
 	width: 60px;
@@ -49,16 +56,21 @@ h2 span img{
 }
 
 /*NOTICIA*/
-section:nth-child(2){
+section:nth-child(3){
 	background-color: black;
 	/*background-image: url("../img/casas.png");*/
 	background-size: 200px 200px;
 	background-position: right bottom;
 	background-repeat: no-repeat;
+	margin-bottom: 50px;
 }
 
-section:nth-child(2) article span img{
+section:nth-child(3) article span img{
 	width: 150px;
+}
+
+section:nth-child(2){
+	margin-top: 50px;
 }
 
 .sobreMI{
@@ -71,39 +83,39 @@ h2{
 	color: white;
 }
 
-section:nth-child(2) p{
+section:nth-child(3) p{
 	color:white;
 }
 
 /*FONDO PARALLAX*/
 
-section:nth-child(3){
+section:nth-child(4){
 	/*background-image: url("../img/luces.jpg");*/
 	background-size: cover;
 	background-attachment: fixed;
 	height: 150px;
 }
 
-section:nth-child(3) h2{
+section:nth-child(4) h2{
 	background-color: #5e1d1e6f;
 	height: 100%;
 }
 
 /*MAS VENDIDOS*/
 
-section:nth-child(4) h2{
+section:nth-child(5) h2{
 	color: black;
 }
 
 /*CONTACTO*/
 
-section:nth-child(6){
+section:nth-child(7){
 	background-color: #edacad;
 }
 
 /* input[type="text"]{
 	background-color: white;
-	color: #c4383a;
+	color: black;
 	border:0;
 } */
 
@@ -119,7 +131,7 @@ input[type="submit"]{
 
 /* ULTIMA SECCION */
 
-section:nth-child(5){
+section:nth-child(6){
 	/*background-image: url("../img/globos.jpg");*/
 	background-size: cover;
 	background-attachment: fixed;
@@ -140,10 +152,10 @@ footer ul li img{
 	height: 38px;
 }
 
-footer ul li:nth-child(2){
+footer ul li:nth-child(3){
 	background-position: 0 38px;
 }
 
-footer ul li:nth-child(3){
+footer ul li:nth-child(4){
 	background-position: 0 86px;
 }
