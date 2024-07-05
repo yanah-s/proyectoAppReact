@@ -12,9 +12,20 @@ const Home = () => {
     return (
         <main className="container-fluid">
 			<section className="row text-center pb-5">
-				<h1 className="col-12 mt-3">
+				<h2 className="col-12 w-100" id="navidad">¡Bienvenido a Avance.fit</h2>
+				<figure className="d-none d-md-block col-md-5">
+					<img src="images/lucia.jpg" className="img-fluid" alt=""/>
+				</figure>
+				<article className="col-8 col-md-3 sobreMI">
+					<span><img src="img/candy.png" alt=""/></span>
+					<p>un espacio de transformación! Aquí nos dedicaremos a potenciar tu salud y ayudarte alcanzar tus metas fitness. Con un programa personalizado y un enfoque integral, te guiaremos en cada paso hacia una versión más fuerte, más saludable y más feliz de ti mismo. Unete y comienza tu viaje hacia una vida activa y plena.</p>
+				</article>
+				{/* <h1 className="col-12 mt-3">
 					¡Bienvenido a Avance.fit, un espacio de transformación! Aquí nos dedicaremos a potenciar tu salud y ayudarte alcanzar tus metas fitness. Con un programa personalizado y un enfoque integral, te guiaremos en cada paso hacia una versión más fuerte, más saludable y más feliz de ti mismo. Unete y comienza tu viaje hacia una vida activa y plena.
-				</h1>
+				</h1> */}
+				
+			</section>
+			<section>
 				<nav className="col-12 mb-5">
 					<ul className="list-unstyled list-inline text-center">
 						<li className="list-inline-item">

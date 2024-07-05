@@ -10,8 +10,7 @@ const Header = () => {
     <nav className="navbar navbar-dark bg-dark fixed-top">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          <img src="logos/logo.png" alt="logo" className="navbar-logo" />
-          Avance.fit
+          <img src="logos/logo.jpeg" alt="logo" className="navbar-logo" />
         </Link>
         <button className="btn btn-primary" id="boton_hamburguesa" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
           <i className="bi bi-list"></i>
@@ -31,7 +30,13 @@ const Header = () => {
                 <Link className="nav-link" to="/agenda"><i className="bi bi-calendar-week"></i> Agenda</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/disponibilidadagenda"><i class="bi bi-calendar2-check"></i> Disponibilidad</Link>
+                <Link className="nav-link" to="/disponibilidadagenda"><i className="bi bi-calendar2-check"></i> Disponibilidad</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/ejercicios"> <img src="/iconos/ejercicio.png" alt="Ejercicio Icono" style={{ width: '25px' }} /> Ejercicios</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/rutinas"> <img src="/iconos/rutina.png" alt="Rutina Icono" style={{ width: '25px' }} /> Rutinas</Link>
               </li>
             </ul>
             <ul className="nav flex-column mt-auto" id="pestañas_hamburguesa">
