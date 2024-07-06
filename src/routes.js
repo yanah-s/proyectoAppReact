@@ -25,6 +25,8 @@ const AppRoutes = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/recuperar-password" element={<RecuperarPassword />} />
           <Route path="/" element={<Home />} />
+          <Route path="/ejercicios" element={<Ejercicios />} />
+          <Route path="/rutinas" element={<Rutinas />} />
           {/* <Route path="/CrearUsuario" element={<CrearUsuario />} /> */}
           <Route path="/AgendaUsuarios" element={<AgendaUsuarios />} />
           {isAuthenticated && isAdmin &&(
@@ -34,12 +36,12 @@ const AppRoutes = () => {
               <Route path="/editar-usuario/:email" element={<EditarUsuario />} />
               <Route path="/DesactivarUsuario" element={<DesactivarUsuario />} />
               <Route path="/EditarUsuarioDesdeAdmin/:id" element={<EditarUsuarioDesdeAdmin />} />
-              <Route path="/ejercicios" element={<Ejercicios />} />
-              <Route path="/rutinas" element={<Rutinas />} />
+             
             </>
           )} {isAuthenticated && 
 
             <Route path="/Logout" element={<Logout />} /> 
+            
           }
           
         </Routes>

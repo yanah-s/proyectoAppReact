@@ -57,7 +57,16 @@ const Ejercicios = () => {
     const listarEjercicios = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:3000/api/ejercicio');
+        const token = localStorage.getItem('token'); 
+        const usuario = JSON.parse(localStorage.getItem('usuario')); 
+        console.log("usuarioid   :" + usuario.id + "token" + token);
+
+        const response = await axios.get('http://localhost:3000/api/ejercicio', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'User-ID': usuario.id
+          }
+        });
         const ejercicios = response.data.filter(ejercicio => ejercicio.disponible);
         setEjercicios(ejercicios);
         setFilteredEjercicios(ejercicios);
@@ -134,9 +143,27 @@ const Ejercicios = () => {
       }
       try {
         if (editado) {
-          await axios.put(`http://localhost:3000/api/ejercicio/${modalData._id}`, formattedData );
-        } else {
-          await axios.post('http://localhost:3000/api/ejercicio', formattedData );
+          const token = localStorage.getItem('token'); 
+          const usuario = JSON.parse(localStorage.getItem('usuario')); 
+          console.log("usuarioid   :" + usuario.id + "token" + token);
+        
+          await axios.put(`http://localhost:3000/api/ejercicio/${modalData._id}`, formattedData, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'User-ID': usuario.id
+            }
+          });
+        } else { 
+          const token = localStorage.getItem('token'); 
+          const usuario = JSON.parse(localStorage.getItem('usuario')); 
+          console.log("usuarioid   :" + usuario.id + "token" + token);
+        
+          await axios.post('http://localhost:3000/api/ejercicio', formattedData, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'User-ID': usuario.id
+            }
+          });
         }
         listarEjercicios();
         cerrarModal();
@@ -164,7 +191,16 @@ const Ejercicios = () => {
       if(!confirmacion) return;
 
       try {
-        await axios.put(`http://localhost:3000/api/ejercicio/${id}/deshabilitar`);
+        const token = localStorage.getItem('token'); 
+        const usuario = JSON.parse(localStorage.getItem('usuario')); 
+        console.log("usuarioid   :" + usuario.id + "token" + token);
+        
+        await axios.put(`http://localhost:3000/api/ejercicio/${id}/deshabilitar`, null, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'User-ID': usuario.id
+          }
+        });
         listarEjercicios();
       } catch (err) {
         console.error('Error al deshabilitar ejercicio:', err);

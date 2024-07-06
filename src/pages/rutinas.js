@@ -74,7 +74,19 @@ const Rutinas = () => {
     
       if (newCategoria) {
         try {
-          const response = await axios.get(`http://localhost:3000/api/ejercicio/categoria`, { params: { categoria: newCategoria } });
+          const token = localStorage.getItem('token'); 
+          const usuario = JSON.parse(localStorage.getItem('usuario')); 
+          console.log("usuarioid   :" + usuario.id + "token" + token);
+          
+          const response = await axios.get('http://localhost:3000/api/ejercicio/categoria', {
+            params: { 
+              categoria: newCategoria 
+            },
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'User-ID': usuario.id
+            }
+          });
           setEjerciciosFiltrados(response.data);
         } catch (error) {
           console.error('Error al obtener los ejercicios:', error);
@@ -87,7 +99,16 @@ const Rutinas = () => {
     const listarRutinas = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:3000/api/rutinas');
+        const token = localStorage.getItem('token'); 
+        const usuario = JSON.parse(localStorage.getItem('usuario')); 
+        console.log("usuarioid   :" + usuario.id + "token" + token);
+
+        const response = await axios.get('http://localhost:3000/api/rutinas', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'User-ID': usuario.id
+          }
+        });
         const rutinas = response.data.filter(rutina => rutina.disponible);
         setRutinas(rutinas);
         setFilteredRutinas(rutinas);
@@ -125,7 +146,19 @@ const Rutinas = () => {
     
         // Obtener ejercicios filtrados por categoría
         try {
-          const response = await axios.get(`http://localhost:3000/api/ejercicio/categoria`, { params: { categoria: rutina.categoria } });
+          
+          const token = localStorage.getItem('token'); 
+          const usuario = JSON.parse(localStorage.getItem('usuario')); 
+          console.log("usuarioid   :" + usuario.id + "token" + token);
+      
+          const response = await axios.get('http://localhost:3000/api/ejercicio/categoria', {
+            params: { categoria: rutina.categoria },
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'User-ID': usuario.id
+            }
+          });
+      
           setEjerciciosFiltrados(response.data);
     
           // Actualizar modalData con los ejercicios seleccionados de la rutina
@@ -182,9 +215,27 @@ const Rutinas = () => {
     
       try {
         if (editado) {
-          await axios.put(`http://localhost:3000/api/rutinas/${modalData._id}`, formattedData );
+          const token = localStorage.getItem('token'); 
+          const usuario = JSON.parse(localStorage.getItem('usuario')); 
+          console.log("usuarioid   :" + usuario.id + "token" + token);
+        
+          await axios.put(`http://localhost:3000/api/rutinas/${modalData._id}`, formattedData, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'User-ID': usuario.id
+            }
+          });
         } else {
-          await axios.post('http://localhost:3000/api/rutinas', formattedData );
+          const token = localStorage.getItem('token'); 
+          const usuario = JSON.parse(localStorage.getItem('usuario')); 
+          console.log("usuarioid   :" + usuario.id + "token" + token);
+        
+          await axios.post('http://localhost:3000/api/rutinas', formattedData, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'User-ID': usuario.id
+            }
+          });
         }
         listarRutinas();
         cerrarModal();
@@ -210,7 +261,16 @@ const Rutinas = () => {
       if(!confirmacion) return;
 
       try {
-        await axios.put(`http://localhost:3000/api/rutinas/${id}/deshabilitar`);
+        const token = localStorage.getItem('token'); 
+        const usuario = JSON.parse(localStorage.getItem('usuario')); 
+        console.log("usuarioid   :" + usuario.id + "token" + token);
+        
+        await axios.put(`http://localhost:3000/api/rutinas/${id}/deshabilitar`, null, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'User-ID': usuario.id
+          }
+        });
         listarRutinas();
       } catch (err) {
         console.error('Error al deshabilitar ejercicio:', err);

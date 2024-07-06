@@ -86,7 +86,7 @@ const DisponibilidadAgenda = () => {
 
         const token = localStorage.getItem('token'); 
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
-
+        console.log("usuarioid   :" + usuario.id + "token" + token);
         const response = await axios.get('http://localhost:3000/api/agenda/turnos', {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -156,17 +156,21 @@ const DisponibilidadAgenda = () => {
 };
 
   const quitarTurnoDeAgenda = async (idTurno, index) => {
+    
     setError([]);
     setMensaje(null);
+    
     try {
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario')); 
+      console.log("usuarioid   :" + usuario.id + "token" + token);
       const response = await axios.delete(`http://localhost:3000/api/agenda/${idTurno}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'User-ID': usuario.id
         }
       });
+      
      setMensajeTabla(response.data);
 
        
@@ -233,7 +237,9 @@ const DisponibilidadAgenda = () => {
 
     try {
       const token = localStorage.getItem('token'); 
-      const usuario = JSON.parse(localStorage.getItem('usuario')); 
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
+      console.log("usuarioid   :" + usuario.id + "token" + token);
+
       await axios.post('http://localhost:3000/api/agenda/', formulario, {
         headers: {
           'Authorization': `Bearer ${token}`,
