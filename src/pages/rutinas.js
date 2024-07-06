@@ -127,8 +127,7 @@ const Rutinas = () => {
           const nombre = rutina.nombre?.toLowerCase().includes(value.toLowerCase());
           const categoria = rutina.categoria?.toLowerCase().includes(value.toLowerCase());
           const ejercicios = Array.isArray(rutina.ejercicios) &&
-          rutina.ejercicios.some(ejercicio => ejercicio?.toLowerCase().includes(value.toLowerCase()));
-
+          rutina.ejercicios.some(ejercicio => ejercicio.nombre?.toLowerCase().includes(value));
           return nombre || categoria || ejercicios;
         });
         setFilteredRutinas(filtered);
