@@ -14,7 +14,7 @@ import EditarUsuarioDesdeAdmin from './pages/EditarUsuarioDesdeAdmin';
 import Logout from './pages/Logout';
 import Ejercicios from './pages/Ejercicios';
 import Rutinas from './pages/rutinas';
-
+import Notificaciones from './components/Notificaciones';
 const AppRoutes = () => {
     const isAuthenticated = !!localStorage.getItem('token');
    const isAdmin =  localStorage.getItem('admin') === 'true';
@@ -36,7 +36,7 @@ const AppRoutes = () => {
               <Route path="/editar-usuario/:email" element={<EditarUsuario />} />
               <Route path="/DesactivarUsuario" element={<DesactivarUsuario />} />
               <Route path="/EditarUsuarioDesdeAdmin/:id" element={<EditarUsuarioDesdeAdmin />} />
-             
+              {/* <Route path="/Notificaciones" element={<Notificaciones />} /> */}
             </>
           )} {isAuthenticated && 
 

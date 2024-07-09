@@ -109,6 +109,7 @@ const Rutinas = () => {
             'User-ID': usuario.id
           }
         });
+        console.log(usuario);
         const rutinas = response.data.filter(rutina => rutina.disponible);
         setRutinas(rutinas);
         setFilteredRutinas(rutinas);

@@ -79,7 +79,6 @@ const Login = () => {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('usuario', JSON.stringify(response.data.usuario));
       localStorage.setItem('admin', isAdmin.toString());
-      
       window.dispatchEvent(new Event('sesionIniciada'));
       navigate('/');
       
@@ -147,7 +146,6 @@ const Login = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                autoFocus
                 value={formulario.email}
                 onChange={eventoCambio}
               />
