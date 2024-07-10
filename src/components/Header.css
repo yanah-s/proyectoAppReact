@@ -28,8 +28,13 @@
     display: flex;
     flex-direction: column;
 }
-  
-  
+
+.notificacionesYmenu {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Alinea los elementos verticalmente */
+    justify-content: space-between; /* Espacio entre los elementos */
+}
 .offcanvas-body .nav.flex-column.mt-auto {
     margin-top: auto;
 }

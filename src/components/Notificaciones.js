@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Badge, Stack, Toolbar, Popover, Box, Typography } from '@mui/material';
+import { Badge, Stack, Toolbar, Popover, Box, Typography, Paper } from '@mui/material';
 import MailIcon from '@mui/icons-material/Mail';
+import { useNavigate } from 'react-router-dom';
 
 const Notificaciones = () => {
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
     const [anchorEl, setAnchorEl] = useState(null);
+    const navigate = useNavigate();
 
     const handleClick = async (event) => {
         setAnchorEl(event.currentTarget);
@@ -54,46 +56,17 @@ const Notificaciones = () => {
         setAnchorEl(null);
     };
 
+    const handleNotificationClick = (notification) => {
+        // Verifica el contenido del mensaje de la notificación
+        if (notification.message.includes('agendo')) {
+            navigate('/ListarUsuarios');
+        }
+    };
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
-    return (
-        // <div>
-        //     <Toolbar style={{ flexGrow: 1, justifyContent: 'flex-end' }}>
-        //         <Stack spacing={4} direction="row" sx={{ alignItems: 'center' }}>
-        //             <Badge color="secondary" badgeContent={unreadCount} onClick={handleClick} sx={{ cursor: 'pointer' }}>
-        //                 <MailIcon sx={{ color: 'white' }} />
-        //             </Badge>
-        //         </Stack>
-        //     </Toolbar>
-        //     <Popover
-        //         id={id}
-        //         open={open}
-        //         anchorEl={anchorEl}
-        //         onClose={handleClose}
-        //         anchorOrigin={{
-        //             vertical: 'bottom',
-        //             horizontal: 'right',
-        //         }}
-        //         transformOrigin={{
-        //             vertical: 'top',
-        //             horizontal: 'right',
-        //         }}
-        //     >
-        //         <Box sx={{ p: 2 }}>
-        //             <Typography variant="h6">Notificaciones</Typography>
-        //             {notifications> (
-        //                 notifications.map((notification) => (
-        //                     <Typography key={notification.id} variant="body1">
-        //                         {notification.message}
-        //                     </Typography>
-        //                 ))
-        //             // ) 
-        //             )}
-        //         </Box>
-        //     </Popover>
-        // </div>
-        <div>
+return (
+    <div>
         <Toolbar style={{ flexGrow: 1, justifyContent: 'flex-end' }}>
             <Stack spacing={4} direction="row" sx={{ alignItems: 'center' }}>
                 <Badge color="secondary" badgeContent={unreadCount} onClick={handleClick} sx={{ cursor: 'pointer' }}>
@@ -116,20 +89,22 @@ const Notificaciones = () => {
             }}
         >
             <Box sx={{ p: 2 }}>
-                <Typography variant="h6">Notificaciones</Typography>
-                {notifications.length > 0 ? (
-                    notifications.map((notification) => (
-                        <Typography key={notification.id} variant="body1">
-                            {notification.message}
-                        </Typography>
-                    ))
-                ) : (
-                    <Typography variant="body1">No hay nuevas notificaciones.</Typography>
-                )}
+                    <Typography variant="h6">Notificaciones</Typography>
+                    {notifications.length > 0 ? (
+                        notifications.map((notification) => (
+                            <Paper key={notification.id} sx={{ p: 1, mb: 1 }} onClick={() => handleNotificationClick(notification)}>
+                                <Typography variant="body1">
+                                    {notification.message}
+                                </Typography>
+                            </Paper>
+                        ))
+                    ) : (
+                        <Typography variant="body1">No tienes nuevas notificaciones.</Typography>
+                    )}
             </Box>
         </Popover>
     </div>
-    );
+);
 };
 
 export default Notificaciones;

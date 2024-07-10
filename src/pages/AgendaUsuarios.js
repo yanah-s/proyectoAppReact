@@ -27,6 +27,7 @@ import dayjs from 'dayjs';
 import { LocalizationProvider, DateCalendar } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import './AgendaUsuarios.css';
+import { useNavigate } from 'react-router-dom';
 
 const tema = createTheme({
   palette: {
@@ -62,7 +63,6 @@ const AgendaUsuarios = () => {
   //apenas se carga la pagina, consulta disponibilidad.
   const [selectedTurnos, setSelectedTurnos] = useState({});
   const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
-  const [usuarioId, setUsuarioId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState([]);
   const [mensaje, setMensaje] = useState(null);
@@ -75,7 +75,7 @@ const AgendaUsuarios = () => {
     password2: '',
     patologias: ''
   });
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchDisponibilidad = async () => {
       try {
@@ -115,7 +115,7 @@ const AgendaUsuarios = () => {
         }
       });
       setMensaje('Usuario registrado y turno agendado exitosamente.');
-      
+      navigate('/login');
     } catch (err) {
       let errorMsg = 'Error de conexión';
 

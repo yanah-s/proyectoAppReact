@@ -6,10 +6,6 @@ import { Link } from 'react-router-dom';
 import './Header.css';
 import { useState, useEffect } from 'react';
 import Notificaciones from './Notificaciones';
-import Stack from '@mui/material/Stack';
-import Badge from '@mui/material/Badge';
-import MailIcon from '@mui/icons-material/Mail';
-import { AppBar, Toolbar,Popover, Typography, Box  } from '@mui/material';
 const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -49,17 +45,12 @@ const Header = () => {
 return(
   <nav className="navbar navbar-dark bg-dark fixed-top">
     <div className="container-fluid">
+       
       <Link className="navbar-brand" to="/">
         <img src="logos/logo.jpeg" alt="logo" className="navbar-logo" />
       </Link>
+      <div className="notificacionesYmenu">
       {isAuthenticated &&(
-      // <Toolbar style={{ flexGrow: 1, justifyContent: 'flex-end' }}>
-      //   <Stack spacing={4} direction="row" sx={{ alignItems: 'center' }}>
-      //     <Badge color="secondary" badgeContent={1} onClick={handleClick} sx={{ cursor: 'pointer' }}>
-      //       <MailIcon sx={{ color: 'white' }} />
-      //     </Badge>
-      //   </Stack>
-      // </Toolbar>
       <Notificaciones/>
        )}
       <button
@@ -126,26 +117,7 @@ return(
           )}
         </div>
       </div>
-
-      {/* <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-      >
-        <Box sx={{ p: 2 }}>
-          <Typography variant="h6">Notificaciones</Typography>
-          <Typography variant="body1">No tienes nuevas notificaciones.</Typography>
-        </Box>
-      </Popover> */}
+    </div>
     </div>
   </nav>
 );
