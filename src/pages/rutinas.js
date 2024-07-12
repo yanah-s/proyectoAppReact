@@ -4,6 +4,8 @@ import axios from 'axios';
 import { Alert, AlertTitle, Button, CssBaseline, TextField, Grid, Paper, Box, Snackbar, Typography,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Modal, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Tabs, Tab } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const tema = createTheme({
   palette: {
@@ -34,6 +36,7 @@ const tema = createTheme({
 });
 
 const Rutinas = () => {
+    const [activeTab, setActiveTab] = useState('crear');
     const [rutinas, setRutinas] = useState([]);
     const [rutinasFiltradas, setFilteredRutinas] = useState([]);
     const [rutinaSeleccionada, setSelectedRutina] = useState(null);
@@ -106,7 +109,7 @@ const Rutinas = () => {
           const nombre = rutina.nombre?.toLowerCase().includes(value.toLowerCase());
           const categoria = rutina.categoria?.toLowerCase().includes(value.toLowerCase());
           const ejercicios = Array.isArray(rutina.ejercicios) &&
-          rutina.ejercicios.some(ejercicio => ejercicio?.toLowerCase().includes(value.toLowerCase()));
+          rutina.ejercicios.some(ejercicio => ejercicio.nombre?.toLowerCase().includes(value));
 
           return nombre || categoria || ejercicios;
         });
@@ -224,57 +227,65 @@ const Rutinas = () => {
             <CssBaseline />
             <Grid item xs={12} component={Paper} elevation={6} square>
               <Box sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Typography component="h1" variant="h5">Rutinas</Typography>
-                <Box sx={{ display: 'flex', width: '100%', mb: 2 }}>
-                  <TextField
-                    label="Filtrar"
-                    variant="outlined"
-                    value={filter}
-                    onChange={filtrarTabla}
-                    sx={{ width: '300px', marginRight: '20px' }}
-                  />
-                  <Button variant="contained" color="primary" onClick={() => abrirModal(false)}>Crear</Button>
-                  <Button variant="contained" color="secondary" onClick={() => abrirModal(true, rutinaSeleccionada)} disabled={!rutinaSeleccionada} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
-                  <Button variant="contained" color="error" onClick={() => deshabilitarRutina(rutinaSeleccionada._id)} disabled={!rutinaSeleccionada} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>
-                </Box>
-                {loading ? (
-                  <CircularProgress />
-                ) : (
-                  rutinasFiltradas.length > 0 ? (
-                    <TableContainer component={Paper}>
-                      <Table>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Nombre</TableCell>
-                            <TableCell>Categoría</TableCell>
-                            <TableCell>Ejercicios</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {rutinasFiltradas.map((rutina) => (
-                            <TableRow
-                              key={rutina._id}
-                              onClick={() => setSelectedRutina(rutinaSeleccionada?._id === rutina._id ? null : rutina)}
-                              selected={rutinaSeleccionada?._id === rutina._id}
-                            >
-                              <TableCell>{rutina.nombre}</TableCell>
-                              <TableCell>{rutina.categoria}</TableCell>
-                              <TableCell>
-                                <div>
-                                  {rutina.ejercicios.map(ejercicio => (
-                                    <li key={ejercicio._id}>{ejercicio.nombre}</li>
-                                    ))}
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  ) : (
-                    <Typography variant="h6">No se encontraron rutinas</Typography>
-                  )
-                )}
+                <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k)} className="mb-3">
+                  <Tab eventKey="crear" title="Crear">
+                    <Typography component="h1" variant="h5">Rutinas</Typography>
+                    <Box sx={{ display: 'flex', width: '100%', mb: 2 }}>
+                      <TextField
+                        label="Filtrar"
+                        variant="outlined"
+                        value={filter}
+                        onChange={filtrarTabla}
+                        sx={{ width: '300px', marginRight: '20px' }}
+                      />
+                      <Button variant="contained" color="primary" onClick={() => abrirModal(false)}>Crear</Button>
+                      <Button variant="contained" color="secondary" onClick={() => abrirModal(true, rutinaSeleccionada)} disabled={!rutinaSeleccionada} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
+                      <Button variant="contained" color="error" onClick={() => deshabilitarRutina(rutinaSeleccionada._id)} disabled={!rutinaSeleccionada} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>
+                    </Box>
+                    {loading ? (
+                      <CircularProgress />
+                    ) : (
+                      rutinasFiltradas.length > 0 ? (
+                        <TableContainer component={Paper}>
+                          <Table>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Nombre</TableCell>
+                                <TableCell>Categoría</TableCell>
+                                <TableCell>Ejercicios</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {rutinasFiltradas.map((rutina) => (
+                                <TableRow
+                                  key={rutina._id}
+                                  onClick={() => setSelectedRutina(rutinaSeleccionada?._id === rutina._id ? null : rutina)}
+                                  selected={rutinaSeleccionada?._id === rutina._id}
+                                >
+                                  <TableCell>{rutina.nombre}</TableCell>
+                                  <TableCell>{rutina.categoria}</TableCell>
+                                  <TableCell>
+                                    <div>
+                                      {rutina.ejercicios.map(ejercicio => (
+                                        <li key={ejercicio._id}>{ejercicio.nombre}</li>
+                                        ))}
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      ) : (
+                        <Typography variant="h6">No se encontraron rutinas</Typography>
+                      )
+                    )}
+                  </Tab>
+                  <Tab eventKey="asignar" title="Asignar">
+                    <Typography component="h1" variant="h5">Asignar Rutinas</Typography>
+                    {/* Aquí puedes agregar el contenido para la pestaña "Asignar" */}
+                  </Tab>
+                </Tabs>
               </Box>
             </Grid>
           </Grid>
