@@ -430,8 +430,8 @@ return (
                     <TableCell>{dayjs(item.fecha).format('DD/MM/YYYY')}</TableCell>
                     <TableCell>{item.hora_desde ? dayjs(item.hora_desde).format('HH:mm') : ''}</TableCell>
                     <TableCell>{item.hora_hasta ? dayjs(item.hora_hasta).format('HH:mm') : ''}</TableCell>
-                    <TableCell>{item.id_usuario}</TableCell>
-                   
+                    {/* <TableCell>{item.usuario ? `${item.usuario.nombre}` : 'Sin asignar'}</TableCell> */}
+                    <TableCell>{item.usuario ? item.usuario.nombre : 'Sin asignar'}</TableCell>
                   </TableRow>
                 ))}
                   </TableBody>

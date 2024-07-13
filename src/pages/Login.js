@@ -148,6 +148,7 @@ const Login = () => {
                 autoComplete="email"
                 value={formulario.email}
                 onChange={eventoCambio}
+
               />
               <TextField
                 margin="normal"
@@ -173,7 +174,11 @@ const Login = () => {
               {error && <Typography color="error">{error}</Typography>}
               {mensaje && <Typography color="success">{mensaje}</Typography>}
               <Grid container>
-                <Grid item xs>
+               
+              </Grid>
+
+            </Box>
+            <Grid item xs>
                   <Link
                     component="button"
                     variant="body2"
@@ -183,8 +188,6 @@ const Login = () => {
                     Recuperar Contraseña
                   </Link>
                 </Grid>
-              </Grid>
-            </Box>
           </Box>
         </Grid>
       </Grid>

@@ -63,6 +63,7 @@ const AgendaUsuarios = () => {
   //apenas se carga la pagina, consulta disponibilidad.
   const [selectedTurnos, setSelectedTurnos] = useState({});
   const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
+  const [usuarioId, setUsuarioId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState([]);
   const [mensaje, setMensaje] = useState(null);
