@@ -80,7 +80,7 @@ const AgendaUsuarios = () => {
   useEffect(() => {
     const fetchDisponibilidad = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/agenda'); 
+        const response = await axios.get('http://3.129.205.13:3000/api/agenda'); 
        setDisponibilidad(response.data);
       } catch (error) {
         console.error('Error al obtener la disponibilidad de agenda:', error);
@@ -105,12 +105,12 @@ const AgendaUsuarios = () => {
         return;
       }
 
-      const respuestaUsuario = await axios.post('http://localhost:3000/api/usuarios/', formulario);
+      const respuestaUsuario = await axios.post('http://3.129.205.13:3000/api/usuarios/', formulario);
       const dataAgenda = {
         usuarioId: respuestaUsuario.data.value._id, 
         turnoId : selectedTurnos,
       };
-      const responseAgenda = await axios.put('http://localhost:3000/api/agenda/',dataAgenda, {
+      const responseAgenda = await axios.put('http://3.129.205.13:3000/api/agenda/',dataAgenda, {
         headers: {
             'Content-Type': 'application/json'
         }

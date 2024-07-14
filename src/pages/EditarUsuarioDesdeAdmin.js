@@ -70,7 +70,7 @@ const [usuario, setUsuario] = useState(null);
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario')); 
 
-      const respuesta = await axios.put(`http://localhost:3000/api/usuarios/editarUsuario/${id}`, formulario, {
+      const respuesta = await axios.put(`http://3.129.205.13:3000/api/usuarios/editarUsuario/${id}`, formulario, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'usuario': usuario.id

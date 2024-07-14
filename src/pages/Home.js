@@ -37,7 +37,7 @@ const Home = () => {
 					<img src="images/lucia.jpg" className="img-fluid" alt=""/>
 				</figure>
 				<article className="col-8 col-md-3 sobreMI">
-					<span><img src="img/candy.png" alt=""/></span>
+					{/* <span><img src="img/candy.png" alt=""/></span> */}
 					<p>un espacio de transformación! Aquí nos dedicaremos a potenciar tu salud y ayudarte alcanzar tus metas fitness. Con un programa personalizado y un enfoque integral, te guiaremos en cada paso hacia una versión más fuerte, más saludable y más feliz de ti mismo. Unete y comienza tu viaje hacia una vida activa y plena.</p>
 				</article>
 				
@@ -59,7 +59,7 @@ const Home = () => {
 					<img src="images/lucia.jpg" className="img-fluid" alt=""/>
 				</figure>
 				<article className="col-8 col-md-3 sobreMI">
-					<span><img src="img/candy.png" alt=""/></span>
+					{/* <span><img src="img/candy.png" alt=""/></span> */}
 					<p>Mi nombre es Lucía, entrenadora personal y técnica en musculación avalada por la IFBB. Mi pasión por la salud y el fitness me impulsa a seguir expandiendo mis conocimientos en el Instituto Superior de Educación Física, garantizando así un contenido de máxima calidad para ti. Mi misión es acompañarte en el camino hacia tus objetivos fitness, brindándote el apoyo y la guía necesarios para alcanzar el éxito. ¡Juntos lograremos resultados que transformarán tu vida!</p>
 				</article>
 			</section>
