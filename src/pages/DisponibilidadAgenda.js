@@ -27,7 +27,7 @@ import axios from '../configuracion/axiosconfig';
 import { DatePicker } from '@mui/x-date-pickers';
 import './DisponibilidadAgenda.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { set } from 'date-fns';
+import { isToday, set } from 'date-fns';
 
 const tema = createTheme({
   palette: {
@@ -99,11 +99,11 @@ const DisponibilidadAgenda = () => {
         setDisponibilidad(response.data);
   
         // Filtrar turnos ocupados
-        const ocupados = response.data.filter(item => item.id_usuario !== null);
+        const ocupados = response.data.filter(item => item.usuario !== null);
         setTurnosOcupados(ocupados);
   
         // Filtrar turnos libres
-        const libres = response.data.filter(item => item.id_usuario === null);
+        const libres = response.data.filter(item => item.usuario === null);
         setTurnosLibres(libres);
   
       } catch (error) {
@@ -163,7 +163,7 @@ const DisponibilidadAgenda = () => {
     try {
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario')); 
-      console.log("usuarioid   :" + usuario.id + "token" + token);
+      console.log("el id del turno?"+  idTurno);
       const response = await axios.delete(`http://3.129.205.13:3000/api/agenda/${idTurno}`, {
         headers: {
           'Authorization': `Bearer ${token}`,

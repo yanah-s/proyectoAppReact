@@ -5,6 +5,8 @@ import { Alert, AlertTitle, Button, CssBaseline, TextField, Grid, Paper, Box, Sn
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Modal } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import YouTube from 'react-youtube';
+import ReactPlayer from 'react-player';
+
 
 const tema = createTheme({
   palette: {
@@ -256,17 +258,18 @@ const Ejercicios = () => {
                               <TableCell>{ejercicio.otrosMusculos.join(', ')}</TableCell>
                               <TableCell>{ejercicio.descripcion}</TableCell>
                               <TableCell>
-                                {ejercicio.video ? (
-                                  <img
-                                    src={`https://img.youtube.com/vi/${ejercicio.video.split('v=')[1]}/0.jpg`}
-                                    alt="Miniatura del Video"
-                                    style={{ cursor: 'pointer', width: '120px', height: '90px' }}
-                                    onClick={() => abrirVideoModal(ejercicio.video)}
-                                  />
-                                ) : (
-                                  <span>No hay video disponible</span>
-                                )}
-                              </TableCell>
+                              {ejercicio.video ? (
+                                <ReactPlayer
+                                  url={`https://www.youtube.com/watch?v=${ejercicio.video.split('v=')[1]}`}
+                                  controls
+                                  width="120px"
+                                  height="90px"
+                                  onClick={() => abrirVideoModal(ejercicio.video)}
+                                />
+                              ) : (
+                                <span>No hay video disponible</span>
+                              )}
+                            </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
