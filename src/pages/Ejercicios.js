@@ -221,7 +221,7 @@ const Ejercicios = () => {
                     variant="outlined"
                     value={filter}
                     onChange={filtrarTabla}
-                    sx={{ width: '300px', marginRight: '20px' }}
+                    sx={{ width: '300px', marginRight: '20px', '& .MuiInputBase-root': { backgroundColor: 'white',}, }}
                   />
                   <Button variant="contained" color="primary" onClick={() => abrirModal(false)}>Crear</Button>
                   <Button variant="contained" color="secondary" onClick={() => abrirModal(true, ejercicioSeleccionado)} disabled={!ejercicioSeleccionado} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
