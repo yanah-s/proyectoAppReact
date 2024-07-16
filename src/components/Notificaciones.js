@@ -14,7 +14,7 @@ const Notificaciones = () => {
         setAnchorEl(event.currentTarget);
     
         try {
-            await axios.post('http://localhost:3000/api/notificaciones/markAsRead', {}, {
+            await axios.post('http://3.129.205.13:3000/api/notificaciones/markAsRead', {}, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -31,7 +31,7 @@ const Notificaciones = () => {
             try {
                 const token = localStorage.getItem('token'); 
                 const usuario = JSON.parse(localStorage.getItem('usuario')); 
-                const response = await axios.get('http://localhost:3000/api/notificaciones', {
+                const response = await axios.get('http://3.129.205.13:3000/api/notificaciones', {
                     headers: {
                         'Authorization': `Bearer ${token}`,   
                         'User-ID': usuario.id

@@ -27,7 +27,7 @@ import axios from '../configuracion/axiosconfig';
 import { DatePicker } from '@mui/x-date-pickers';
 import './DisponibilidadAgenda.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { set } from 'date-fns';
+import { isToday, set } from 'date-fns';
 
 const tema = createTheme({
   palette: {
@@ -87,7 +87,7 @@ const DisponibilidadAgenda = () => {
         const token = localStorage.getItem('token'); 
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
-        const response = await axios.get('http://localhost:3000/api/agenda/turnos', {
+        const response = await axios.get('http://3.129.205.13:3000/api/agenda/turnos', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
@@ -99,11 +99,11 @@ const DisponibilidadAgenda = () => {
         setDisponibilidad(response.data);
   
         // Filtrar turnos ocupados
-        const ocupados = response.data.filter(item => item.id_usuario !== null);
+        const ocupados = response.data.filter(item => item.usuario !== null);
         setTurnosOcupados(ocupados);
   
         // Filtrar turnos libres
-        const libres = response.data.filter(item => item.id_usuario === null);
+        const libres = response.data.filter(item => item.usuario === null);
         setTurnosLibres(libres);
   
       } catch (error) {
@@ -163,8 +163,8 @@ const DisponibilidadAgenda = () => {
     try {
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario')); 
-      console.log("usuarioid   :" + usuario.id + "token" + token);
-      const response = await axios.delete(`http://localhost:3000/api/agenda/${idTurno}`, {
+      console.log("el id del turno?"+  idTurno);
+      const response = await axios.delete(`http://3.129.205.13:3000/api/agenda/${idTurno}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'User-ID': usuario.id
@@ -240,7 +240,7 @@ const DisponibilidadAgenda = () => {
       const usuario = JSON.parse(localStorage.getItem('usuario'));
       console.log("usuarioid   :" + usuario.id + "token" + token);
 
-      await axios.post('http://localhost:3000/api/agenda/', formulario, {
+      await axios.post('http://3.129.205.13:3000/api/agenda/', formulario, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'User-ID': usuario.id
@@ -430,8 +430,8 @@ return (
                     <TableCell>{dayjs(item.fecha).format('DD/MM/YYYY')}</TableCell>
                     <TableCell>{item.hora_desde ? dayjs(item.hora_desde).format('HH:mm') : ''}</TableCell>
                     <TableCell>{item.hora_hasta ? dayjs(item.hora_hasta).format('HH:mm') : ''}</TableCell>
-                    <TableCell>{item.id_usuario}</TableCell>
-                   
+                    {/* <TableCell>{item.usuario ? `${item.usuario.nombre}` : 'Sin asignar'}</TableCell> */}
+                    <TableCell>{item.usuario ? item.usuario.nombre : 'Sin asignar'}</TableCell>
                   </TableRow>
                 ))}
                   </TableBody>

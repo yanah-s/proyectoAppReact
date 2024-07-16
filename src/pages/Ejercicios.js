@@ -5,6 +5,8 @@ import { Alert, AlertTitle, Button, CssBaseline, TextField, Grid, Paper, Box, Sn
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Modal } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import YouTube from 'react-youtube';
+import ReactPlayer from 'react-player';
+
 
 const tema = createTheme({
   palette: {
@@ -61,7 +63,7 @@ const Ejercicios = () => {
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
 
-        const response = await axios.get('http://localhost:3000/api/ejercicio', {
+        const response = await axios.get('http://3.129.205.13:3000/api/ejercicio', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
@@ -147,7 +149,7 @@ const Ejercicios = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
         
-          await axios.put(`http://localhost:3000/api/ejercicio/${modalData._id}`, formattedData, {
+          await axios.put(`http://3.129.205.13:3000/api/ejercicio/${modalData._id}`, formattedData, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'User-ID': usuario.id
@@ -158,7 +160,7 @@ const Ejercicios = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
         
-          await axios.post('http://localhost:3000/api/ejercicio', formattedData, {
+          await axios.post('http://3.129.205.13:3000/api/ejercicio', formattedData, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'User-ID': usuario.id
@@ -195,7 +197,7 @@ const Ejercicios = () => {
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
         
-        await axios.put(`http://localhost:3000/api/ejercicio/${id}/deshabilitar`, null, {
+        await axios.put(`http://3.129.205.13:3000/api/ejercicio/${id}/deshabilitar`, null, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
@@ -256,17 +258,18 @@ const Ejercicios = () => {
                               <TableCell>{ejercicio.otrosMusculos.join(', ')}</TableCell>
                               <TableCell>{ejercicio.descripcion}</TableCell>
                               <TableCell>
-                                {ejercicio.video ? (
-                                  <img
-                                    src={`https://img.youtube.com/vi/${ejercicio.video.split('v=')[1]}/0.jpg`}
-                                    alt="Miniatura del Video"
-                                    style={{ cursor: 'pointer', width: '120px', height: '90px' }}
-                                    onClick={() => abrirVideoModal(ejercicio.video)}
-                                  />
-                                ) : (
-                                  <span>No hay video disponible</span>
-                                )}
-                              </TableCell>
+                              {ejercicio.video ? (
+                                <ReactPlayer
+                                  url={`https://www.youtube.com/watch?v=${ejercicio.video.split('v=')[1]}`}
+                                  controls
+                                  width="120px"
+                                  height="90px"
+                                  onClick={() => abrirVideoModal(ejercicio.video)}
+                                />
+                              ) : (
+                                <span>No hay video disponible</span>
+                              )}
+                            </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>

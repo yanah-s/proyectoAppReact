@@ -152,7 +152,7 @@ const Rutinas = () => {
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
 
-        const response = await axios.get('http://localhost:3000/api/rutinas', {
+        const response = await axios.get('http://3.129.205.13:3000/api/rutinas', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
@@ -377,7 +377,7 @@ const Rutinas = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
       
-          const response = await axios.get('http://localhost:3000/api/ejercicio/categoria', {
+          const response = await axios.get('http://3.129.205.13:3000/api/ejercicio/categoria', {
             params: { categoria: rutina.categoria },
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -445,7 +445,7 @@ const Rutinas = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
         
-          await axios.put(`http://localhost:3000/api/rutinas/${modalData._id}`, formattedData, {
+          await axios.put(`http://3.129.205.13:3000/api/rutinas/${modalData._id}`, formattedData, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'User-ID': usuario.id
@@ -456,7 +456,7 @@ const Rutinas = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
         
-          await axios.post('http://localhost:3000/api/rutinas', formattedData, {
+          await axios.post('http://3.129.205.13:3000/api/rutinas', formattedData, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'User-ID': usuario.id
@@ -491,7 +491,7 @@ const Rutinas = () => {
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
         
-        await axios.put(`http://localhost:3000/api/rutinas/${id}/deshabilitar`, null, {
+        await axios.put(`http://3.129.205.13:3000/api/rutinas/${id}/deshabilitar`, null, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id

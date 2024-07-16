@@ -71,7 +71,7 @@ const Login = () => {
     setMensaje(null);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/autentificacion', formulario);
+      const response = await axios.post('http:///3.129.205.13:3000/api/autentificacion', formulario);
       console.log('Respuesta:', response.data.usuario.admin);
       const isAdmin = response.data.usuario.admin; 
       console.log('isAdmin:', isAdmin);
@@ -148,6 +148,7 @@ const Login = () => {
                 autoComplete="email"
                 value={formulario.email}
                 onChange={eventoCambio}
+
               />
               <TextField
                 margin="normal"
@@ -173,7 +174,11 @@ const Login = () => {
               {error && <Typography color="error">{error}</Typography>}
               {mensaje && <Typography color="success">{mensaje}</Typography>}
               <Grid container>
-                <Grid item xs>
+               
+              </Grid>
+
+            </Box>
+            <Grid item xs>
                   <Link
                     component="button"
                     variant="body2"
@@ -183,8 +188,6 @@ const Login = () => {
                     Recuperar Contraseña
                   </Link>
                 </Grid>
-              </Grid>
-            </Box>
           </Box>
         </Grid>
       </Grid>
