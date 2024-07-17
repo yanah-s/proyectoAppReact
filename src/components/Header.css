@@ -24,6 +24,7 @@
     text-align: left;
 }
 
+
 .offcanvas-body {
     display: flex;
     flex-direction: column;
@@ -40,7 +41,7 @@
 }
 
 .offcanvas-translucent-dark {
-    background-color: rgba(0, 0, 0, 0.5) !important; /* negro con 50% de transparencia */
+    background-color: rgba(0, 0, 0, 0.5) !important; 
 }
 
 #boton_hamburguesa {

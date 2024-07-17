@@ -195,7 +195,7 @@ return (
   <ThemeProvider theme={tema}>
     <CssBaseline />
   
-    <Grid container component="main"  sx={{ height: '100vh',
+    <Grid container component="main" sx={{ height: '100vh',
        justifyContent: 'center', alignItems: 'center' }}>
 
 
@@ -209,7 +209,7 @@ return (
             alignItems: 'center',
           }}
         >
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" className='h2agenda'>
             EMPIEZA HOY!!
           </Typography>
 
@@ -253,20 +253,9 @@ return (
         </Box>
       </Grid>
 
-
-
-      <Grid item xs={12} md={8} component={Paper} elevation={6} square>
-        <Box
-          sx={{
-            my: 8,
-            mx: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-      <Grid container component="main" sx={{ height: '100vh' }}>
-        <Grid item xs={12} component={Paper} elevation={6} square>
+      <Grid container component="main" sx={{ height: '100vh',
+       justifyContent: 'center', alignItems: 'center' }}>
+        <Grid item xs={12} md={8} component={Paper} elevation={6} square>
 
                 <form onSubmit={handleSubmitUsuario} noValidate>
                   <TextField
@@ -359,12 +348,8 @@ return (
                   )}
                   {mensaje && <Typography color="success.main">{mensaje}</Typography>}
                 </form>
-              {/* </Paper> */}
-            {/* </Grid>
-          </Grid> */}
         </Grid>
       </Grid>
-      </Box>
       </Grid>
       <Modal
         open={openModal}
@@ -448,8 +433,6 @@ return (
           </Box>
         </Fade>
       </Modal>
-    </Grid>
-  
   </ThemeProvider>
 );
 }

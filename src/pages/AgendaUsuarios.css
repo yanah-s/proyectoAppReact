@@ -1,12 +1,8 @@
 .custom-disabled {
   background-color: #ffcccc; 
 }
-/* }//NO FUNCIONA */
-
-.mainAgenda {
-  background-color: black;
-  
+h2agenda{
+	font-family: 'Sacramento', cursive;
+	font-size: 50px;
+	color: white;
 }
-/* .custom {
-  background-color: aqua !important;
-} */

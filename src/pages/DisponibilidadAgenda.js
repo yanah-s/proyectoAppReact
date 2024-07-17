@@ -163,7 +163,6 @@ const DisponibilidadAgenda = () => {
     try {
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario')); 
-      console.log("el id del turno?"+  idTurno);
       const response = await axios.delete(`http://3.129.205.13:3000/api/agenda/${idTurno}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -385,7 +384,7 @@ return (
               </TableContainer>
             </div>
 
-            <div id="table2" className="table-content" style={{   maxHeight: '400px', overflowY: 'auto' ,display: activeTab === 'table2' ? 'block' : 'none' }}>
+            <div id="table2" className="table-content" style={{ display: activeTab === 'table2' ? 'block' : 'none' }}>
 
               <TableContainer className='tablaDisponibilidad'>
                 <Table>
