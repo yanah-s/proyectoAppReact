@@ -23,12 +23,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import { LocalizationProvider, DateCalendar, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import axios from '../configuracion/axiosconfig';
+import api from '../configuracion/axiosconfig';
 import { DatePicker } from '@mui/x-date-pickers';
 import './DisponibilidadAgenda.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { isToday, set } from 'date-fns';
-
 const tema = createTheme({
   palette: {
     primary: {
@@ -87,7 +86,7 @@ const DisponibilidadAgenda = () => {
         const token = localStorage.getItem('token'); 
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
-        const response = await axios.get('http://3.129.205.13:3000/api/agenda/turnos', {
+        const response = await api.get('api/agenda/turnos', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
@@ -163,7 +162,7 @@ const DisponibilidadAgenda = () => {
     try {
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario')); 
-      const response = await axios.delete(`http://3.129.205.13:3000/api/agenda/${idTurno}`, {
+      const response = await api.delete(`api/agenda/${idTurno}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'User-ID': usuario.id
@@ -239,7 +238,7 @@ const DisponibilidadAgenda = () => {
       const usuario = JSON.parse(localStorage.getItem('usuario'));
       console.log("usuarioid   :" + usuario.id + "token" + token);
 
-      await axios.post('http://3.129.205.13:3000/api/agenda/', formulario, {
+      await api.post('api/agenda/', formulario, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'User-ID': usuario.id

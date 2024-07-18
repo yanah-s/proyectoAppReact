@@ -8,7 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu'; // Icono de Material-UI para el
 import EditIcon from '@mui/icons-material/Edit'; // Icono de Material-UI para editar
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import axios from '../configuracion/axiosconfig';
+import api from '../configuracion/axiosconfig';
 
 const ConfirmDialog = ({ open, handleClose, handleConfirm, title, content }) => {
     return (
@@ -163,7 +163,7 @@ const ListarUsuarios = () => {
         try {
             const token = localStorage.getItem('token'); 
             const usuario = JSON.parse(localStorage.getItem('usuario')); 
-            const respuesta = await axios.delete(`http://3.129.205.13:3000/api/usuarios/${id}`, {
+            const respuesta = await api.delete(`/api/usuarios/${id}`, {
                 headers: {
                   'Authorization': `Bearer ${token}`,
                   'User-ID': usuario.id
@@ -181,7 +181,7 @@ const ListarUsuarios = () => {
         try {
             const token = localStorage.getItem('token'); 
             const usuario = JSON.parse(localStorage.getItem('usuario')); 
-            const respuesta = await axios.put(`http://3.129.205.13:3000/api/usuarios/asignar/${id}`, {
+            const respuesta = await api.put(`/api/usuarios/asignar/${id}`, {
                 headers: {
                   'Authorization': `Bearer ${token}`,
                   'User-ID': usuario.id
@@ -200,7 +200,7 @@ const ListarUsuarios = () => {
         try {
             const token = localStorage.getItem('token'); 
             const usuario = JSON.parse(localStorage.getItem('usuario')); 
-            const respuesta = await axios.get('http://3.129.205.13:3000/api/usuarios', {
+            const respuesta = await api.get('/api/usuarios', {
                 headers: {
                   'Authorization': `Bearer ${token}`,
                   'User-ID': usuario.id

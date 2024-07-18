@@ -1,5 +1,5 @@
 import React, { useState, useEffect  } from 'react';
-import axios from 'axios';
+import api from '../configuracion/axiosconfig';
 import { Alert, AlertTitle, Button, CssBaseline, CircularProgress, TextField, Grid, Paper, Box, Snackbar, Typography,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Modal, MenuItem, Select, FormControl, InputLabel, 
     Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton} from '@mui/material';
@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import { format } from 'date-fns';
 import { Tabs, Tab } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Api, AppRegistration } from '@mui/icons-material';
 
 const tema = createTheme({
   palette: {
@@ -80,7 +81,7 @@ const Rutinas = () => {
       //listarUsuarios();
       if (categoria) {
         console.log("Fetching ejercicios for categoría:", categoria);
-        axios.get(`http://localhost:3000/api/ejercicio/categoria`, { params: { categoria } })
+        api.get(`/api/ejercicio/categoria`, { params: { categoria } })
           .then(response => {
             console.log("Ejercicios fetched:", response.data);
             setEjerciciosFiltrados(response.data);
@@ -105,7 +106,7 @@ const Rutinas = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
           
-          const response = await axios.get('http://localhost:3000/api/ejercicio/categoria', {
+          const response = await api.get('/api/ejercicio/categoria', {
             params: { 
               categoria: newCategoria 
             },
@@ -130,8 +131,9 @@ const Rutinas = () => {
       console.log(usuarioId);
       if (usuarioId) {
         try { 
-          
-          const response = await axios.get('http://localhost:3000/api/rutina_ej_alumno/usuario', {
+          const token = localStorage.getItem('token'); 
+          const usuario = JSON.parse(localStorage.getItem('usuario')); 
+          const response = await api.get('/api/rutina_ej_alumno/usuario',  {
             params: { usuario: usuarioId }
           });
           console.log(response);
@@ -152,7 +154,7 @@ const Rutinas = () => {
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
 
-        const response = await axios.get('http://3.129.205.13:3000/api/rutinas', {
+        const response = await api.get('/api/rutinas', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
@@ -171,7 +173,15 @@ const Rutinas = () => {
 
     const listarUsuarios = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/usuarios');
+        const token = localStorage.getItem('token'); 
+        const usuario = JSON.parse(localStorage.getItem('usuario')); 
+
+        const response = await api.get('/api/usuarios', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'User-ID': usuario.id
+          }
+        });
         setUsuarios(response.data);
       } catch (error) {
         console.error('Error al obtener usuarios:', error);
@@ -239,7 +249,7 @@ const Rutinas = () => {
       try {
         for (const date of selectedDates) {
           for (const ejercicio of exercisesData) {
-            await axios.post('http://localhost:3000/api/rutina_ej_alumno', {
+            await api.post('/api/rutina_ej_alumno', {
               usuario: usuarioSeleccionado,
               fecha: new Date(date).toISOString(), // Asegúrate de que la fecha esté en formato ISO
               rutina: rutinaSeleccionada,
@@ -259,7 +269,7 @@ const Rutinas = () => {
   
     const handleEdit = async () => {
       try {
-        await axios.put(`http://localhost:3000/api/rutina_ej_alumno/${selectedExerciseData._id}`, selectedExerciseData);
+        await api.put(`api/rutina_ej_alumno/${selectedExerciseData._id}`, selectedExerciseData);
         const updatedData = [...userExercisesData];
         updatedData[selectedRow] = selectedExerciseData;
         setUserExercisesData(updatedData);
@@ -273,7 +283,7 @@ const Rutinas = () => {
       if (selectedRow !== null) {
         try {
           const selectedData = userExercisesData[selectedRow];
-          await axios.delete(`http://localhost:3000/api/rutina_ej_alumno/${selectedData._id}`);
+          await api.delete(`/api/rutina_ej_alumno/${selectedData._id}`);
           const updatedData = userExercisesData.filter((_, index) => index !== selectedRow);
           setUserExercisesData(updatedData);
           setSelectedRow(null);
@@ -348,7 +358,7 @@ const Rutinas = () => {
       if (selectedRow !== null) {
         const updatedExercise = userExercisesData[selectedRow];
         try {
-          await axios.put(`http://localhost:3000/api/rutina_ej_alumno/${updatedExercise._id}`, updatedExercise);
+          await api.put(`/api/rutina_ej_alumno/${updatedExercise._id}`, updatedExercise);
           console.log('Updated successfully');
         } catch (error) {
           console.error('Error updating exercise:', error);
@@ -377,7 +387,7 @@ const Rutinas = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
       
-          const response = await axios.get('http://3.129.205.13:3000/api/ejercicio/categoria', {
+          const response = await api.get('/api/ejercicio/categoria', {
             params: { categoria: rutina.categoria },
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -445,7 +455,7 @@ const Rutinas = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
         
-          await axios.put(`http://3.129.205.13:3000/api/rutinas/${modalData._id}`, formattedData, {
+          await api.put(`/api/rutinas/${modalData._id}`, formattedData, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'User-ID': usuario.id
@@ -456,7 +466,7 @@ const Rutinas = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
         
-          await axios.post('http://3.129.205.13:3000/api/rutinas', formattedData, {
+          await api.post('/api/rutinas', formattedData, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'User-ID': usuario.id
@@ -491,7 +501,7 @@ const Rutinas = () => {
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
         
-        await axios.put(`http://3.129.205.13:3000/api/rutinas/${id}/deshabilitar`, null, {
+        await api.put(`/api/rutinas/${id}/deshabilitar`, null, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id

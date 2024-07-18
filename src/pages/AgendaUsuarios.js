@@ -21,7 +21,7 @@ import {
   TableHead,
   TableRow
 } from '@mui/material';
-import axios from '../configuracion/axiosconfig';
+import api from '../configuracion/axiosconfig';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import { LocalizationProvider, DateCalendar } from '@mui/x-date-pickers';
@@ -80,7 +80,7 @@ const AgendaUsuarios = () => {
   useEffect(() => {
     const fetchDisponibilidad = async () => {
       try {
-        const response = await axios.get('http://3.129.205.13:3000/api/agenda'); 
+        const response = await api.get('/api/agenda'); 
        setDisponibilidad(response.data);
       } catch (error) {
         console.error('Error al obtener la disponibilidad de agenda:', error);
@@ -105,12 +105,12 @@ const AgendaUsuarios = () => {
         return;
       }
 
-      const respuestaUsuario = await axios.post('http://3.129.205.13:3000/api/usuarios/', formulario);
+      const respuestaUsuario = await api.post('/api/usuarios/', formulario);
       const dataAgenda = {
         usuarioId: respuestaUsuario.data.value._id, 
         turnoId : selectedTurnos,
       };
-      const responseAgenda = await axios.put('http://3.129.205.13:3000/api/agenda/',dataAgenda, {
+      const responseAgenda = await api.put('/api/agenda/',dataAgenda, {
         headers: {
             'Content-Type': 'application/json'
         }
@@ -209,13 +209,14 @@ return (
             alignItems: 'center',
           }}
         >
-          <Typography component="h1" variant="h5" className='h2agenda'>
-            EMPIEZA HOY!!
-          </Typography>
-
+          {/* <Typography component="h1" variant="h5" className='h2agenda'> */}
+           <h2>EMPIEZA HOY!!</h2> 
+          {/* </Typography> */}
+        {/*   <br></br>
           <Typography component="h3" variant="h5"  sx={{ fontSize: '1rem' }}>
             Agenda una entrevista sin costo, para que podamos definir juntos un plan de entrenamiento.
           </Typography>
+          <br></br> */}
           <Box component="form" noValidate sx={{ mt: 1 }}>
             
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -297,6 +298,17 @@ return (
                   />
                   <TextField
                     margin="normal"
+                    fullWidth
+                    name="patologias"
+                    label="Patologías/Aclaraciones referentes a su salud"
+                    type="text"
+                    id="patologias"
+                    // autoComplete="patologias"
+                    value={formulario.patologias}
+                    onChange={handleChange}
+                  />
+                  <TextField
+                    margin="normal"
                     required
                     fullWidth
                     name="password"
@@ -312,22 +324,11 @@ return (
                     required
                     fullWidth
                     name="password2"
-                    label="Repetir Password"
+                    label="Password"
                     type="password"
                     id="password2"
                     autoComplete="new-password"
                     value={formulario.password2}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    margin="normal"
-                    fullWidth
-                    name="patologias"
-                    label="Patologías o aclaraciones referentes a su salud"
-                    type="text"
-                    id="patologias"
-                    // autoComplete="patologias"
-                    value={formulario.patologias}
                     onChange={handleChange}
                   />
                   <Button

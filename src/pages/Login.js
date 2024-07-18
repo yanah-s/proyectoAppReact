@@ -13,7 +13,7 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import imagenLogin from '../imagenes/imagenLogin.png';
 import RecuperarPassword from './RecuperarPassword';
-import axios from '../configuracion/axiosconfig';
+import api from '../configuracion/axiosconfig';
 import { useNavigate } from 'react-router-dom';
 
 const tema = createTheme({
@@ -71,7 +71,7 @@ const Login = () => {
     setMensaje(null);
 
     try {
-      const response = await axios.post('http:///3.129.205.13:3000/api/autentificacion', formulario);
+      const response = await api.post('api/autentificacion', formulario);
       console.log('Respuesta:', response.data.usuario.admin);
       const isAdmin = response.data.usuario.admin; 
       console.log('isAdmin:', isAdmin);
@@ -185,7 +185,7 @@ const Login = () => {
                     onClick={handleOpen}
                     color="primary"
                   >
-                    Recuperar Contraseña
+                    Olvidó su contraseña?
                   </Link>
                 </Grid>
           </Box>

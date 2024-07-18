@@ -1,6 +1,6 @@
 import React, { useEffect ,useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from '../configuracion/axiosconfig';
+import api from '../configuracion/axiosconfig';
 
 
 
@@ -18,7 +18,7 @@ const Logout = () => {
 
         const body = { usuario };
 
-        const response = await axios.post('http://3.129.205.13:3000/api/logout', body, config);
+        const response = await api.post('/api/logout', body, config);
 
         console.log('Respuesta:', response);
         localStorage.removeItem('token');

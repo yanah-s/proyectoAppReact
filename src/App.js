@@ -3,7 +3,6 @@ import AppRoutes from './routes';
 import { Button, AppBar, Toolbar, Typography, Container } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './App.css';
-import axios from './configuracion/axiosconfig'; 
 
 const tema = createTheme({
     palette: {

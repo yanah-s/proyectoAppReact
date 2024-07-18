@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from '../configuracion/axiosconfig';
+import api from '../configuracion/axiosconfig';
 import {
   Button,
   TextField,
@@ -28,7 +28,7 @@ const RecuperarPassword = ({ handleClose }) => {
     setMensaje(null);
     console.log('Llamada a la API');
     try {
-      const respuesta = await axios.post('http:///3.129.205.13:3000/api/usuarios/recuperar-passw', formulario);
+      const respuesta = await api.post('/api/usuarios/recuperar-passw', formulario);
       console.log('Respuesta:', respuesta.data);
       setMensaje('Solicitud de recuperación enviada.');
     } catch (err) {

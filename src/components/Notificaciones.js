@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../configuracion/axiosconfig';
 import { Badge, Stack, Toolbar, Popover, Box, Typography, Paper } from '@mui/material';
 import MailIcon from '@mui/icons-material/Mail';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +14,7 @@ const Notificaciones = () => {
         setAnchorEl(event.currentTarget);
     
         try {
-            await axios.post('http://3.129.205.13:3000/api/notificaciones/markAsRead', {}, {
+            await api.post('/api/notificaciones/markAsRead', {}, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -31,7 +31,7 @@ const Notificaciones = () => {
             try {
                 const token = localStorage.getItem('token'); 
                 const usuario = JSON.parse(localStorage.getItem('usuario')); 
-                const response = await axios.get('http://3.129.205.13:3000/api/notificaciones', {
+                const response = await api.get('/api/notificaciones', {
                     headers: {
                         'Authorization': `Bearer ${token}`,   
                         'User-ID': usuario.id

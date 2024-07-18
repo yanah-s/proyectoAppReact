@@ -13,24 +13,38 @@ main {
 	background-attachment: fixed;
 }
 
-header nav ul li a {
+/* header nav ul li a {
 	background-color: black;
 	color: white;
 	letter-spacing: 1px;
 	text-decoration: none;
 	transition: 1s;
-}
+} */
 
+header nav ul li a {
+    background-color: #97228e;
+    color: white;
+    letter-spacing: 5px;
+    text-decoration: none;
+    transition: 5s;
+}
 header nav ul li a:hover {
 	background-color: #1d1d1d;
 	color: white;
 	text-decoration: none;
 }
-
+.resaltadoLetra{
+	color:#b82ec4e3;
+	font-style: bold;
+}
+.textoBienvenida {
+	font-size: lar;
+}
 section:nth-child(1) {
-	margin-top: 0;
+	margin-top: 20px;
 	padding: 0;
 	background-color: black;
+	/* background-image: url("../../public/images/backTextura.jpg"); */
 }
 
 .section-compact {
@@ -51,7 +65,7 @@ section:nth-child(1) {
 
 .imgBienvenido {
 	max-width: 90%;
-	width: 100%;
+	width: 80%;
 	height: auto;
 	/* filter: blur(1px); */
 }
@@ -92,11 +106,11 @@ section:nth-child(1) {
 	}
 }
 
-h2 {
+/* h2 {
 	background-color: #00000090;
 	font-size: 50px;
 	color: white;
-}
+} */
 
 h1 span img, h2 span img {
 	width: 60px;

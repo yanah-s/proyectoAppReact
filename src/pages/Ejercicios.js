@@ -1,6 +1,6 @@
 import { CircularProgress } from '@mui/material';
 import React, { useState, useEffect  } from 'react';
-import axios from 'axios';
+import api from '../configuracion/axiosconfig';
 import { Alert, AlertTitle, Button, CssBaseline, TextField, Grid, Paper, Box, Snackbar, Typography,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Modal } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -63,7 +63,7 @@ const Ejercicios = () => {
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
 
-        const response = await axios.get('http://3.129.205.13:3000/api/ejercicio', {
+        const response = await api.get('/api/ejercicio', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
@@ -149,7 +149,7 @@ const Ejercicios = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
         
-          await axios.put(`http://3.129.205.13:3000/api/ejercicio/${modalData._id}`, formattedData, {
+          await api.put(`/api/ejercicio/${modalData._id}`, formattedData, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'User-ID': usuario.id
@@ -160,7 +160,7 @@ const Ejercicios = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
         
-          await axios.post('http://3.129.205.13:3000/api/ejercicio', formattedData, {
+          await api.post('/api/ejercicio', formattedData, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'User-ID': usuario.id
@@ -197,7 +197,7 @@ const Ejercicios = () => {
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
         
-        await axios.put(`http://3.129.205.13:3000/api/ejercicio/${id}/deshabilitar`, null, {
+        await api.put(`/api/ejercicio/${id}/deshabilitar`, null, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id

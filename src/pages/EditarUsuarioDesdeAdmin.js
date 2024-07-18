@@ -1,5 +1,5 @@
 import React, { useState ,useEffect } from 'react';
-import axios from '../configuracion/axiosconfig';
+import api from '../configuracion/axiosconfig';
 import { Button, CssBaseline, TextField, Grid, Paper, Box, Typography, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useParams } from 'react-router-dom';
@@ -70,7 +70,7 @@ const [usuario, setUsuario] = useState(null);
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario')); 
 
-      const respuesta = await axios.put(`http://3.129.205.13:3000/api/usuarios/editarUsuario/${id}`, formulario, {
+      const respuesta = await api.put(`/api/usuarios/editarUsuario/${id}`, formulario, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'usuario': usuario.id
