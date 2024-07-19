@@ -163,7 +163,7 @@ const ListarUsuarios = () => {
         try {
             const token = localStorage.getItem('token'); 
             const usuario = JSON.parse(localStorage.getItem('usuario')); 
-            const respuesta = await axios.delete(`http://3.129.205.13:3000/api/usuarios/${id}`, {
+            const respuesta = await axios.delete(`http://localhost:3000/api/usuarios/${id}`, {
                 headers: {
                   'Authorization': `Bearer ${token}`,
                   'User-ID': usuario.id
@@ -181,7 +181,7 @@ const ListarUsuarios = () => {
         try {
             const token = localStorage.getItem('token'); 
             const usuario = JSON.parse(localStorage.getItem('usuario')); 
-            const respuesta = await axios.put(`http://3.129.205.13:3000/api/usuarios/asignar/${id}`, {
+            const respuesta = await axios.put(`http://localhost:3000/api/usuarios/asignar/${id}`, {
                 headers: {
                   'Authorization': `Bearer ${token}`,
                   'User-ID': usuario.id
@@ -200,7 +200,7 @@ const ListarUsuarios = () => {
         try {
             const token = localStorage.getItem('token'); 
             const usuario = JSON.parse(localStorage.getItem('usuario')); 
-            const respuesta = await axios.get('http://3.129.205.13:3000/api/usuarios', {
+            const respuesta = await axios.get('http://localhost:3000/api/usuarios', {
                 headers: {
                   'Authorization': `Bearer ${token}`,
                   'User-ID': usuario.id

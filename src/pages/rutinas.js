@@ -38,6 +38,14 @@ const tema = createTheme({
       color: '#e0e0e0',
     },
   },
+  MuiTableCell: {
+    styleOverrides: {
+      root: {
+        whiteSpace: 'normal',
+        wordWrap: 'break-word',
+      },
+    },
+  },
 });
 
 const Rutinas = () => {
@@ -144,6 +152,13 @@ const Rutinas = () => {
         setUserExercisesData([]);
       }
     };
+
+    const handleTabSelect = (k) => {
+      setActiveTab(k);
+      if (k === 'asignar') {
+        setUsuarioSeleccionado(""); 
+      }
+    };
   
     const listarRutinas = async () => {
       setLoading(true);
@@ -152,7 +167,7 @@ const Rutinas = () => {
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
 
-        const response = await axios.get('http://3.129.205.13:3000/api/rutinas', {
+        const response = await axios.get('http://localhost:3000/api/rutinas', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
@@ -171,7 +186,14 @@ const Rutinas = () => {
 
     const listarUsuarios = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/usuarios');
+        const token = localStorage.getItem('token'); 
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        const response = await axios.get('http://localhost:3000/api/usuarios', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'User-ID': usuario.id
+          }
+        });
         setUsuarios(response.data);
       } catch (error) {
         console.error('Error al obtener usuarios:', error);
@@ -377,7 +399,7 @@ const Rutinas = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
       
-          const response = await axios.get('http://3.129.205.13:3000/api/ejercicio/categoria', {
+          const response = await axios.get('http://localhost:3000/api/ejercicio/categoria', {
             params: { categoria: rutina.categoria },
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -445,7 +467,7 @@ const Rutinas = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
         
-          await axios.put(`http://3.129.205.13:3000/api/rutinas/${modalData._id}`, formattedData, {
+          await axios.put(`http://localhost:3000/api/rutinas/${modalData._id}`, formattedData, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'User-ID': usuario.id
@@ -456,7 +478,7 @@ const Rutinas = () => {
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
           console.log("usuarioid   :" + usuario.id + "token" + token);
         
-          await axios.post('http://3.129.205.13:3000/api/rutinas', formattedData, {
+          await axios.post('http://localhost:3000/api/rutinas', formattedData, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'User-ID': usuario.id
@@ -491,7 +513,7 @@ const Rutinas = () => {
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
         
-        await axios.put(`http://3.129.205.13:3000/api/rutinas/${id}/deshabilitar`, null, {
+        await axios.put(`http://localhost:3000/api/rutinas/${id}/deshabilitar`, null, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
@@ -510,7 +532,7 @@ const Rutinas = () => {
             <CssBaseline />
             <Grid item xs={12} component={Paper} elevation={6} square sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', height: '100%', p: 2  }}>
-                <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k)} className="mb-3">
+                <Tabs activeKey={activeTab} onSelect={handleTabSelect} className="mb-3">
                   <Tab eventKey="crear" title="Crear">
                     <Typography component="h1" variant="h5">Rutinas</Typography>
                     <Box sx={{ display: 'flex', width: '100%', mb: 2 }}>
@@ -570,13 +592,12 @@ const Rutinas = () => {
                   <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', p: 2  }}>
                     <Typography component="h1" variant="h5">Asignar Rutinas</Typography>
                     <FormControl fullWidth={false} margin="normal" sx={{ width: '300px' }}>
-                      <InputLabel>Selecciona un Usuario</InputLabel>
                       <Select
                         value={usuarioSeleccionado || ""} 
                         onChange={handleUsuarioChange}
                         onOpen={listarUsuarios}
                         displayEmpty
-                        sx={{ backgroundColor: 'white' }}
+                        sx={{ backgroundColor: 'white', color: 'black !important'}}
                       >
                         <MenuItem value="" disabled>Selecciona un usuario</MenuItem>
                         {usuarios.map(usuario => (
@@ -610,6 +631,7 @@ const Rutinas = () => {
                                   <TableCell>Ejercicio</TableCell>
                                   <TableCell>Series</TableCell>
                                   <TableCell>Repeticiones</TableCell>
+                                  <TableCell>Peso</TableCell>
                                   <TableCell>Observaciones</TableCell>
                                   <TableCell>Fecha</TableCell>
                                 </TableRow>
@@ -625,6 +647,7 @@ const Rutinas = () => {
                                     <TableCell>{ejercicio.ejercicio.nombre}</TableCell>
                                     <TableCell>{ejercicio.series}</TableCell>
                                     <TableCell>{ejercicio.repeticiones}</TableCell>
+                                    <TableCell>{ejercicio.peso}</TableCell>
                                     <TableCell>{ejercicio.observaciones}</TableCell>
                                     <TableCell>{formatDate(ejercicio.fecha) || ''}</TableCell>
                                   </TableRow>
@@ -643,7 +666,7 @@ const Rutinas = () => {
           </Grid>
           <Modal open={openModal} onClose={cerrarModal}>
             <Box sx={{ ...modalStyle, width: '80%', maxWidth: '600px', maxHeight: '80vh', overflowY: 'auto' }}>
-              <Typography component="h2" variant="h6">{editado ? 'Editar Ejercicio' : 'Crear Ejercicio'}</Typography>
+              <Typography component="h2" variant="h6" sx={{ mb: 2, backgroundColor: 'transparent' }}>{editado ? 'Editar Ejercicio' : 'Crear Ejercicio'}</Typography>
               <TextField
                 margin="normal"
                 required
@@ -723,10 +746,10 @@ const Rutinas = () => {
           </Modal>
           <Modal
             open={openAsignarModal}
-            onClose={() => setOpenAsignarModal(false)}
+            onClose={() => {setOpenAsignarModal(false); setShowExercises(false);}}
           >
-            <Box sx={{ ...modalStyle, width: '80%', maxWidth: '600px', maxHeight: '80vh', overflowY: 'auto' }}>
-              <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
+            <Box sx={{ ...modalStyle, width: '80%', maxWidth: '1000px', maxHeight: '80vh', overflowY: 'auto' }}>
+              <Typography variant="h6" component="h2" sx={{ mb: 2, backgroundColor: 'transparent' }}>
                 {showExercises ? "Detalles de los Ejercicios" : "Asignar Rutinas"}
               </Typography>
               {showExercises ? (
@@ -737,6 +760,7 @@ const Rutinas = () => {
                         <TableCell>Ejercicio</TableCell>
                         <TableCell>Series</TableCell>
                         <TableCell>Repeticiones</TableCell>
+                        <TableCell>Peso</TableCell>
                         <TableCell>Observaciones</TableCell>
                       </TableRow>
                     </TableHead>
@@ -753,6 +777,11 @@ const Rutinas = () => {
                                 newExercisesData[index].series = e.target.value;
                                 setExercisesData(newExercisesData);
                               }}
+                              sx={{
+                                '& .MuiInputBase-input': {
+                                  padding: '4px 0 5px !important', // Ajusta el padding aquí
+                                },
+                              }}
                             />
                           </TableCell>
                           <TableCell>
@@ -764,6 +793,27 @@ const Rutinas = () => {
                                 newExercisesData[index].repeticiones = e.target.value;
                                 setExercisesData(newExercisesData);
                               }}
+                              sx={{
+                                '& .MuiInputBase-input': {
+                                  padding: '4px 0 5px !important', // Ajusta el padding aquí
+                                },
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <TextField
+                              type="number"
+                              value={ejercicio.peso || ''}
+                              onChange={(e) => {
+                                const newExercisesData = [...exercisesData];
+                                newExercisesData[index].peso = e.target.value;
+                                setExercisesData(newExercisesData);
+                              }}
+                              sx={{
+                                '& .MuiInputBase-input': {
+                                  padding: '4px 0 5px !important', // Ajusta el padding aquí
+                                },
+                              }}
                             />
                           </TableCell>
                           <TableCell>
@@ -773,6 +823,11 @@ const Rutinas = () => {
                                 const newExercisesData = [...exercisesData];
                                 newExercisesData[index].observaciones = e.target.value;
                                 setExercisesData(newExercisesData);
+                              }}
+                              sx={{
+                                '& .MuiInputBase-input': {
+                                  padding: '4px 0 5px !important', // Ajusta el padding aquí
+                                },
                               }}
                             />
                           </TableCell>
@@ -800,6 +855,7 @@ const Rutinas = () => {
                               borderColor: '#e91e63',
                               border: '1px solid',
                               backgroundColor: '#FFFFFF',
+                              width: '45%',
                             }
                           }
                         }} 
@@ -841,6 +897,7 @@ const Rutinas = () => {
                             backgroundColor: '#f5f5f5',
                           },
                         },
+                        width: '45%',
                       }}
                     >
                       {rutinas.map((rutina) => (
@@ -869,14 +926,15 @@ const Rutinas = () => {
             open={isModalOpen}
             onClose={handleCloseModal}
           >
-            <Box sx={{ ...modalStyle, width: '80%', maxWidth: '600px', maxHeight: '80vh', overflowY: 'auto' }}>
-              <Typography variant="h6" component="h2" sx={{ mb: 2 }}>Editar ejercicio</Typography>
+            <Box sx={{ ...modalStyle, width: '80%', maxWidth: '1000px', maxHeight: '80vh', overflowY: 'auto' }}>
+              <Typography variant="h6" component="h2" sx={{ mb: 2, backgroundColor: 'transparent' }}>Editar ejercicio</Typography>
               <Table>
                 <TableHead>
                   <TableRow>
                     <TableCell>Ejercicio</TableCell>
                     <TableCell>Series</TableCell>
                     <TableCell>Repeticiones</TableCell>
+                    <TableCell>Peso</TableCell>
                     <TableCell>Observaciones</TableCell>
                     <TableCell>Fecha</TableCell>
                   </TableRow>
@@ -889,6 +947,11 @@ const Rutinas = () => {
                         type="number"
                         value={selectedExerciseData?.series || ''}
                         onChange={(e) => setSelectedExerciseData(prev => ({ ...prev, series: e.target.value }))}
+                        sx={{
+                          '& .MuiInputBase-input': {
+                            padding: '4px 0 5px !important', // Ajusta el padding aquí
+                          },
+                        }}
                       />
                     </TableCell>
                     <TableCell>
@@ -896,12 +959,34 @@ const Rutinas = () => {
                         type="number"
                         value={selectedExerciseData?.repeticiones || ''}
                         onChange={(e) => setSelectedExerciseData(prev => ({ ...prev, repeticiones: e.target.value }))}
+                        sx={{
+                          '& .MuiInputBase-input': {
+                            padding: '4px 0 5px !important', // Ajusta el padding aquí
+                          },
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        type="number"
+                        value={selectedExerciseData?.peso || ''}
+                        onChange={(e) => setSelectedExerciseData(prev => ({ ...prev, peso: e.target.value }))}
+                        sx={{
+                          '& .MuiInputBase-input': {
+                            padding: '4px 0 5px !important', // Ajusta el padding aquí
+                          },
+                        }}
                       />
                     </TableCell>
                     <TableCell>
                       <TextField
                         value={selectedExerciseData?.observaciones || ''}
                         onChange={(e) => setSelectedExerciseData(prev => ({ ...prev, observaciones: e.target.value }))}
+                        sx={{
+                          '& .MuiInputBase-input': {
+                            padding: '4px 0 5px !important', // Ajusta el padding aquí
+                          },
+                        }}
                       />
                     </TableCell>
                     <TableCell>{selectedExerciseData?.fecha || ''}</TableCell>
@@ -917,7 +1002,7 @@ const Rutinas = () => {
             open={isDialogOpen}
             onClose={handleCloseDialog}
           >
-            <DialogTitle>Confirmar Eliminación</DialogTitle>
+            <DialogTitle sx={{ mb: 2, backgroundColor: 'transparent' }}>Confirmar Eliminación</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 ¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.

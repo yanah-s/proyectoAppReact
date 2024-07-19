@@ -71,7 +71,7 @@ const Login = () => {
     setMensaje(null);
 
     try {
-      const response = await axios.post('http:///3.129.205.13:3000/api/autentificacion', formulario);
+      const response = await axios.post('http:///localhost:3000/api/autentificacion', formulario);
       console.log('Respuesta:', response.data.usuario.admin);
       const isAdmin = response.data.usuario.admin; 
       console.log('isAdmin:', isAdmin);

@@ -18,7 +18,7 @@ const Logout = () => {
 
         const body = { usuario };
 
-        const response = await axios.post('http://3.129.205.13:3000/api/logout', body, config);
+        const response = await axios.post('http://localhost:3000/api/logout', body, config);
 
         console.log('Respuesta:', response);
         localStorage.removeItem('token');
