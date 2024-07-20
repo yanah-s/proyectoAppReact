@@ -32,6 +32,7 @@ const Notificaciones = () => {
                 const token = localStorage.getItem('token'); 
                 const usuario = JSON.parse(localStorage.getItem('usuario')); 
                 const response = await api.get('/api/notificaciones', {
+
                     headers: {
                         'Authorization': `Bearer ${token}`,   
                         'User-ID': usuario.id

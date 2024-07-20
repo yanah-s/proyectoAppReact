@@ -104,12 +104,20 @@ const AgendaUsuarios = () => {
         return;
       }
 
+<<<<<<< HEAD
       const respuestaUsuario = await api.post('/api/usuarios/', formulario);
+=======
+      const respuestaUsuario = await axios.post('http://localhost:3000/api/usuarios/', formulario);
+>>>>>>> origin/visualizar_rutina
       const dataAgenda = {
         usuarioId: respuestaUsuario.data.value._id, 
         turnoId : selectedTurnos,
       };
+<<<<<<< HEAD
       const responseAgenda = await api.put('/api/agenda/',dataAgenda, {
+=======
+      const responseAgenda = await axios.put('http://localhost:3000/api/agenda/',dataAgenda, {
+>>>>>>> origin/visualizar_rutina
         headers: {
             'Content-Type': 'application/json'
         }
