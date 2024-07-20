@@ -26,11 +26,7 @@ const DesactivarUsuario = () => {
 
             const token = localStorage.getItem('token'); 
             const usuario = JSON.parse(localStorage.getItem('usuario')); 
-<<<<<<< HEAD
            const respuesta = await api.delete(`/api/usuarios/${formulario.email}`,{
-=======
-           const respuesta = await axios.delete(`http://localhost:3000/api/usuarios/${formulario.email}`,{
->>>>>>> origin/visualizar_rutina
            headers: {
               'Authorization': `Bearer ${token}`,
               'User-ID': usuario.id

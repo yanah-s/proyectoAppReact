@@ -18,11 +18,7 @@ const Logout = () => {
 
         const body = { usuario };
 
-<<<<<<< HEAD
         const response = await api.post('/api/logout', body, config);
-=======
-        const response = await axios.post('http://localhost:3000/api/logout', body, config);
->>>>>>> origin/visualizar_rutina
 
         console.log('Respuesta:', response);
         localStorage.removeItem('token');

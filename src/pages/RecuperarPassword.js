@@ -28,11 +28,7 @@ const RecuperarPassword = ({ handleClose }) => {
     setMensaje(null);
     console.log('Llamada a la API');
     try {
-<<<<<<< HEAD
       const respuesta = await api.post('/api/usuarios/recuperar-passw', formulario);
-=======
-      const respuesta = await axios.post('http:///localhost:3000/api/usuarios/recuperar-passw', formulario);
->>>>>>> origin/visualizar_rutina
       console.log('Respuesta:', respuesta.data);
       setMensaje('Solicitud de recuperación enviada.');
     } catch (err) {
