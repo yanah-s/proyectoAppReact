@@ -58,7 +58,7 @@ const tema = createTheme({
   },
 });
 
-const AgendaUsuarios = () => {
+const AgendaAlumno = () => {
   const [disponibilidad, setDisponibilidad] = useState([]); //donde se almacenan todos los turnos disponibles, 
   //apenas se carga la pagina, consulta disponibilidad.
   const [selectedTurnos, setSelectedTurnos] = useState({});
@@ -67,15 +67,7 @@ const AgendaUsuarios = () => {
   const [error, setError] = useState([]);
   const [mensaje, setMensaje] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  const [formulario, setFormulario] = useState({
-    nombre: '',
-    email: '',
-    fNacimiento: '',
-    password: '',
-    password2: '',
-    patologias: ''
-  });
-  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchDisponibilidad = async () => {
       try {
@@ -89,33 +81,31 @@ const AgendaUsuarios = () => {
     fetchDisponibilidad();
   }, []);
 
-  const handleSubmitUsuario = async (e) => {
+
+  const handleSubmitAgenda = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError([]);
     setMensaje(null);
 
-    try {
-      const coincide = validarPassword(formulario.password, formulario.password2);
-      if (!coincide) {
-
-        const errorMsg = "Las contraseñas no coinciden";
-        setError([errorMsg]);
-        return;
-      }
-
-      const respuestaUsuario = await api.post('/api/usuarios/', formulario);
+   try {
+     
+      
+      const token = localStorage.getItem('token'); 
+      const usuario = JSON.parse(localStorage.getItem('usuario')); 
+      console.log("usuarioid   :" + usuario.id + "token" + token);
       const dataAgenda = {
-        usuarioId: respuestaUsuario.data.value._id, 
+        usuarioId: usuario.id, 
         turnoId : selectedTurnos,
       };
       const responseAgenda = await api.put('/api/agenda/',dataAgenda, {
         headers: {
-            'Content-Type': 'application/json'
-        }
+            'Authorization': `Bearer ${token}`,
+            'User-ID': usuario.id
+          }
       });
-      setMensaje('Usuario registrado y turno agendado exitosamente.');
-      navigate('/login');
+      setMensaje('Turno agendado exitosamente.');
+    
     } catch (err) {
       let errorMsg = 'Error de conexión';
 
@@ -135,20 +125,6 @@ const AgendaUsuarios = () => {
       setLoading(false);
     }
   };
-
-  const validarPassword = (password, password2) => {
-    return password === password2;
-  };
- 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormulario({
-      ...formulario,
-      [name]: value,
-    });
-  };
-
-  //checkbox para seleccionar el turno actualiza de true a false o al reves
   const handleTurnoChange = (turnoId) => {
     setSelectedTurnos(prev => (prev === turnoId ? null : turnoId));
   };
@@ -208,14 +184,8 @@ return (
             alignItems: 'center',
           }}
         >
-          {/* <Typography component="h1" variant="h5" className='h2agenda'> */}
-           <h2>EMPIEZA HOY!!</h2> 
-          {/* </Typography> */}
-        {/*   <br></br>
-          <Typography component="h3" variant="h5"  sx={{ fontSize: '1rem' }}>
-            Agenda una entrevista sin costo, para que podamos definir juntos un plan de entrenamiento.
-          </Typography>
-          <br></br> */}
+           <p>Si deseas que nos reunamos para tener una consulta de evaluación, agenda tu cita:</p> 
+
           <Box component="form" noValidate sx={{ mt: 1 }}>
             
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -238,10 +208,20 @@ return (
               margin="normal"
               fullWidth
               id="observaciones"
-              label="Observaciones"
+              label="Motivo de la consulta"
               name="observaciones"
               autoComplete="observaciones"
             />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              disabled={loading}
+              onClick={handleSubmitAgenda}
+            >
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'AGENDAR'}
+            </Button>
             {error.length > 0 && (
               <Alert severity="error">
                 {error.map((e, i) => (
@@ -249,107 +229,18 @@ return (
                 ))}
               </Alert>
             )}
+             {error.length > 0 && (
+              <Alert severity="error">
+                {error.map((e, i) => (
+                  <div key={i}>{e}</div>
+                ))}
+              </Alert>
+            )}
+            {mensaje && <Typography color="success.main">{mensaje}</Typography>}
           </Box>
         </Box>
       </Grid>
 
-      <Grid container component="main" sx={{ height: '100vh',
-       justifyContent: 'center', alignItems: 'center' }}>
-        <Grid item xs={12} md={8} component={Paper} elevation={6} square>
-
-                <form onSubmit={handleSubmitUsuario} noValidate>
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="nombre"
-                    label="Nombre completo"
-                    name="nombre"
-                    autoComplete="nombre"
-                    autoFocus
-                    value={formulario.nombre}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email"
-                    name="email"
-                    autoComplete="email"
-                    value={formulario.email}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="fNacimiento"
-                    label="Fecha de nacimiento"
-                    type="date"
-                    name="fNacimiento"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    value={formulario.fNacimiento}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    margin="normal"
-                    fullWidth
-                    name="patologias"
-                    label="Patologías/Aclaraciones referentes a su salud"
-                    type="text"
-                    id="patologias"
-                    // autoComplete="patologias"
-                    value={formulario.patologias}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                    value={formulario.password}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password2"
-                    label="Password"
-                    type="password"
-                    id="password2"
-                    autoComplete="new-password"
-                    value={formulario.password2}
-                    onChange={handleChange}
-                  />
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                    disabled={loading}
-                  >
-                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Registrar'}
-                  </Button>
-                  {error.length > 0 && (
-                    <Typography color="error">
-                      {error.map((e, i) => (
-                        <div key={i}>{e}</div>
-                      ))}
-                    </Typography>
-                  )}
-                  {mensaje && <Typography color="success.main">{mensaje}</Typography>}
-                </form>
-        </Grid>
-      </Grid>
       </Grid>
       <Modal
         open={openModal}
@@ -422,19 +313,12 @@ return (
             >
               {loading ? <CircularProgress size={24} color="inherit" /> : 'SELECCIONAR TURNO'}
             </Button>
-            {error.length > 0 && (
-              <Alert severity="error">
-                {error.map((e, i) => (
-                  <div key={i}>{e}</div>
-                ))}
-              </Alert>
-            )}
-            {mensaje && <Typography color="success.main">{mensaje}</Typography>}
           </Box>
         </Fade>
       </Modal>
+      
   </ThemeProvider>
 );
 }
-export default AgendaUsuarios;
+export default AgendaAlumno;
 

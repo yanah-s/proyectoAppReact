@@ -3,7 +3,8 @@ import React, { useState ,useEffect } from 'react';
 import api from '../configuracion/axiosconfig';
 import { Button, CssBaseline, TextField, Grid, Paper, Box, Typography, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import AvanceEjercicios from '../components/AvanceEjercicios';
+import ReactDOM from 'react-dom';
 
 const tema = createTheme({
     palette: {
@@ -32,9 +33,18 @@ const tema = createTheme({
       },
     },
   });
-  
 
 
+  const Avances = () => {
+    return (
+      <ThemeProvider theme={tema}>
+        <CssBaseline />
+        <div style={{ padding: 20 }}>
+          <h1>Avances en ejercicios</h1>
+          <AvanceEjercicios />
+        </div>
+      </ThemeProvider>
+    );
+  }
 
-
-export default Estadisticas;
+export default Avances;

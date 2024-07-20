@@ -14,7 +14,8 @@ import EditarUsuarioDesdeAdmin from './pages/EditarUsuarioDesdeAdmin';
 import Logout from './pages/Logout';
 import Ejercicios from './pages/Ejercicios';
 import Rutinas from './pages/rutinas';
-import Estadisticas from './pages/Estadisticas';
+import Avances from './pages/Avances';
+import AgendaAlumno from './pages/AgendaAlumno';
 const AppRoutes = () => {
     const isAuthenticated = !!localStorage.getItem('token');
    const isAdmin =  localStorage.getItem('admin') === 'true';
@@ -41,7 +42,8 @@ const AppRoutes = () => {
             </>
           )} {isAuthenticated && 
             <>
-            <Route path="/Estadisticas" element={<Estadisticas />} />
+            <Route path="/AgendaAlumno" element={<AgendaAlumno />} />
+            <Route path="/Avances" element={<Avances />} />
             <Route path="/Logout" element={<Logout />} /></> 
             
           }

@@ -2,6 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+
 import { Link } from 'react-router-dom';
 import './Header.css';
 import { useState, useEffect } from 'react';
@@ -110,6 +111,12 @@ return(
           </ul>
           {isAuthenticated && (
             <ul className="nav flex-column mt-auto" id="pestañas_hamburguesa">
+                <li className="nav-item">
+                  <Link className="nav-link" to="/Avances"><i className="bi-bar-chart-line"></i> Avances </Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/AgendaAlumno"><i className="bi bi-calendar-week"></i> Agendar consulta </Link>
+                </li>
               <li className="nav-item">
                 <Link className="nav-link" to="/" onClick={handleLogout}><i className="bi bi-lock"></i> Cerrar Sesion</Link>
               </li>
