@@ -132,8 +132,14 @@ const Rutinas = () => {
     };
 
     const handleUsuarioChange = async (event) => {
-      const usuarioId = event.target.value;
-      setUsuarioSeleccionado(usuarioId);
+      let usuarioId ="";
+      if(event){
+        usuarioId = event.target.value;
+        setUsuarioSeleccionado(usuarioId);
+
+      }else{
+        usuarioId = usuarioSeleccionado;
+      }
     
       console.log(usuarioId);
       if (usuarioId) {
@@ -243,6 +249,13 @@ const Rutinas = () => {
       }
     };
 
+    const abrirModalAsignar = () => {
+      setTempDate(null);
+      setSelectedDates([]);
+      setSelectedRutina(null);
+      setOpenAsignarModal(true);
+    }
+
     const handleOpenModal = () => {
       const selectedData = userExercisesData[selectedRow];
       setSelectedExerciseData({
@@ -268,14 +281,22 @@ const Rutinas = () => {
               ejercicio: ejercicio._id,
               series: Number(ejercicio.series),
               repeticiones: Number(ejercicio.repeticiones),
+              peso: Number(ejercicio.peso),
               observaciones: ejercicio.observaciones || '',
               completado: false
             });
           }
         }
         setOpenAsignarModal(false);
+        setShowExercises(false);
+        handleUsuarioChange();
       } catch (error) {
-        console.error('Error al guardar los registros:', error.response?.data || error.message);
+        const errors = error.response && error.response.data && error.response.data.error 
+          ? error.response.data.error 
+          : [{ message: 'Error desconocido al procesar la solicitud.' }];
+            
+        setAlertMessages(errors);
+        setAlertOpen(true);
       }
     };
   
@@ -286,8 +307,14 @@ const Rutinas = () => {
         updatedData[selectedRow] = selectedExerciseData;
         setUserExercisesData(updatedData);
         handleCloseModal();
+        handleUsuarioChange();
       } catch (error) {
-        console.error('Error al actualizar el ejercicio:', error);
+        const errors = error.response && error.response.data && error.response.data.error 
+          ? error.response.data.error 
+          : [{ message: 'Error desconocido al procesar la solicitud.' }];
+            
+        setAlertMessages(errors);
+        setAlertOpen(true);
       }
     };
 
@@ -300,6 +327,7 @@ const Rutinas = () => {
           setUserExercisesData(updatedData);
           setSelectedRow(null);
           setIsDialogOpen(false);
+          handleUsuarioChange();
         } catch (error) {
           console.error('Error al eliminar el ejercicio:', error);
         }
@@ -528,7 +556,7 @@ const Rutinas = () => {
   
     return (
         <ThemeProvider theme={tema}>
-          <Grid container component="main" sx={{ height: '100vh', overflow: 'hidden' }}>
+          <Grid container component="main" sx={{ overflow: 'hidden' }}>
             <CssBaseline />
             <Grid item xs={12} component={Paper} elevation={6} square sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', height: '100%', p: 2  }}>
@@ -618,11 +646,11 @@ const Rutinas = () => {
                             onChange={filtrarTablaAsignar}
                             sx={{ width: '300px', marginRight: '20px', '& .MuiInputBase-root': { backgroundColor: 'white', color: 'black'}, }}
                           />
-                          <Button variant="contained" color="primary" onClick={() => setOpenAsignarModal(true)}>Crear</Button>
+                          <Button variant="contained" color="primary" onClick={abrirModalAsignar}>Crear</Button>
                           <Button variant="contained" color="secondary" onClick={handleOpenModal}  disabled={selectedRow === null} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
                           <Button variant="contained" color="error" onClick={handleOpenDialog} disabled={selectedRow === null} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>
                         </Box>
-                        <Box sx={{ maxHeight: 'calc(100vh - 150px)', overflowY: 'auto' }}>
+                        <Box sx={{ flex: 1, overflowY: 'auto' }}>
                           <TableContainer component={Paper} sx={{ width: '100%' }}>
                             <Table>
                               <TableHead>
@@ -795,7 +823,7 @@ const Rutinas = () => {
                               }}
                               sx={{
                                 '& .MuiInputBase-input': {
-                                  padding: '4px 0 5px !important', // Ajusta el padding aquí
+                                  padding: '4px 0 5px !important',
                                 },
                               }}
                             />
