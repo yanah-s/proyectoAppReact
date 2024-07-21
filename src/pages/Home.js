@@ -46,9 +46,9 @@ return (
 			<article className="col-12 col-md-5 d-flex flex-column justify-content-center sobreMI">
 				<h3>Bienvenido a <span className='resaltadoLetra'>Avance.fit</span>, un espacio de transformación.</h3>
 				<br></br>
-				<p className='textoBienvenida'> Aquí nos dedicaremos a potenciar tu <span className='resaltadoLetra'>salud</span> y ayudarte alcanzar tus metas fitness.</p> 
-				<p className='textoBienvenida'>	Con un programa <span className='resaltadoLetra'>personalizado</span> y un enfoque integral, te guiaremos en cada paso hacia una versión más fuerte, más saludable y más <span className='resaltadoLetra'>feliz</span> de ti mismo.</p>	
-				<p className='textoBienvenida'> <span className='resaltadoLetra'>Unete</span> y comienza tu viaje hacia una vida activa y plena.</p>
+				<p> Aquí nos dedicaremos a potenciar tu salud y ayudarte alcanzar tus metas fitness.</p> 
+				<p>	Con un programa personalizadoy un enfoque integral, te guiaremos en cada paso hacia una versión más fuerte, más saludable y más feliz de ti mismo.</p>	
+				<p> Unetey comienza tu viaje hacia una vida activa y plena.</p>
 			</article>
 		</section>
 

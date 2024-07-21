@@ -96,6 +96,10 @@ const AgendaUsuarios = () => {
     setMensaje(null);
 
     try {
+      if( formulario.nombre== ''| formulario.email=='' | formulario.fNacimiento== '' | formulario.password=='' |formulario.password2==''){
+        const errorMsg = "Revise su formulario";
+        setError([errorMsg]);
+      }
       const coincide = validarPassword(formulario.password, formulario.password2);
       if (!coincide) {
 
@@ -103,6 +107,7 @@ const AgendaUsuarios = () => {
         setError([errorMsg]);
         return;
       }
+
 
       const respuestaUsuario = await api.post('/api/usuarios/', formulario);
       const dataAgenda = {

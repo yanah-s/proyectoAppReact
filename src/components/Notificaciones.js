@@ -62,6 +62,9 @@ const Notificaciones = () => {
         if (notification.message.includes('agendo')) {
             navigate('/ListarUsuarios');
         }
+        if (notification.message.includes('rutina')) {
+            navigate('/');  //CAMBIAR A VISUALIZAR RUTINA CUANDO ESTE PRONTA
+        }
     };
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;

@@ -22,19 +22,21 @@ main {
 } */
 
 header nav ul li a {
-    background-color: #97228e;
+    background-color: #22978da9;
     color: white;
     letter-spacing: 5px;
     text-decoration: none;
     transition: 5s;
+	
 }
+
 header nav ul li a:hover {
 	background-color: #1d1d1d;
 	color: white;
 	text-decoration: none;
 }
 .resaltadoLetra{
-	color:#b82ec4e3;
+	color: #22978da9;
 	font-style: bold;
 }
 .textoBienvenida {

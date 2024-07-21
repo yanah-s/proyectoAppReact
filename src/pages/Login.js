@@ -13,8 +13,10 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import imagenLogin from '../imagenes/imagenLogin.png';
 import RecuperarPassword from './RecuperarPassword';
-import api from '../configuracion/axiosconfig';
+import api from '../configuracion/axiosconfig'; 
 import { useNavigate } from 'react-router-dom';
+import './Login.css';
+
 
 const tema = createTheme({
   palette: {
@@ -168,6 +170,7 @@ const Login = () => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 disabled={loading}
+               
               >
                 {loading ? 'Loading...' : 'Sign In'}
               </Button>
