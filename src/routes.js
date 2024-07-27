@@ -16,37 +16,37 @@ import Ejercicios from './pages/Ejercicios';
 import Rutinas from './pages/rutinas';
 import Avances from './pages/Avances';
 import AgendaAlumno from './pages/AgendaAlumno';
+
+
 const AppRoutes = () => {
-    const isAuthenticated = !!localStorage.getItem('token');
-   const isAdmin =  localStorage.getItem('admin') === 'true';
+  //  const isAuthenticated = !!localStorage.getItem('token');
+  //  const isAdmin =  localStorage.getItem('admin') === 'true';
+  //  console.log(isAdmin + isAuthenticated);
     return (
+     
       <Router>
         <Header />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/recuperar-password" element={<RecuperarPassword />} />
           <Route path="/" element={<Home />} />
-          <Route path="/ejercicios" element={<Ejercicios />} />
-          <Route path="/rutinas" element={<Rutinas />} />
-          {/* <Route path="/CrearUsuario" element={<CrearUsuario />} /> */}
           <Route path="/AgendaUsuarios" element={<AgendaUsuarios />} />
-          {isAuthenticated && isAdmin &&(
-            <>
+            
+              <Route path="/ejercicios" element={<Ejercicios />} />
+              <Route path="/rutinas" element={<Rutinas />} />
               <Route path="/DisponibilidadAgenda" element={<DisponibilidadAgenda />} />
               <Route path="/ListarUsuarios" element={<ListarUsuarios />} />
-              <Route path="/editar-usuario/:email" element={<EditarUsuario />} />
+              <Route path="/editar/:id" element={<EditarUsuario />} />
               <Route path="/DesactivarUsuario" element={<DesactivarUsuario />} />
               <Route path="/EditarUsuarioDesdeAdmin/:id" element={<EditarUsuarioDesdeAdmin />} />
-             
-              {/* <Route path="/Notificaciones" element={<Notificaciones />} /> */}
-            </>
-          )} {isAuthenticated && 
+  
+          
             <>
             <Route path="/AgendaAlumno" element={<AgendaAlumno />} />
             <Route path="/Avances" element={<Avances />} />
             <Route path="/Logout" element={<Logout />} /></> 
             
-          }
+          {/* } */}
           
         </Routes>
       </Router>

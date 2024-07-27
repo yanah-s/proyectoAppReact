@@ -3,6 +3,8 @@ import api from '../configuracion/axiosconfig';
 import { Button, CssBaseline, TextField, Grid, Paper, Box, Typography, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 const tema = createTheme({
   palette: {
     primary: {
@@ -44,6 +46,7 @@ const EditarUsuarioDesdeAdmin = () => {
     patologias: '',
     observaciones: ''
   });
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [mensaje, setMensaje] = useState(null);
@@ -79,6 +82,9 @@ const [usuario, setUsuario] = useState(null);
 
       console.log(respuesta);
       setMensaje('Usuario editado exitosamente.');
+      setTimeout(() => {
+        navigate('/ListarUsuarios');
+      }, 1000); // 1 segundo de retraso
     } catch (err) {
       let errorMsg = 'Error de conexión';
       if (err.response) {

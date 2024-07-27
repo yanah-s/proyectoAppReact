@@ -221,12 +221,14 @@ const DisponibilidadAgenda = () => {
         },
       },
     }));
+
     setSelectAM(null);
     setSelectPM(null);
     setOpenModal(false);
     setError([]);
   };
 
+  
   const marcarDisponibilidad = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -234,6 +236,7 @@ const DisponibilidadAgenda = () => {
     setMensaje(null);
 
     try {
+      if(Object.keys(formulario.datos).length > 0){
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario'));
       console.log("usuarioid   :" + usuario.id + "token" + token);
@@ -245,6 +248,15 @@ const DisponibilidadAgenda = () => {
         }
       });
       setMensaje('Disponibilidad registrada exitosamente');
+
+      const nuevosDatos = { ...formulario.datos };
+      Object.keys(nuevosDatos).forEach(key => delete nuevosDatos[key]);
+      setFormulario({ datos: nuevosDatos });
+      }else{
+        setError(['Debe seleccionar turnos en la agenda']);
+      }
+      
+
     } catch (err) {
       let errorMsg = 'Error de conexión';
 
@@ -348,7 +360,7 @@ return (
 
             <div id="table1" className="table-content" style={{ display: activeTab === 'table1' ? 'block' : 'none' }}>
             
-                <TableContainer className='tablaDisponibilidad'>
+                <TableContainer className='tablaDisponibilidad' style={{ maxHeight: '400px', overflowY: 'auto' }}>
                 <Table>
                   <TableHead>
                     <TableRow>
@@ -385,7 +397,7 @@ return (
 
             <div id="table2" className="table-content" style={{ display: activeTab === 'table2' ? 'block' : 'none' }}>
 
-              <TableContainer className='tablaDisponibilidad'>
+              <TableContainer className='tablaDisponibilidad' style={{ maxHeight: '400px', overflowY: 'auto' }}>
                 <Table>
                   <TableHead>
                     <TableRow>
@@ -412,7 +424,7 @@ return (
             </div>
 
             <div id="table3" className="table-content" style={{ display: activeTab === 'table3' ? 'block' : 'none' }}>
-              <TableContainer className='tablaDisponibilidad'>
+              <TableContainer className='tablaDisponibilidad' style={{ maxHeight: '400px', overflowY: 'auto' }}>
                 <Table>
                   <TableHead>
                     <TableRow>

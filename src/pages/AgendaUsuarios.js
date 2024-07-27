@@ -73,7 +73,8 @@ const AgendaUsuarios = () => {
     fNacimiento: '',
     password: '',
     password2: '',
-    patologias: ''
+    patologias: '',
+    telefono: ''
   });
   const navigate = useNavigate();
   useEffect(() => {
@@ -88,15 +89,18 @@ const AgendaUsuarios = () => {
     
     fetchDisponibilidad();
   }, []);
-
+ 
   const handleSubmitUsuario = async (e) => {
+    
     e.preventDefault();
     setLoading(true);
     setError([]);
     setMensaje(null);
-
+    
+    
     try {
-      if( formulario.nombre== ''| formulario.email=='' | formulario.fNacimiento== '' | formulario.password=='' |formulario.password2==''){
+      
+      if( formulario.nombre== ''| formulario.email=='' | formulario.fNacimiento== '' | formulario.password=='' |formulario.password2==''|formulario.telefono==''){
         const errorMsg = "Revise su formulario";
         setError([errorMsg]);
       }
@@ -107,21 +111,25 @@ const AgendaUsuarios = () => {
         setError([errorMsg]);
         return;
       }
-
-
-      const respuestaUsuario = await api.post('/api/usuarios/', formulario);
-      const dataAgenda = {
-        usuarioId: respuestaUsuario.data.value._id, 
-        turnoId : selectedTurnos,
-      };
-      const responseAgenda = await api.put('/api/agenda/',dataAgenda, {
-        headers: {
-            'Content-Type': 'application/json'
+        if (Object.keys(selectedTurnos).length === 0) {
+          const errorMsg = "Debe seleccionar un turno en la agenda";
+          setError([errorMsg]);
+          return;
         }
-      });
-      setMensaje('Usuario registrado y turno agendado exitosamente.');
-      navigate('/login');
-    } catch (err) {
+        const respuestaUsuario = await api.post('/api/usuarios/', formulario);
+        const dataAgenda = {
+          usuarioId: respuestaUsuario.data.value._id, 
+          turnoId : selectedTurnos,
+        };
+        const responseAgenda = await api.put('/api/agenda/',dataAgenda, {
+          headers: {
+              'Content-Type': 'application/json'
+          }
+        });
+        setMensaje('Usuario registrado y turno agendado exitosamente.');
+        navigate('/login');
+      }
+       catch (err) {
       let errorMsg = 'Error de conexión';
 
       if (err.response) {
@@ -284,6 +292,17 @@ return (
                     name="email"
                     autoComplete="email"
                     value={formulario.email}
+                    onChange={handleChange}
+                  />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="telefono"
+                    label="telefono"
+                    name="telefono"
+                    autoComplete="telefono"
+                    value={formulario.telefono}
                     onChange={handleChange}
                   />
                   <TextField

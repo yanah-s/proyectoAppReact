@@ -1,68 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Select, MenuItem, FormControl, InputLabel, Button, TextField } from '@mui/material';
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Area } from 'recharts';
 import api from '../configuracion/axiosconfig';
 
 const AvanceEjercicios = () => {
-  const [formulario, setFormulario] = useState({ ejercicio: '', peso: '' });
-  const [ejercicios, setEjercicios] = useState([]);
-  const [selectedOption, setSelectedOption] = useState('');
-  const [dataOptions, setDataOptions] = useState({});
+  const [formulario, setFormulario] = useState({ peso: '' });
   const [avances, setAvances] = useState([]);
-  const [fechaUltimoEjercicio, setFechaUltimoEjercicio] = useState(null);
+  const [fechaUltimoPeso, setFechaUltimoPeso] = useState(null);
   const hoy = new Date();
   
-  const sePuedeHabilitar = fechaUltimoEjercicio ? ((hoy - fechaUltimoEjercicio) / (1000 * 60 * 60 * 24)) >= 1 : true;
+  const sePuedeHabilitar = fechaUltimoPeso ? ((hoy - fechaUltimoPeso) / (1000 * 60 * 60 * 24)) >= 1 : true;
 
   useEffect(() => {
-    listarEjercicios();
-    console.log(sePuedeHabilitar);
-    console.log(fechaUltimoEjercicio);
+    obtenerAvances();
+  
   }, []);
 
-  useEffect(() => {
-    const options = ejercicios.reduce((acc, ejercicio) => {
-      acc[ejercicio.nombre] = ejercicio; 
-      return acc;
-    }, {});
 
-    setDataOptions(options);
-
-    if (ejercicios.length > 0) {
-      setSelectedOption(ejercicios[0].nombre);
-    }
-  }, [ejercicios]);
-
-  const listarEjercicios = async () => {
-    try {
-      const token = localStorage.getItem('token'); 
-      const usuario = JSON.parse(localStorage.getItem('usuario')); 
-
-      const response = await api.get('/api/ejercicio', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'User-ID': usuario.id
-        }
-      });
-      const ejercicios = response.data.filter(ejercicio => ejercicio.disponible);
-      setEjercicios(ejercicios);
-     
-    } catch (err) {
-      console.error('Error listando ejercicios:', err);
-    }
-  };
 
   const obtenerAvances = async () => {
     const token = localStorage.getItem('token');
     const usuario = JSON.parse(localStorage.getItem('usuario'));
-    const selectedEjercicio = dataOptions[selectedOption];
-  
-    if (!selectedEjercicio) return;
-  
-    const ejercicioId = selectedEjercicio._id;
-  
+
     try {
-      const response = await api.get(`/api/avances/usuarioEjercicio?ejercicio=${ejercicioId}`, {
+      const response = await api.get(`/api/avances/usuarioPeso`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'User-ID': usuario.id
@@ -71,7 +32,7 @@ const AvanceEjercicios = () => {
   
       if (!response.data || response.data.length === 0) {
         // No hay avances, permitir el registro
-        setFechaUltimoEjercicio(null);
+        setFechaUltimoPeso(null);
         setAvances([]);
         return;
       }
@@ -82,9 +43,9 @@ const AvanceEjercicios = () => {
       }));
   
       // Obtener la fecha del último registro
-      const ultimoEjercicio = response.data[response.data.length - 1];
-      if (ultimoEjercicio) {
-        setFechaUltimoEjercicio(new Date(ultimoEjercicio.fecha));
+      const ultimoPeso = response.data[response.data.length - 1];
+      if (ultimoPeso) {
+        setFechaUltimoPeso(new Date(ultimoPeso.fecha));
       }
   
       setAvances(avances);
@@ -93,61 +54,46 @@ const AvanceEjercicios = () => {
     }
   };
   
-  
-  useEffect(() => {
-    if (selectedOption) {
-      obtenerAvances();
-    }
-  }, [selectedOption]);
+
 
   const registrarAvance = async () => {
     const token = localStorage.getItem('token'); 
     const usuario = JSON.parse(localStorage.getItem('usuario'));
 
-    const selectedEjercicio = dataOptions[selectedOption];
     const data = {
-      ejercicio: selectedEjercicio._id,
+     
       peso: formulario.peso,
       usuarioId: usuario.id
     };
 
     try {
-      const response = await api.post('/api/avances/avanceEjercicios', data, {
+      const response = await api.post('/api/avances/usuarioPeso', data, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'User-ID': usuario.id
         }
       });
       console.log('Avance registrado:', response.data);
+      setFormulario((prevFormulario) => ({
+        ...prevFormulario,
+        peso: ''
+      }));
+
       obtenerAvances();
     } catch (err) {
       console.error('Error registrando avance:', err);
     }
   };
 
-  const handleChange = (event) => {
-    setSelectedOption(event.target.value);
-    setFormulario((prevFormulario) => ({
-      ...prevFormulario,
-      peso: ''
-    }));
-  };
-
   const handlePesoChange = (event) => {
     setFormulario({ ...formulario, peso: event.target.value });
   };
 
+
   return (
     <div>
       <FormControl fullWidth>
-        <InputLabel id="select-label">Selecciona un ejercicio</InputLabel>
-        <Select labelId="select-label" value={selectedOption} onChange={handleChange}>
-          {Object.keys(dataOptions).map((key) => (
-            <MenuItem key={key} value={key}>
-              {`Ejercicio ${key.replace('ejercicio', '')}`}
-            </MenuItem>
-          ))}
-        </Select>
+      
         <TextField
           margin="normal"
           required
@@ -161,9 +107,7 @@ const AvanceEjercicios = () => {
           value={formulario.peso}
           onChange={handlePesoChange}
         />
-        {/* <Button variant="contained" color="primary" onClick={registrarAvance} sx={{ width: '45%' }}>
-          Registrar
-        </Button> */}
+    
               <Button
         variant="contained"
         color="primary"
@@ -175,7 +119,7 @@ const AvanceEjercicios = () => {
       </Button>
       </FormControl>
 
-      <ResponsiveContainer width="100%" height={200}>
+      {/* <ResponsiveContainer width="100%" height={200}>
         <LineChart data={avances} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis 
@@ -189,7 +133,34 @@ const AvanceEjercicios = () => {
           <Tooltip />
           <Line type="monotone" dataKey="valorNumerico" stroke="#22978da9"  name="Peso levantado" />
         </LineChart>
-      </ResponsiveContainer>
+      </ResponsiveContainer> */}
+      <ResponsiveContainer width="100%" height={200}>
+    <LineChart data={avances} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis 
+        dataKey="fecha" 
+        tick={{ fontSize: 12 }} 
+        tickFormatter={(tick) => tick.split(',')[0]} 
+      />
+      <YAxis 
+        tickFormatter={(tick) => tick !== 0 ? tick : ''} 
+      />
+      <Tooltip />
+      <Area 
+        type="monotone" 
+        dataKey="valorNumerico" 
+        stroke="#f0a6c0" 
+        fill="#f0a6c0"   
+        strokeWidth={2}   
+      />
+      <Line 
+        type="monotone" 
+        dataKey="valorNumerico" 
+        stroke="#f0a6c0"  
+        name="Peso en KG" 
+      />
+    </LineChart>
+  </ResponsiveContainer>
     </div>
   );
 };

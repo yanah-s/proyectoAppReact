@@ -197,7 +197,7 @@ return (
                 }}
               
                 shouldDisableDate={shouldDisableDate}
-                customClassName={{ disabled: 'custom-disabled' }}
+                customclassname={{ disabled: 'custom-disabled' }}
               />
             </LocalizationProvider>
             <FormControlLabel

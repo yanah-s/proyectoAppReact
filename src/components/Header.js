@@ -2,7 +2,6 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
 import { Link } from 'react-router-dom';
 import './Header.css';
 import { useState, useEffect } from 'react';
@@ -87,6 +86,7 @@ return(
                 <li className="nav-item">
                   <Link className="nav-link" to="/Login"><i className="bi bi-box-arrow-in-right"></i> Login</Link>
                 </li>
+
                 <li className="nav-item">
                   <Link className="nav-link" to="/AgendaUsuarios"><i className="bi bi-calendar-week"></i> Agenda</Link>
                 </li>
@@ -106,6 +106,7 @@ return(
                 <li className="nav-item">
                   <Link className="nav-link" to="/rutinas"> <img src="/iconos/rutina.png" alt="Rutina Icono" style={{ width: '25px' }} /> Rutinas</Link>
                 </li>
+
               </>
             )}
           </ul>
@@ -117,7 +118,10 @@ return(
                 <li className="nav-item">
                   <Link className="nav-link" to="/AgendaAlumno"><i className="bi bi-calendar-week"></i> Agendar consulta </Link>
                 </li>
-              <li className="nav-item">
+                <li className="nav-item">
+                  <Link className="nav-link" to="/editar/:id"><i className="bi bi-box-arrow-in-right"></i> Editar datos</Link>
+                </li>
+                <li className="nav-item">
                 <Link className="nav-link" to="/" onClick={handleLogout}><i className="bi bi-lock"></i> Cerrar Sesion</Link>
               </li>
             </ul>

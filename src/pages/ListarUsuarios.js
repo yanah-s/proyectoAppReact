@@ -121,7 +121,7 @@ const ListarUsuarios = () => {
     const [selectedId, setSelectedId] = useState(null);
 
     useEffect(() => {
-        console.log(localStorage);
+        
         traerUsuarios();
     }, []);
 
@@ -206,7 +206,9 @@ const ListarUsuarios = () => {
                   'User-ID': usuario.id
                 }
               });
+              
             setUsuarios(respuesta.data);
+
         } catch (err) {
             console.error('Error:', err);
             let errorMsg = 'Error de conexión';

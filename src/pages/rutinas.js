@@ -89,7 +89,17 @@ const Rutinas = () => {
       //listarUsuarios();
       if (categoria) {
         console.log("Fetching ejercicios for categoría:", categoria);
-        api.get(`/api/ejercicio/categoria`, { params: { categoria } })
+        const token = localStorage.getItem('token'); 
+          const usuario = JSON.parse(localStorage.getItem('usuario')); 
+        api.get(`/api/ejercicio/categoria`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'User-ID': usuario.id
+          },
+          params: {
+            categoria: categoria
+          }
+        })
           .then(response => {
             console.log("Ejercicios fetched:", response.data);
             setEjerciciosFiltrados(response.data);
@@ -147,8 +157,14 @@ const Rutinas = () => {
         try { 
           const token = localStorage.getItem('token'); 
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
-          const response = await api.get('/api/rutina_ej_alumno/usuario',  {
-            params: { usuario: usuarioId }
+          const response = await api.get('/api/rutina_ej_alumno/usuario', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'User-ID': usuario.id
+            },
+            params: {
+              usuario: usuarioId
+            }
           });
           console.log(response);
           setUserExercisesData(response.data);
@@ -275,19 +291,31 @@ const Rutinas = () => {
 
     const handleSave = async () => {
       try {
+        const token = localStorage.getItem('token'); 
+        const usuario = JSON.parse(localStorage.getItem('usuario')); 
+
         for (const date of selectedDates) {
           for (const ejercicio of exercisesData) {
-            await api.post('/api/rutina_ej_alumno', {
-              usuario: usuarioSeleccionado,
-              fecha: new Date(date).toISOString(), // Asegúrate de que la fecha esté en formato ISO
-              rutina: rutinaSeleccionada,
-              ejercicio: ejercicio._id,
-              series: Number(ejercicio.series),
-              repeticiones: Number(ejercicio.repeticiones),
-              peso: Number(ejercicio.peso),
-              observaciones: ejercicio.observaciones || '',
-              completado: false
-            });
+            await api.post(
+              '/api/rutina_ej_alumno', 
+              { 
+                usuario: usuarioSeleccionado,
+                fecha: new Date(date).toISOString(), // Asegúrate de que la fecha esté en formato ISO
+                rutina: rutinaSeleccionada,
+                ejercicio: ejercicio._id,
+                series: Number(ejercicio.series),
+                repeticiones: Number(ejercicio.repeticiones),
+                peso: Number(ejercicio.peso),
+                observaciones: ejercicio.observaciones || '',
+                completado: false
+              },
+              {
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'User-ID': usuario.id
+                }
+              }
+            );
           }
         }
         setOpenAsignarModal(false);
@@ -305,7 +333,20 @@ const Rutinas = () => {
   
     const handleEdit = async () => {
       try {
-        await api.put(`api/rutina_ej_alumno/${selectedExerciseData._id}`, selectedExerciseData);
+        const token = localStorage.getItem('token'); 
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+       
+        await api.put(
+          `/api/rutina_ej_alumno/${selectedExerciseData._id}`, 
+          selectedExerciseData,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'User-ID': usuario.id
+            }
+          }
+        );
+       
         const updatedData = [...userExercisesData];
         updatedData[selectedRow] = selectedExerciseData;
         setUserExercisesData(updatedData);
@@ -325,7 +366,14 @@ const Rutinas = () => {
       if (selectedRow !== null) {
         try {
           const selectedData = userExercisesData[selectedRow];
-          await api.delete(`/api/rutina_ej_alumno/${selectedData._id}`);
+          const token = localStorage.getItem('token'); 
+          const usuario = JSON.parse(localStorage.getItem('usuario'));
+          await api.delete(`/api/rutina_ej_alumno/${selectedData._id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'User-ID': usuario.id
+            }
+          });
           const updatedData = userExercisesData.filter((_, index) => index !== selectedRow);
           setUserExercisesData(updatedData);
           setSelectedRow(null);
@@ -401,8 +449,21 @@ const Rutinas = () => {
       if (selectedRow !== null) {
         const updatedExercise = userExercisesData[selectedRow];
         try {
-          await api.put(`/api/rutina_ej_alumno/${updatedExercise._id}`, updatedExercise);
-          console.log('Updated successfully');
+          const token = localStorage.getItem('token'); 
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+         
+          await api.put(
+            `/api/rutina_ej_alumno/${updatedExercise._id}`, 
+            updatedExercise,
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'User-ID': usuario.id
+              }
+            }
+          );
+        
+        console.log('Updated successfully');
         } catch (error) {
           console.error('Error updating exercise:', error);
         }
