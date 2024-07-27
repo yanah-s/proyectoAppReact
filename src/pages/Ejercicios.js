@@ -258,18 +258,18 @@ const Ejercicios = () => {
                               <TableCell>{ejercicio.otrosMusculos.join(', ')}</TableCell>
                               <TableCell>{ejercicio.descripcion}</TableCell>
                               <TableCell>
-                              {ejercicio.video ? (
-                                <ReactPlayer
-                                  url={`https://www.youtube.com/watch?v=${ejercicio.video.split('v=')[1]}`}
-                                  controls
-                                  width="120px"
-                                  height="90px"
-                                  onClick={() => abrirVideoModal(ejercicio.video)}
-                                />
-                              ) : (
-                                <span>No hay video disponible</span>
-                              )}
-                            </TableCell>
+                                {ejercicio.video ? (
+                                  <ReactPlayer
+                                    url={`https://www.youtube.com/watch?v=${ejercicio.video.split('v=')[1]}`}
+                                    controls
+                                    width="120px"
+                                    height="90px"
+                                    onClick={() => abrirVideoModal(ejercicio.video)}
+                                  />
+                                ) : (
+                                  <span>No hay video disponible</span>
+                                )}
+                              </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>

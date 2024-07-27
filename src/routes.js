@@ -14,10 +14,15 @@ import EditarUsuarioDesdeAdmin from './pages/EditarUsuarioDesdeAdmin';
 import Logout from './pages/Logout';
 import Ejercicios from './pages/Ejercicios';
 import Rutinas from './pages/rutinas';
+<<<<<<< HEAD
 import Avances from './pages/Avances';
 import AgendaAlumno from './pages/AgendaAlumno';
 
 
+=======
+import VerRutinas from './pages/VerRutinas';
+import Notificaciones from './components/Notificaciones';
+>>>>>>> origin/visualizar_rutina
 const AppRoutes = () => {
   //  const isAuthenticated = !!localStorage.getItem('token');
   //  const isAdmin =  localStorage.getItem('admin') === 'true';
@@ -30,10 +35,14 @@ const AppRoutes = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/recuperar-password" element={<RecuperarPassword />} />
           <Route path="/" element={<Home />} />
+          <Route path="/ejercicios" element={<Ejercicios />} />
+          <Route path="/rutinas" element={<Rutinas />} />
+          <Route path="/verRutinas" element={<VerRutinas />} />
+          {/* <Route path="/CrearUsuario" element={<CrearUsuario />} /> */}
           <Route path="/AgendaUsuarios" element={<AgendaUsuarios />} />
             
-              <Route path="/ejercicios" element={<Ejercicios />} />
-              <Route path="/rutinas" element={<Rutinas />} />
+              {/* <Route path="/ejercicios" element={<Ejercicios />} />
+              <Route path="/rutinas" element={<Rutinas />} /> */}
               <Route path="/DisponibilidadAgenda" element={<DisponibilidadAgenda />} />
               <Route path="/ListarUsuarios" element={<ListarUsuarios />} />
               <Route path="/editar/:id" element={<EditarUsuario />} />

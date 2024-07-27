@@ -109,6 +109,13 @@ return(
 
               </>
             )}
+            {isAuthenticated && !isAdmin &&(
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/verRutinas" ><img src="/iconos/rutina.png" alt="Rutina Icono" style={{ width: '25px' }} /> Ver Rurina</Link>
+                </li>
+              </>
+            )}
           </ul>
           {isAuthenticated && (
             <ul className="nav flex-column mt-auto" id="pestañas_hamburguesa">
