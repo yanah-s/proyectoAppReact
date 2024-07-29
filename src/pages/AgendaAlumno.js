@@ -29,6 +29,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import './AgendaUsuarios.css';
 import { useNavigate } from 'react-router-dom';
 
+
 const tema = createTheme({
   palette: {
     primary: {
@@ -67,11 +68,31 @@ const AgendaAlumno = () => {
   const [error, setError] = useState([]);
   const [mensaje, setMensaje] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [turnoUsuario, setTurnoUsuario] = useState(null);
+
+  const [fechaUsuario, setFechaUsuario] = useState(null);
+  const [horaUsuario, setHoraUsuario] = useState(null);
+  const isButtonDisabled = turnoUsuario === null || loading;
+  const formatFecha = (fecha) => {
+    const opciones = { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'America/Montevideo' };
+    return new Intl.DateTimeFormat('es-ES', opciones).format(new Date(fecha));
+  };
+
+  // Función para formatear la hora
+  const formatHora = (hora) => {
+    const opciones = { hour: '2-digit', minute: '2-digit', timeZone: 'America/Montevideo' };
+    return new Intl.DateTimeFormat('es-ES', opciones).format(new Date(hora));
+  };
+
+  // Definir las fechas y horas formateadas
+  const fechaFormateada = formatFecha(fechaUsuario);
+  const horaFormateada = formatHora(horaUsuario);
 
   useEffect(() => {
     const fetchDisponibilidad = async () => {
       try {
         const response = await api.get('/api/agenda'); 
+        
        setDisponibilidad(response.data);
       } catch (error) {
         console.error('Error al obtener la disponibilidad de agenda:', error);
@@ -81,6 +102,54 @@ const AgendaAlumno = () => {
     fetchDisponibilidad();
   }, []);
 
+  useEffect(() => {
+    consultarAgendaCliente(); 
+  }, []);
+
+  useEffect(() => {
+    if (turnoUsuario) {
+      console.log('Datos de la agenda:', turnoUsuario);
+    }
+  }, [turnoUsuario]);
+
+    const consultarAgendaCliente = async (e) => {
+      try {
+        const token = localStorage.getItem('token'); 
+        const usuario = JSON.parse(localStorage.getItem('usuario')); 
+        
+        const responseAgenda = await api.get('/api/agenda/agendaAlumno/', {
+          headers: {
+              'Authorization': `Bearer ${token}`,
+              'User-ID': usuario.id
+            },
+            params: {
+              usuario: usuario.id
+            }
+        });
+      
+        setTurnoUsuario(responseAgenda.data);
+        setFechaUsuario(responseAgenda.data.fecha);
+        setHoraUsuario(responseAgenda.data.hora_desde);
+
+        
+      }  catch (err) {
+          let errorMsg = 'Error de conexión';
+    
+          if (err.response) {
+            if (err.response.data && err.response.data.errors) {
+              setError(err.response.data.errors);
+            } else if (err.response.data && err.response.data.message) {
+              setError([err.response.data.message]);
+            } else {
+              errorMsg = `Error: ${err.response.status} ${err.response.statusText}`;
+              setError([errorMsg]);
+            }
+          } else {
+            setError([errorMsg]);
+          }
+        }
+    }
+  
 
   const handleSubmitAgenda = async (e) => {
     e.preventDefault();
@@ -89,11 +158,15 @@ const AgendaAlumno = () => {
     setMensaje(null);
 
    try {
+    if (Object.keys(selectedTurnos).length === 0) {
+      const errorMsg = "Debe seleccionar un turno en la agenda";
+      setError([errorMsg]);
+      return;
+    }
      
       
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario')); 
-      console.log("usuarioid   :" + usuario.id + "token" + token);
       const dataAgenda = {
         usuarioId: usuario.id, 
         turnoId : selectedTurnos,
@@ -184,8 +257,10 @@ return (
             alignItems: 'center',
           }}
         >
-           <p>Si deseas que nos reunamos para tener una consulta de evaluación, agenda tu cita:</p> 
-
+          <p>Usted tiene un turno agendado para el día {fechaFormateada} a las {horaFormateada}hs</p>
+        {/* <p>Si deseas que nos reunamos para tener una consulta de evaluación, agenda tu cita:</p> */}
+      
+         
           <Box component="form" noValidate sx={{ mt: 1 }}>
             
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -229,13 +304,7 @@ return (
                 ))}
               </Alert>
             )}
-             {error.length > 0 && (
-              <Alert severity="error">
-                {error.map((e, i) => (
-                  <div key={i}>{e}</div>
-                ))}
-              </Alert>
-            )}
+
             {mensaje && <Typography color="success.main">{mensaje}</Typography>}
           </Box>
         </Box>
@@ -304,15 +373,15 @@ return (
               </Table>
             </TableContainer>
             <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              disabled={loading}
-              onClick={seleccionTurno}
-            >
-              {loading ? <CircularProgress size={24} color="inherit" /> : 'SELECCIONAR TURNO'}
-            </Button>
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            disabled={isButtonDisabled}
+            onClick={seleccionTurno}
+          >
+            {loading ? <CircularProgress size={24} color="inherit" /> : 'SELECCIONAR TURNO'}
+          </Button>
           </Box>
         </Fade>
       </Modal>

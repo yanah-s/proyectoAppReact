@@ -5,6 +5,7 @@ import { Button, CssBaseline, TextField, Grid, Paper, Box, Typography, CircularP
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AvanceEjercicios from '../components/AvanceEjercicios';
 import AvancePesoAlumno from '../components/AvancePesoAlumno';
+import PorcentajeAsitencia from '../components/PorcentajeAsitencia';
 import ReactDOM from 'react-dom';
 
 const tema = createTheme({
@@ -59,18 +60,22 @@ const tema = createTheme({
         <h1>Registra tus avances</h1>
         <p>Cada 7 días puedes registrar los nuevos avances</p>
           <Grid container spacing={6}> {/* Ajusta el valor de spacing aquí */}
+            
             <Grid item xs={12} md={6}>
               <Paper style={{ padding: 20 }}>
-              <h1>     Prograsión KG     </h1>
+              <h1>     Progresión KG     </h1>
+              <br></br>
                 <AvanceEjercicios />
               </Paper>
             </Grid>
             <Grid item xs={12} md={6}>
-           
+              
+            <Paper style={{ padding: 20 }}>
+                <PorcentajeAsitencia />
+              </Paper>
+              <br></br>
               <Paper style={{ padding: 20 }}>
               <h1>  Peso corporal   </h1>
-              <br></br>
-              <br></br>
                 <AvancePesoAlumno />
                 <br></br>
               </Paper>

@@ -106,19 +106,16 @@ return(
                 <li className="nav-item">
                   <Link className="nav-link" to="/rutinas"> <img src="/iconos/rutina.png" alt="Rutina Icono" style={{ width: '25px' }} /> Rutinas</Link>
                 </li>
-
+                <li className="nav-item">
+                  <Link className="nav-link" to="/AvancesUsuarios"> <i className="bi-bar-chart-line"></i> Avances </Link>
+                </li>
               </>
             )}
             {isAuthenticated && !isAdmin &&(
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/verRutinas" ><img src="/iconos/rutina.png" alt="Rutina Icono" style={{ width: '25px' }} /> Ver Rurina</Link>
+                  <Link className="nav-link" to="/verRutinas" ><img src="/iconos/rutina.png" alt="Rutina Icono" style={{ width: '25px' }} /> Ver Rutinas</Link>
                 </li>
-              </>
-            )}
-          </ul>
-          {isAuthenticated && (
-            <ul className="nav flex-column mt-auto" id="pestañas_hamburguesa">
                 <li className="nav-item">
                   <Link className="nav-link" to="/Avances"><i className="bi-bar-chart-line"></i> Avances </Link>
                 </li>
@@ -128,6 +125,12 @@ return(
                 <li className="nav-item">
                   <Link className="nav-link" to="/editar/:id"><i className="bi bi-box-arrow-in-right"></i> Editar datos</Link>
                 </li>
+              </>
+            )}
+          </ul>
+          {isAuthenticated && (
+            <ul className="nav flex-column mt-auto" id="pestañas_hamburguesa">
+               
                 <li className="nav-item">
                 <Link className="nav-link" to="/" onClick={handleLogout}><i className="bi bi-lock"></i> Cerrar Sesion</Link>
               </li>

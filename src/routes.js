@@ -14,15 +14,11 @@ import EditarUsuarioDesdeAdmin from './pages/EditarUsuarioDesdeAdmin';
 import Logout from './pages/Logout';
 import Ejercicios from './pages/Ejercicios';
 import Rutinas from './pages/rutinas';
-<<<<<<< HEAD
 import Avances from './pages/Avances';
 import AgendaAlumno from './pages/AgendaAlumno';
-
-
-=======
 import VerRutinas from './pages/VerRutinas';
-import Notificaciones from './components/Notificaciones';
->>>>>>> origin/visualizar_rutina
+import AvancesUsuarios from './pages/AvancesUsuarios';
+
 const AppRoutes = () => {
   //  const isAuthenticated = !!localStorage.getItem('token');
   //  const isAdmin =  localStorage.getItem('admin') === 'true';
@@ -48,7 +44,7 @@ const AppRoutes = () => {
               <Route path="/editar/:id" element={<EditarUsuario />} />
               <Route path="/DesactivarUsuario" element={<DesactivarUsuario />} />
               <Route path="/EditarUsuarioDesdeAdmin/:id" element={<EditarUsuarioDesdeAdmin />} />
-  
+              <Route path="/AvancesUsuarios" element={<AvancesUsuarios />} />
           
             <>
             <Route path="/AgendaAlumno" element={<AgendaAlumno />} />

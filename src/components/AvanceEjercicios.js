@@ -3,7 +3,7 @@ import { Select, MenuItem, FormControl, InputLabel, Button, TextField } from '@m
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 import api from '../configuracion/axiosconfig';
 
-const AvanceEjercicios = () => {
+const AvanceEjercicios = ({ id }) => {
   const [formulario, setFormulario] = useState({ ejercicio: '', peso: '' });
   const [ejercicios, setEjercicios] = useState([]);
   const [selectedOption, setSelectedOption] = useState('');
@@ -11,6 +11,7 @@ const AvanceEjercicios = () => {
   const [avances, setAvances] = useState([]);
   const [fechaUltimoEjercicio, setFechaUltimoEjercicio] = useState(null);
   const hoy = new Date();
+  const mostrarComponentes = id === undefined || id === null;
   
   const sePuedeHabilitar = fechaUltimoEjercicio ? ((hoy - fechaUltimoEjercicio) / (1000 * 60 * 60 * 24)) >= 1 : true;
 
@@ -19,6 +20,13 @@ const AvanceEjercicios = () => {
     console.log(sePuedeHabilitar);
     console.log(fechaUltimoEjercicio);
   }, []);
+
+
+  useEffect(() => {
+    listarEjercicios();
+    obtenerAvances();
+  }, [id]);
+
 
   useEffect(() => {
     const options = ejercicios.reduce((acc, ejercicio) => {
@@ -52,9 +60,22 @@ const AvanceEjercicios = () => {
     }
   };
 
+  
   const obtenerAvances = async () => {
+    console.log("id recibido" + id);
+    // const token = localStorage.getItem('token');
+    // const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    // // Usa el id del prop si está disponible, de lo contrario usa el del localStorage
+    // const usuarioId = id || usuario.id;
+
     const token = localStorage.getItem('token');
-    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    const usuarioId = id || JSON.parse(localStorage.getItem('usuario')).id;
+
+        if (!usuarioId) {
+          throw new Error('No se encontró el id del usuario.');
+        }
+
     const selectedEjercicio = dataOptions[selectedOption];
   
     if (!selectedEjercicio) return;
@@ -62,11 +83,16 @@ const AvanceEjercicios = () => {
     const ejercicioId = selectedEjercicio._id;
   
     try {
+
+      
       const response = await api.get(`/api/avances/usuarioEjercicio?ejercicio=${ejercicioId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'User-ID': usuario.id
-        }
+          'User-ID': JSON.parse(localStorage.getItem('usuario')).id
+        },
+        params: {
+          usuario: usuarioId,
+        },
       });
   
       if (!response.data || response.data.length === 0) {
@@ -148,6 +174,7 @@ const AvanceEjercicios = () => {
             </MenuItem>
           ))}
         </Select>
+        {mostrarComponentes && (
         <TextField
           margin="normal"
           required
@@ -161,9 +188,11 @@ const AvanceEjercicios = () => {
           value={formulario.peso}
           onChange={handlePesoChange}
         />
+      )}
         {/* <Button variant="contained" color="primary" onClick={registrarAvance} sx={{ width: '45%' }}>
           Registrar
         </Button> */}
+      {mostrarComponentes && (
               <Button
         variant="contained"
         color="primary"
@@ -173,7 +202,10 @@ const AvanceEjercicios = () => {
       >
         Registrar
       </Button>
+       )}
+      <br></br>
       </FormControl>
+      
 
       <ResponsiveContainer width="100%" height={200}>
         <LineChart data={avances} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>

@@ -5,7 +5,7 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import axios from 'axios';
+import api from '../configuracion/axiosconfig';
 import YouTube from 'react-youtube';
 import ReactPlayer from 'react-player';
 
@@ -71,10 +71,17 @@ const VerRutinas = () => {
 
   const fetchExercises = async () => {
     try {
+      const token = localStorage.getItem('token');
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
+
       if (!usuarioId) {
         throw new Error('El ID del usuario no está definido');
       }
-      const response = await axios.get('http://localhost:3000/api/rutina_ej_alumno/usuario', {
+      const response = await api.get('api/rutina_ej_alumno/usuario', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'usuario': usuario.id
+        },
         params: { usuario: usuarioId, fecha: selectedDate.format('YYYY-MM-DD') }
       });
       const ejercicios = response.data;
@@ -133,9 +140,17 @@ const VerRutinas = () => {
 
   const handleConfirmClick = async (rutinaId) => {
     const updates = [];
+    // for (const ejercicioId in tempCompletado) {
+    //   updates.push(
+    //     axios.patch(`http://localhost:3000/api/rutina_ej_alumno/${ejercicioId}`, {
+    //       completado: tempCompletado[ejercicioId],
+    //     })
+    //   );
+    // }
+
     for (const ejercicioId in tempCompletado) {
       updates.push(
-        axios.patch(`http://localhost:3000/api/rutina_ej_alumno/${ejercicioId}`, {
+        api.patch(`/api/rutina_ej_alumno/${ejercicioId}`, {
           completado: tempCompletado[ejercicioId],
         })
       );
