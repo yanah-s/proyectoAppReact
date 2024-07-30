@@ -59,12 +59,16 @@ const Notificaciones = () => {
 
     const handleNotificationClick = (notification) => {
         // Verifica el contenido del mensaje de la notificación
+        const admin = localStorage.getItem('admin') === 'true';
         if (notification.message.includes('agendo')) {
             navigate('/ListarUsuarios');
         }
-        if (notification.message.includes('rutina')) {
-            navigate('/');  //CAMBIAR A VISUALIZAR RUTINA CUANDO ESTE PRONTA
+        if (notification.message.includes('rutina') && !admin ) {
+            navigate('/verRutinas');  
         }
+        if (notification.message.includes('rutina') && admin) {
+            navigate('/rutinas');  
+        } 
     };
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;

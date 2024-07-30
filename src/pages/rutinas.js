@@ -740,7 +740,13 @@ const Rutinas = () => {
                                     <TableCell>{ejercicio.series}</TableCell>
                                     <TableCell>{ejercicio.repeticiones}</TableCell>
                                     <TableCell>{ejercicio.peso}</TableCell>
-                                    <TableCell>{ejercicio.observaciones}</TableCell>
+                                    <TableCell>
+                                    <Typography>
+                                        {ejercicio.observaciones.split('\n\n').map((line, index) => (
+                                          <p key={index}>{line}</p>
+                                        ))}
+                                      </Typography>
+                                    </TableCell>
                                     <TableCell>{formatDate(ejercicio.fecha) || ''}</TableCell>
                                   </TableRow>
                                 ))}
