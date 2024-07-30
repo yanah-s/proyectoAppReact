@@ -19,7 +19,8 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  Link
 } from '@mui/material';
 import api from '../configuracion/axiosconfig';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -69,10 +70,12 @@ const AgendaAlumno = () => {
   const [mensaje, setMensaje] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [turnoUsuario, setTurnoUsuario] = useState(null);
-
   const [fechaUsuario, setFechaUsuario] = useState(null);
   const [horaUsuario, setHoraUsuario] = useState(null);
-  const isButtonDisabled = turnoUsuario === null || loading;
+  const [idTurno, setIdTurno] = useState(null);
+  const [mostrarFechaAgendada, setMostrarFechaAgendada] = useState(false);
+  const isButtonDisabled = selectedTurnos === null || loading || mostrarFechaAgendada;
+  console.log('isButtonDisabled:', isButtonDisabled);
   const formatFecha = (fecha) => {
     const opciones = { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'America/Montevideo' };
     return new Intl.DateTimeFormat('es-ES', opciones).format(new Date(fecha));
@@ -104,6 +107,7 @@ const AgendaAlumno = () => {
 
   useEffect(() => {
     consultarAgendaCliente(); 
+
   }, []);
 
   useEffect(() => {
@@ -126,13 +130,24 @@ const AgendaAlumno = () => {
               usuario: usuario.id
             }
         });
-      
+        if(responseAgenda.status != 204){
+        console.log(usuario.id);
+        console.log(responseAgenda.data);
         setTurnoUsuario(responseAgenda.data);
         setFechaUsuario(responseAgenda.data.fecha);
         setHoraUsuario(responseAgenda.data.hora_desde);
-
+        setIdTurno(responseAgenda.data._id);
+        setMostrarFechaAgendada(responseAgenda.data.fecha !== undefined && responseAgenda.data.fecha !== null && responseAgenda.data.hora_desde !== undefined && responseAgenda.data.hora_desde !== null);
+   
+        }
+        else {
+          console.log("No hay turnos agendados para el usuario.");
+          setMostrarFechaAgendada(false);
+        }
+           
         
       }  catch (err) {
+        
           let errorMsg = 'Error de conexión';
     
           if (err.response) {
@@ -149,7 +164,42 @@ const AgendaAlumno = () => {
           }
         }
     }
-  
+    const cancelarTurno = async (e) => {
+      try {
+        const token = localStorage.getItem('token'); 
+        const usuario = JSON.parse(localStorage.getItem('usuario')); 
+        console.log("mandando en params" + usuario.id + idTurno);
+        const responseAgenda = await api.put('/api/agenda/eliminar/', 
+          { 
+            usuarioId: usuario.id,
+            turnoId: idTurno
+          }, 
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'User-ID': usuario.id
+            }
+          });
+        setMensaje("Turno eliminado");
+        consultarAgendaCliente();
+      } catch (err) {
+        let errorMsg = 'Error de conexión';
+    
+        if (err.response) {
+          if (err.response.data && err.response.data.errors) {
+            setError(err.response.data.errors);
+          } else if (err.response.data && err.response.data.message) {
+            setError([err.response.data.message]);
+          } else {
+            errorMsg = `Error: ${err.response.status} ${err.response.statusText}`;
+            setError([errorMsg]);
+          }
+        } else {
+          setError([errorMsg]);
+        }
+      }
+    };
+
 
   const handleSubmitAgenda = async (e) => {
     e.preventDefault();
@@ -178,6 +228,7 @@ const AgendaAlumno = () => {
           }
       });
       setMensaje('Turno agendado exitosamente.');
+      consultarAgendaCliente();
     
     } catch (err) {
       let errorMsg = 'Error de conexión';
@@ -257,12 +308,28 @@ return (
             alignItems: 'center',
           }}
         >
+           {!mostrarFechaAgendada && (
+          <p>Puedes agendar una consulta de evaluación si lo deseas.</p>
+          
+        )}
+         {mostrarFechaAgendada && (
           <p>Usted tiene un turno agendado para el día {fechaFormateada} a las {horaFormateada}hs</p>
-        {/* <p>Si deseas que nos reunamos para tener una consulta de evaluación, agenda tu cita:</p> */}
-      
-         
+          
+        )}
+         {mostrarFechaAgendada && (
+          <Grid item xs>
+          <Link
+          component="button"
+          variant="body2"
+           onClick={cancelarTurno}
+          color="primary"
+        >
+          Deseo cancelar mi turno
+        </Link>
+        </Grid>
+        )}
           <Box component="form" noValidate sx={{ mt: 1 }}>
-            
+          {mensaje && <Typography color="success.main">{mensaje}</Typography>}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateCalendar
                 value={fechaSeleccionada}
@@ -292,7 +359,7 @@ return (
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={loading}
+              disabled={isButtonDisabled}
               onClick={handleSubmitAgenda}
             >
               {loading ? <CircularProgress size={24} color="inherit" /> : 'AGENDAR'}
@@ -305,7 +372,6 @@ return (
               </Alert>
             )}
 
-            {mensaje && <Typography color="success.main">{mensaje}</Typography>}
           </Box>
         </Box>
       </Grid>

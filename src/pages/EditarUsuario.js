@@ -294,6 +294,7 @@ const EditarUsuario = () => {
                 autoComplete="nombre"
                 value={formulario.nombre}
                 onChange={eventoCambio}
+                disabled
               />
               <TextField
                 margin="normal"
