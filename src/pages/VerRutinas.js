@@ -23,7 +23,7 @@ const tema = createTheme({
       },
       background: {
         default: '#121212',
-        paper: '#1d1d1d',
+        paper: '#212529' ,
       },
       text: {
         primary: '#ffffff',
@@ -210,7 +210,7 @@ const VerRutinas = () => {
               <Typography variant="h5" component="h1" gutterBottom>
                 Visualizar Rutinas
               </Typography>
-              <DatePicker
+              {/* <DatePicker
                 value={selectedDate}
                 onChange={handleDateChange}
                 renderInput={(params) => <TextField {...params} />}
@@ -229,7 +229,27 @@ const VerRutinas = () => {
                     }
                   }
                 }}
-              />
+              /> */}
+                <DatePicker
+                value={selectedDate}
+                onChange={handleDateChange}
+                renderInput={(params) => (
+                  <TextField 
+                    {...params} 
+                    sx={{ 
+                      backgroundColor: tema.palette.background.paper, 
+                      borderRadius: '5px', 
+                      margin: '20px' 
+                    }}
+                    InputProps={{ 
+                      ...params.InputProps, // Asegúrate de propagar las propiedades necesarias
+                      style: { 
+                        color: tema.palette.text.primary 
+                      } 
+                    }}
+                  />
+                )}
+                />
               <List>
                 {Object.values(exercisesByRutina).map((rutinaData) => (
                   <React.Fragment key={rutinaData.rutinaId}>

@@ -44,7 +44,8 @@ const tema = createTheme({
     },
     background: {
       default: '#121212',
-      paper: '#1d1d1d',
+      // paper: '#1d1d1d',
+       paper: '#212529'
       
     },
     text: {

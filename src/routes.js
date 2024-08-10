@@ -18,6 +18,7 @@ import Avances from './pages/Avances';
 import AgendaAlumno from './pages/AgendaAlumno';
 import VerRutinas from './pages/VerRutinas';
 import AvancesUsuarios from './pages/AvancesUsuarios';
+import Motivacion from './pages/Motivacion';
 
 const AppRoutes = () => {
   //  const isAuthenticated = !!localStorage.getItem('token');
@@ -47,6 +48,8 @@ const AppRoutes = () => {
               <Route path="/AvancesUsuarios" element={<AvancesUsuarios />} />
           
             <>
+            <Route path="/Motivacion" element={<Motivacion />} />
+
             <Route path="/AgendaAlumno" element={<AgendaAlumno />} />
             <Route path="/Avances" element={<Avances />} />
             <Route path="/Logout" element={<Logout />} /></> 

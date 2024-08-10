@@ -41,7 +41,7 @@ const tema = createTheme({
     },
     background: {
       default: '#121212',
-      paper: '#1d1d1d',
+      paper: '#212529' 
     },
     text: {
       primary: '#ffffff',
@@ -171,6 +171,10 @@ const DisponibilidadAgenda = () => {
       
      setMensajeTabla(response.data);
 
+     setTimeout(() => {
+      setMensajeTabla(null);
+    }, 3000);
+
        
      setTurnosLibres((prevTurnosLibres) => {
       // Crear una copia del array de turnos sin el eliminado
@@ -248,6 +252,9 @@ const DisponibilidadAgenda = () => {
         }
       });
       setMensaje('Disponibilidad registrada exitosamente');
+      setTimeout(() => {
+        setMensaje(null);
+      }, 3000);
 
       const nuevosDatos = { ...formulario.datos };
       Object.keys(nuevosDatos).forEach(key => delete nuevosDatos[key]);
@@ -338,7 +345,8 @@ return (
           </Box>
         </Grid>
 
-        <Grid item xs={12} sm={12} md={7}>
+        {/* <Grid item xs={12} sm={12} md={7}> */}
+        <Grid item xs={12} sm={12} md={7} component={Paper} elevation={6} square>
           <Box sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <ul className="nav nav-tabs nav-justified">
           <li className="nav-item">

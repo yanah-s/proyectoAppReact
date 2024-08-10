@@ -42,7 +42,8 @@ const tema = createTheme({
     },
     background: {
       default: '#121212',
-      paper: '#1d1d1d',
+      // paper: '#1d1d1d',
+      paper: '#212529'
       
     },
     text: {
@@ -90,48 +91,124 @@ const AgendaUsuarios = () => {
     fetchDisponibilidad();
   }, []);
  
-  const handleSubmitUsuario = async (e) => {
+  // const handleSubmitUsuario = async (e) => {
     
-    e.preventDefault();
-    setLoading(true);
-    setError([]);
-    setMensaje(null);
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setError([]);
+  //   setMensaje(null);
     
     
-    try {
+  //   try {
       
-      if( formulario.nombre== ''| formulario.email=='' | formulario.fNacimiento== '' | formulario.password=='' |formulario.password2==''|formulario.telefono==''){
+  //     if (formulario.nombre === '' || formulario.email === '' || formulario.fNacimiento === '' || formulario.password === '' || formulario.password2 === '' || formulario.telefono === '') {
+  //       const errorMsg = "Revise su formulario";
+  //       setError([errorMsg]);
+  //       setLoading(false);
+  //       return; 
+  //     }
+  //     const coincide = validarPassword(formulario.password, formulario.password2);
+  //     if (!coincide) {
+
+  //       const errorMsg = "Las contraseñas no coinciden";
+  //       setError([errorMsg]);
+  //       return;
+  //     }
+  //       if (Object.keys(selectedTurnos).length === 0) {
+  //         const errorMsg = "Debe seleccionar un turno en la agenda";
+  //         setError([errorMsg]);
+  //         return;
+  //       }
+  //       const respuestaUsuario = await api.post('/api/usuarios/', formulario);
+  //       const dataAgenda = {
+  //         usuarioId: respuestaUsuario.data.value._id, 
+  //         turnoId : selectedTurnos,
+  //       };
+  //       const responseAgenda = await api.put('/api/agenda/',dataAgenda, {
+  //         headers: {
+  //             'Content-Type': 'application/json'
+  //         }
+  //       });
+  //       setMensaje('Usuario registrado y turno agendado exitosamente.');
+  //       navigate('/login');
+  //     }
+  //      catch (err) {
+  //     let errorMsg = 'Error de conexión';
+
+  //     if (err.response) {
+  //       if (err.response.data && err.response.data.errors) {
+  //         setError(err.response.data.errors);
+  //       } else if (err.response.data && err.response.data.message) {
+  //         setError([err.response.data.message]);
+  //       } else {
+  //         errorMsg = `Error: ${err.response.status} ${err.response.statusText}`;
+  //         setError([errorMsg]);
+  //       }
+  //     } else {
+  //       setError([errorMsg]);
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const handleSubmitUsuario = async (e) => {
+    e.preventDefault(); 
+  
+    setLoading(true);
+  
+    try {
+      // Validación de formulario
+      if (formulario.nombre === '' || formulario.email === '' || formulario.fNacimiento === '' || formulario.password === '' || formulario.password2 === '' || formulario.telefono === '') {
         const errorMsg = "Revise su formulario";
         setError([errorMsg]);
+        return; 
       }
+  
+      // Validación de contraseñas
       const coincide = validarPassword(formulario.password, formulario.password2);
       if (!coincide) {
-
         const errorMsg = "Las contraseñas no coinciden";
         setError([errorMsg]);
         return;
       }
-        if (Object.keys(selectedTurnos).length === 0) {
-          const errorMsg = "Debe seleccionar un turno en la agenda";
-          setError([errorMsg]);
-          return;
-        }
-        const respuestaUsuario = await api.post('/api/usuarios/', formulario);
-        const dataAgenda = {
-          usuarioId: respuestaUsuario.data.value._id, 
-          turnoId : selectedTurnos,
-        };
-        const responseAgenda = await api.put('/api/agenda/',dataAgenda, {
-          headers: {
-              'Content-Type': 'application/json'
-          }
-        });
-        setMensaje('Usuario registrado y turno agendado exitosamente.');
-        navigate('/login');
+  
+      // Validación de turno
+      if (Object.keys(selectedTurnos).length === 0) {
+        const errorMsg = "Debe seleccionar un turno en la agenda";
+        setError([errorMsg]);
+        return;
       }
-       catch (err) {
+  
+      // Primera petición: Crear usuario
+      const respuestaUsuario = await api.post('/api/usuarios/', formulario);
+      console.log('Usuario creado:', respuestaUsuario.data);
+  
+      // Preparar datos para la segunda petición
+      const dataAgenda = {
+        usuarioId: respuestaUsuario.data.value._id, 
+        turnoId: selectedTurnos,
+      };
+  
+      console.log('Datos para agendar:', dataAgenda);
+  
+      // Segunda petición: Agendar turno
+      const responseAgenda = await api.put('/api/agenda/', dataAgenda, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      console.log('Respuesta de agenda:', responseAgenda.data);
+  
+      // Mensaje de éxito y redirección
+      setMensaje('Usuario registrado y turno agendado exitosamente.');
+      navigate('/login');
+  
+    } catch (err) {
+      console.log('Error:', err);  // Log adicional para depurar errores
       let errorMsg = 'Error de conexión';
-
+  
       if (err.response) {
         if (err.response.data && err.response.data.errors) {
           setError(err.response.data.errors);
@@ -145,9 +222,10 @@ const AgendaUsuarios = () => {
         setError([errorMsg]);
       }
     } finally {
-      setLoading(false);
+      setLoading(false); // Asegúrate de que esto se ejecute siempre
     }
   };
+  
 
   const validarPassword = (password, password2) => {
     return password === password2;
@@ -221,14 +299,7 @@ return (
             alignItems: 'center',
           }}
         >
-          {/* <Typography component="h1" variant="h5" className='h2agenda'> */}
-           <h2>EMPIEZA HOY!!</h2> 
-          {/* </Typography> */}
-        {/*   <br></br>
-          <Typography component="h3" variant="h5"  sx={{ fontSize: '1rem' }}>
-            Agenda una entrevista sin costo, para que podamos definir juntos un plan de entrenamiento.
-          </Typography>
-          <br></br> */}
+           <h2>¡EMPIEZA HOY!</h2> 
           <Box component="form" noValidate sx={{ mt: 1 }}>
             
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -363,12 +434,19 @@ return (
                   >
                     {loading ? <CircularProgress size={24} color="inherit" /> : 'Registrar'}
                   </Button>
-                  {error.length > 0 && (
+                  {/* {error.length > 0 && (
                     <Typography color="error">
                       {error.map((e, i) => (
                         <div key={i}>{e}</div>
                       ))}
                     </Typography>
+                  )} */}
+                   {error.length > 0 && (
+                    <Alert severity="error">
+                      {error.map((e, i) => (
+                        <div key={i}>{e}</div>
+                      ))}
+                    </Alert>
                   )}
                   {mensaje && <Typography color="success.main">{mensaje}</Typography>}
                 </form>

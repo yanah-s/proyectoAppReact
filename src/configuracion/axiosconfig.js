@@ -38,7 +38,7 @@ if (token) {
 api.interceptors.response.use(
   response => response,
   error => {
-    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+    if (error.response && ( error.response.status === 403)) {
       // Token ha expirado o es inválido, redirigir al usuario al inicio de sesión
       localStorage.removeItem('token'); 
       if (window.location.href !== window.location.origin + '/login') {

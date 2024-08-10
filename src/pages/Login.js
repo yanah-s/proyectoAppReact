@@ -8,6 +8,7 @@ import {
   Box,
   Grid,
   Typography,
+  Alert,
   Modal,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -16,32 +17,32 @@ import RecuperarPassword from './RecuperarPassword';
 import api from '../configuracion/axiosconfig'; 
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
-
+import Motivacion from './Motivacion.js'; 
 
 const tema = createTheme({
   palette: {
     primary: {
-      main: '#424242', // Gris oscuro
+      main: '#424242',
     },
     secondary: {
-      main: '#757575', // Gris medio
+      main: '#757575',
     },
     error: {
-      main: '#ff5252', // Rojo claro
+      main: '#ff5252',
     },
     background: {
-      default: '#121212', // Fondo casi negro
-      paper: '#1d1d1d', // Fondo de papel gris oscuro
+      default: '#121212',
+      paper: '#212529',
     },
     text: {
-      primary: '#ffffff', // Texto blanco
-      secondary: '#bdbdbd', // Texto gris claro
+      primary: '#ffffff',
+      secondary: '#bdbdbd',
     },
   },
   typography: {
     h4: {
       fontSize: '2rem',
-      color: '#e0e0e0', // Texto h4 en gris claro
+      color: '#e0e0e0',
     },
   },
 });
@@ -51,13 +52,25 @@ const Login = () => {
     email: '',
     password: '',
   });
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState([]);
+  // const [mensaje, setMensaje] = useState(null);
+  // const [modalOpen, setModalOpen] = useState(false);
+  // const navigate = useNavigate();
+  // const handleOpen = () => setModalOpen(true);
+  // const handleClose = () => setModalOpen(false);
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState([]);
   const [mensaje, setMensaje] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [motivacionOpen, setMotivacionOpen] = useState(false); // Estado para el modal de motivación
+  const [motivacionMessage, setMotivacionMessage] = useState(''); // Mensaje del modal de motivación
   const navigate = useNavigate();
   const handleOpen = () => setModalOpen(true);
   const handleClose = () => setModalOpen(false);
+  const handleMotivacionClose = () => setMotivacionOpen(false); // Cierra el modal de motivación
+
 
   const eventoCambio = (e) => {
     setFormulario({
@@ -69,24 +82,28 @@ const Login = () => {
   const loginUsuario = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
+    setError([]);
     setMensaje(null);
 
     try {
       const response = await api.post('api/autentificacion', formulario);
-      console.log('Respuesta:', response.data.usuario.admin);
-      const isAdmin = response.data.usuario.admin; 
+      console.log('Respuesta:', response);
+      const isAdmin = response.data.usuario.admin;
       console.log('isAdmin:', isAdmin);
       setMensaje('Ingreso con éxito.');
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('usuario', JSON.stringify(response.data.usuario));
       localStorage.setItem('admin', isAdmin.toString());
       window.dispatchEvent(new Event('sesionIniciada'));
+      if (response.data.usuario.mensaje) { 
+        console.log(response.data.usuario.mensaje);
+        localStorage.setItem('motivacionMessage', response.data.usuario.mensaje);
+      } else {
+        console.log("no tiene mensaje");
+      }
+  
       navigate('/');
-      
-      console.log(localStorage);
     } catch (err) {
-      console.error('Error:', err);
       let errorMsg = 'Error de conexión';
 
       if (err.response) {
@@ -100,8 +117,7 @@ const Login = () => {
           errorMsg = `Error: ${err.response.status} ${err.response.statusText}`;
         }
       }
-
-      setError(errorMsg);
+      setError([errorMsg]);
     } finally {
       setLoading(false);
       console.log('Finalizado exitosamente');
@@ -150,7 +166,6 @@ const Login = () => {
                 autoComplete="email"
                 value={formulario.email}
                 onChange={eventoCambio}
-
               />
               <TextField
                 margin="normal"
@@ -170,18 +185,19 @@ const Login = () => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 disabled={loading}
-               
               >
                 {loading ? 'Loading...' : 'Sign In'}
               </Button>
-              {error && <Typography color="error">{error}</Typography>}
-              {mensaje && <Typography color="success">{mensaje}</Typography>}
+              {error.length > 0 && (
+                <Alert severity="error">
+                  {error.map((e, i) => (
+                    <div key={i}>{e}</div>
+                  ))}
+                </Alert>
+              )}
+              {mensaje && <Typography color="success.main">{mensaje}</Typography>}
               <Grid container>
-               
-              </Grid>
-
-            </Box>
-            <Grid item xs>
+                <Grid item xs>
                   <Link
                     component="button"
                     variant="body2"
@@ -191,6 +207,8 @@ const Login = () => {
                     Olvidó su contraseña?
                   </Link>
                 </Grid>
+              </Grid>
+            </Box>
           </Box>
         </Grid>
       </Grid>
@@ -219,8 +237,10 @@ const Login = () => {
           <RecuperarPassword handleClose={handleClose} />
         </Box>
       </Modal>
+     
     </ThemeProvider>
   );
 };
 
 export default Login;
+

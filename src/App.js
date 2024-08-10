@@ -17,7 +17,7 @@ const tema = createTheme({
         },
         background: {
             default: '#121212', // Fondo casi negro
-            paper: '#1d1d1d', // Fondo de papel gris oscuro
+            paper: '#212529' , // Fondo de papel gris oscuro
         },
         text: {
             primary: '#ffffff', // Texto blanco

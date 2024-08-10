@@ -26,7 +26,7 @@ const tema = createTheme({
     },
     background: {
       default: '#121212',
-      paper: '#1d1d1d',
+      paper: '#212529' 
     },
     text: {
       primary: '#ffffff',
@@ -525,6 +525,14 @@ const Rutinas = () => {
       setOpenModal(false);
       setSelectedRutina(null);
     };
+    const menuProps = {
+      PaperProps: {
+        style: {
+          backgroundColor: 'white',
+          color: 'black',
+        },
+      },
+    };
 
     const manejarCambioDeInput = (e) => {
       const { name, value } = e.target;
@@ -628,12 +636,20 @@ const Rutinas = () => {
                   <Tab eventKey="crear" title="Crear">
                     <Typography component="h1" variant="h5">Rutinas</Typography>
                     <Box sx={{ display: 'flex', width: '100%', mb: 2 }}>
-                      <TextField
+                      {/* <TextField
                         label="Filtrar"
                         variant="outlined"
                         value={filter}
                         onChange={filtrarTabla}
                         sx={{ width: '300px', marginRight: '20px', '& .MuiInputBase-root': { backgroundColor: 'white', color:'black'}, }}
+                      /> */}
+                       <TextField
+                               label="Filtrar"
+                               variant="outlined"
+                               value={filter}
+                               onChange={filtrarTabla}
+                                sx={{ backgroundColor: tema.palette.background.paper, borderRadius: '5px', width: '300px', marginRight: '20px', }}
+                                InputProps={{ style: { color: tema.palette.text.primary } }}
                       />
                       <Button variant="contained" color="primary" onClick={() => abrirModal(false)}>Crear</Button>
                       <Button variant="contained" color="secondary" onClick={() => abrirModal(true, rutinaSeleccionada)} disabled={!rutinaSeleccionada} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
@@ -684,7 +700,7 @@ const Rutinas = () => {
                   <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', p: 2  }}>
                     <Typography component="h1" variant="h5">Asignar Rutinas</Typography>
                     <FormControl fullWidth={false} margin="normal" sx={{ width: '300px' }}>
-                      <Select
+                      {/* <Select
                         value={usuarioSeleccionado || ""} 
                         onChange={handleUsuarioChange}
                         onOpen={listarUsuarios}
@@ -697,7 +713,51 @@ const Rutinas = () => {
                             {usuario.nombre}
                           </MenuItem>
                         ))}
-                      </Select>
+                      </Select> */}       <Select
+        value={usuarioSeleccionado || ''}
+        onChange={handleUsuarioChange}
+        onOpen={listarUsuarios}
+        displayEmpty
+        sx={{ 
+          backgroundColor: '#424242', 
+          color: 'white',
+          '.MuiOutlinedInput-notchedOutline': {
+            borderColor: 'white',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'white',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'white',
+          },
+          '.MuiSvgIcon-root ': {
+            fill: 'white !important',
+          },
+          '.MuiList-root': {
+            backgroundColor: '#424242',
+            color: 'white',
+          },
+        }}
+        disabled={loading}
+      >
+        <MenuItem value="" disabled>Selecciona un usuario</MenuItem>
+        {usuarios.map((usuario) => (
+          <MenuItem 
+            key={usuario._id} 
+            value={usuario._id}
+            sx={{
+              backgroundColor: '#424242', 
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#424242',
+                color: 'white',
+              },
+            }}
+          >
+            {usuario.nombre}
+          </MenuItem>
+        ))}
+      </Select>
                     </FormControl>
                     {usuarioSeleccionado && (
                       <>
@@ -946,7 +1006,7 @@ const Rutinas = () => {
                           textField: {
                             sx: {
                               '& input': {
-                                color: '#000000', // Cambia el color del texto del input
+                                color: '#000000', 
                               },
                               borderRadius: '2px',
                               borderWidth: '1px',

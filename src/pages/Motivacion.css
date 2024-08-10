@@ -1,0 +1,55 @@
+/* button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    cursor: pointer;
+  }
+  
+  .close-button:hover {
+    color: #ff0000;
+  } */
+/* Motivacion.css */
+.motivacion-modal {
+  outline: none;
+}
+
+.motivacion-content {
+  background: #22978de1;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  color: #FFFFFF;
+  max-width: 450px;
+  width: 80%;
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  font-size: 1.5em;
+  color: #FFFFFF;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}

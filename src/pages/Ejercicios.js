@@ -21,7 +21,7 @@ const tema = createTheme({
     },
     background: {
       default: '#121212',
-      paper: '#1d1d1d',
+      paper: '#212529' ,
     },
     text: {
       primary: '#ffffff',
@@ -218,13 +218,22 @@ const Ejercicios = () => {
               <Box sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Typography component="h1" variant="h5">Ejercicios</Typography>
                 <Box sx={{ display: 'flex', width: '100%', mb: 2 }}>
-                  <TextField
+                  {/* <TextField
                     label="Filtrar"
                     variant="outlined"
                     value={filter}
                     onChange={filtrarTabla}
                     sx={{ width: '300px', marginRight: '20px', '& .MuiInputBase-root': { backgroundColor: 'white',}, }}
-                  />
+                  /> */}
+
+                    <TextField
+                                label="Filtrar"
+                                variant="outlined"
+                                value={filter}
+                                onChange={filtrarTabla}
+                                sx={{ backgroundColor: tema.palette.background.paper, borderRadius: '5px', width: '300px', marginRight: '20px', }}
+                                InputProps={{ style: { color: tema.palette.text.primary } }}
+                            />
                   <Button variant="contained" color="primary" onClick={() => abrirModal(false)}>Crear</Button>
                   <Button variant="contained" color="secondary" onClick={() => abrirModal(true, ejercicioSeleccionado)} disabled={!ejercicioSeleccionado} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
                   <Button variant="contained" color="error" onClick={() => deshabilitarEjercicio(ejercicioSeleccionado._id)} disabled={!ejercicioSeleccionado} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>

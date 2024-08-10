@@ -1,9 +1,19 @@
-import React, { useState ,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../configuracion/axiosconfig';
-import { Button, CssBaseline, TextField, Grid, Paper, Box, Typography, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import {
+  Button,
+  CssBaseline,
+  TextField,
+  Grid,
+  Paper,
+  Box,
+  Typography,
+  CircularProgress,
+  Avatar,
+} from '@mui/material';
 
 const tema = createTheme({
   palette: {
@@ -18,7 +28,7 @@ const tema = createTheme({
     },
     background: {
       default: '#121212',
-      paper: '#1d1d1d',
+      paper: '#212529' 
     },
     text: {
       primary: '#ffffff',
@@ -33,16 +43,9 @@ const tema = createTheme({
   },
 });
 
-
-   
-
 const EditarUsuarioDesdeAdmin = () => {
-
-  
   const [formulario, setFormulario] = useState({
-    // nombre: '',
-    // email: '',
-    // password: ''
+    nombre: '',
     patologias: '',
     observaciones: ''
   });
@@ -51,8 +54,37 @@ const EditarUsuarioDesdeAdmin = () => {
   const [error, setError] = useState(null);
   const [mensaje, setMensaje] = useState(null);
   const { id } = useParams();
-const [usuario, setUsuario] = useState(null);
+  const [preview, setPreview] = useState(null);
 
+  useEffect(() => {
+    const obtenerDatosUsuario = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const token = localStorage.getItem('token');
+        const respuesta = await api.get(`/api/usuarios/${id}`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+
+        setFormulario({
+          nombre: respuesta.data.valor.nombre || '',
+          observaciones: respuesta.data.valor.observaciones || '',
+          patologias: respuesta.data.valor.patologias || ''
+        });
+
+        if (respuesta.data.valor.profileImage) {
+          setPreview(`http://localhost:3000/${respuesta.data.valor.profileImage}`);
+        }
+      } catch (err) {
+        setError('Error al obtener los datos del usuario.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    obtenerDatosUsuario();
+  }, [id]);
 
   const eventoCambio = (e) => {
     setFormulario({
@@ -66,25 +98,22 @@ const [usuario, setUsuario] = useState(null);
     setLoading(true);
     setError(null);
     setMensaje(null);
-   
 
     try {
-      console.log(id);
-      const token = localStorage.getItem('token'); 
-      const usuario = JSON.parse(localStorage.getItem('usuario')); 
+      const token = localStorage.getItem('token');
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
 
       const respuesta = await api.put(`/api/usuarios/editarUsuario/${id}`, formulario, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'usuario': usuario.id
-          }
-        });
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'usuario': usuario.id
+        }
+      });
 
-      console.log(respuesta);
       setMensaje('Usuario editado exitosamente.');
-      setTimeout(() => {
-        navigate('/ListarUsuarios');
-      }, 1000); // 1 segundo de retraso
+      // setTimeout(() => {
+      //   navigate('/ListarUsuarios');
+      // }, 1000); // 1 segundo de retraso
     } catch (err) {
       let errorMsg = 'Error de conexión';
       if (err.response) {
@@ -106,28 +135,43 @@ const [usuario, setUsuario] = useState(null);
 
   return (
     <ThemeProvider theme={tema}>
-      <Grid container component="main" sx={{ height: '100vh' }}>
-        <CssBaseline />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Typography component="h1" variant="h5">
-              Editar Usuario
-            </Typography>
+    <Grid container component="main" sx={{ height: '100vh' }}>
+      <CssBaseline />
+      <Grid item xs={12} sm={8} component={Paper} elevation={6} square>
+        <Box
+          sx={{
+            my: 8,
+            mx: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+
+              <Avatar
+                src={preview}
+                alt="Foto de perfil"
+                sx={{ width: 150, height: 150, marginBottom: 2 }}
+              />
             <Box component="form" noValidate onSubmit={editarUsuario} sx={{ mt: 1 }}>
+            
               <TextField
                 margin="normal"
                 required
                 fullWidth
+                id="nombre"
+                label="Nombre"
+                name="nombre"
+                autoComplete="nombre"
+                value={formulario.nombre}
+                onChange={eventoCambio}
+                disabled
+              />
+              <TextField
+                margin="normal"
+                fullWidth
                 id="observaciones"
-                label="observaciones"
+                label="Observaciones"
                 name="observaciones"
                 autoComplete="observaciones"
                 autoFocus
@@ -136,10 +180,9 @@ const [usuario, setUsuario] = useState(null);
               />
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 id="patologias"
-                label="patologias"
+                label="Patologías"
                 name="patologias"
                 autoComplete="patologias"
                 value={formulario.patologias}
@@ -167,4 +210,5 @@ const [usuario, setUsuario] = useState(null);
     </ThemeProvider>
   );
 };
+
 export default EditarUsuarioDesdeAdmin;
