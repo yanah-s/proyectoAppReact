@@ -354,7 +354,11 @@ const Header = () => {
                 )}
               </ul>
               {isAuthenticated && (
+                
                 <ul className="nav flex-column mt-auto" id="pestañas_hamburguesa">
+                    <li className="nav-item">
+                  <Link className="nav-link" to="/objetivos-metas" ><i className="bi bi-trophy"></i> Objetivos-Metas</Link>
+                </li>
                   <li className="nav-item">
                     <Link className="nav-link" to="/" onClick={handleLogout}><i className="bi bi-lock"></i> Cerrar Sesion</Link>
                   </li>

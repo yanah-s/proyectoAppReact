@@ -19,7 +19,7 @@ import AgendaAlumno from './pages/AgendaAlumno';
 import VerRutinas from './pages/VerRutinas';
 import AvancesUsuarios from './pages/AvancesUsuarios';
 import Motivacion from './pages/Motivacion';
-
+import ObjetivosMetas from './pages/ObjetivosMetas';
 const AppRoutes = () => {
   //  const isAuthenticated = !!localStorage.getItem('token');
   //  const isAdmin =  localStorage.getItem('admin') === 'true';
@@ -35,6 +35,7 @@ const AppRoutes = () => {
           <Route path="/ejercicios" element={<Ejercicios />} />
           <Route path="/rutinas" element={<Rutinas />} />
           <Route path="/verRutinas" element={<VerRutinas />} />
+          <Route path="/objetivos-metas" element={<ObjetivosMetas />} />
           {/* <Route path="/CrearUsuario" element={<CrearUsuario />} /> */}
           <Route path="/AgendaUsuarios" element={<AgendaUsuarios />} />
             
