@@ -100,7 +100,7 @@ const DisponibilidadAgenda = () => {
         // Filtrar turnos ocupados
         const ocupados = response.data.filter(item => item.usuario !== null);
         setTurnosOcupados(ocupados);
-  
+         console.log("turnos ocupados" + ocupados.usuario);
         // Filtrar turnos libres
         const libres = response.data.filter(item => item.usuario === null);
         setTurnosLibres(libres);
@@ -440,6 +440,7 @@ return (
                       <TableCell style={{ color: tema.palette.text.primary }}>Hora inicio</TableCell>
                       <TableCell style={{ color: tema.palette.text.primary }}>Hora Fin</TableCell>
                       <TableCell style={{ color: tema.palette.text.primary }}>Cliente</TableCell>
+                      <TableCell style={{ color: tema.palette.text.primary }}>Observaciones</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -450,6 +451,8 @@ return (
                     <TableCell>{item.hora_hasta ? dayjs(item.hora_hasta).format('HH:mm') : ''}</TableCell>
                     {/* <TableCell>{item.usuario ? `${item.usuario.nombre}` : 'Sin asignar'}</TableCell> */}
                     <TableCell>{item.usuario ? item.usuario.nombre : 'Sin asignar'}</TableCell>
+                    <TableCell>{item.observaciones ? item.observaciones: ''}</TableCell>
+                    {/* <TableCell>{item.observaciones ? item.observaciones: ''}</TableCell> */}
                   </TableRow>
                 ))}
                   </TableBody>

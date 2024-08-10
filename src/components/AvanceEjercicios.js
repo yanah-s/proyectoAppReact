@@ -12,8 +12,13 @@ const AvanceEjercicios = ({ id }) => {
   const [fechaUltimoEjercicio, setFechaUltimoEjercicio] = useState(null);
   const hoy = new Date();
   const mostrarComponentes = id === undefined || id === null;
+  const usuario = JSON.parse(localStorage.getItem('usuario')); 
+
   
-  const sePuedeHabilitar = fechaUltimoEjercicio ? ((hoy - fechaUltimoEjercicio) / (1000 * 60 * 60 * 24)) >= 1 : true;
+  // const sePuedeHabilitar = fechaUltimoEjercicio ? ((hoy - fechaUltimoEjercicio) / (1000 * 60 * 60 * 24)) >= 1 : true;
+
+  const sePuedeHabilitar = usuario.alumno === true && (fechaUltimoEjercicio ? ((hoy - fechaUltimoEjercicio) / (1000 * 60 * 60 * 24)) >= 7 : true);
+
 
   useEffect(() => {
     listarEjercicios();
@@ -197,7 +202,7 @@ const AvanceEjercicios = ({ id }) => {
         variant="contained"
         color="primary"
         onClick={registrarAvance}
-        disabled={!sePuedeHabilitar}  // Deshabilitar si no se cumplen las condiciones
+        disabled={!sePuedeHabilitar} 
         sx={{ width: '45%' }}
       >
         Registrar

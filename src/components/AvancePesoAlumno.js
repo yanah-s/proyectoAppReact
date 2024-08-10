@@ -66,9 +66,12 @@ const AvanceEjercicios = ({ id }) => {
   const [fechaUltimoPeso, setFechaUltimoPeso] = useState(null);
   const hoy = new Date();
   const mostrarComponentes = id === undefined || id === null;
-
-  // Verifica si se puede habilitar basado en la fecha del último peso
-  const sePuedeHabilitar = fechaUltimoPeso ? ((hoy - fechaUltimoPeso) / (1000 * 60 * 60 * 24)) >= 1 : true;
+  const usuario = JSON.parse(localStorage.getItem('usuario')); 
+  
+  // // Verifica si se puede habilitar basado en la fecha del último peso
+  // const sePuedeHabilitar = fechaUltimoPeso ? ((hoy - fechaUltimoPeso) / (1000 * 60 * 60 * 24)) >= 1 : true;
+ 
+  const sePuedeHabilitar = usuario.alumno === true && (fechaUltimoPeso ? ((hoy - fechaUltimoPeso) / (1000 * 60 * 60 * 24)) >= 7 : true);
 
   useEffect(() => {
     obtenerAvances();

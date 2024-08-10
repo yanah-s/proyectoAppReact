@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../configuracion/axiosconfig';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Button, Modal, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Select, 
   MenuItem, TextField, Checkbox, Grid, Paper, Box, CssBaseline, Typography, InputLabel, Divider, 
@@ -85,17 +85,31 @@ const ObjetivosMetas = () => {
 
   const cargarMetas = async () =>{
     try {
-      const response = await axios.get('http://localhost:3000/api/objetivo_meta');
+      const token = localStorage.getItem('token'); 
+      const usuario = JSON.parse(localStorage.getItem('usuario')); 
+      const response =await api.get('api/objetivo_meta', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'User-ID': usuario.id
+        }
+      });
       setAvailableMetas(response.data);
     } catch (error) {
       console.error('Error fetching available metas', error);
     }
   }
 
+
   const fetchMetas = async (usuarioId) => {
     try {
-      const response = await axios.get('http://localhost:3000/api/objetivo_meta_usuario/usuario', {
-        params: { usuario: usuarioId }
+      const token = localStorage.getItem('token'); 
+      const usuario = JSON.parse(localStorage.getItem('usuario')); 
+      const response = await api.get('api/objetivo_meta_usuario/usuario', {
+        params: { usuario: usuarioId },
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'User-ID': usuario.id
+        }
       });
       const objetivos = [];
       const metas = [];
@@ -119,7 +133,8 @@ const ObjetivosMetas = () => {
     try {
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario'));
-      const response = await axios.get('http://localhost:3000/api/usuarios', {
+      // const response = await api.get('api/usuarios', {
+      const response = await api.get('/api/usuarios/alumnos', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'User-ID': usuario.id
@@ -131,28 +146,75 @@ const ObjetivosMetas = () => {
     }
   };
 
+  // const handleCreateUserMeta = async () => {
+  //   try {
+
+  //     if (isEdit) {
+  //       if(!isAdmin){
+  //         await axios.put(`http://localhost:3000/api/objetivo_meta_usuario/${metaSeleccionada._id}`, {
+  //           fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
+  //           fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
+  //           valor: modalData.valor,
+  //           cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
+  //         });
+  //       }else{
+  //         await axios.put(`http://localhost:3000/api/objetivo_meta_usuario/${objetivoSeleccionado._id}`, {
+  //           fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
+  //           fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
+  //           valor: modalData.valor,
+  //           cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
+  //         });
+  //       }
+        
+  //     } else {
+  //       await axios.post('http://localhost:3000/api/objetivo_meta_usuario', {
+  //         objetivoMeta: modalData.objetivoMeta._id,
+  //         usuario: usuarioSeleccionado,
+  //         fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
+  //         fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
+  //         valor: modalData.valor,
+  //         creadoAdmin: isAdmin,
+  //         cumplido: false,
+  //       });
+  //     }
+  //     fetchMetas(usuarioSeleccionado);
+  //     setModalOpen(false);
+  //   } catch (error) {
+  //     console.error('Error creating user meta', error);
+  //   }
+  // };
+
   const handleCreateUserMeta = async () => {
     try {
-
+      const token = localStorage.getItem('token'); 
+      const usuario = JSON.parse(localStorage.getItem('usuario')); 
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'User-ID': usuario.id
+      };
+  
       if (isEdit) {
-        if(!isAdmin){
-          await axios.put(`http://localhost:3000/api/objetivo_meta_usuario/${metaSeleccionada._id}`, {
+        if (!isAdmin) {
+          await api.put(`api/objetivo_meta_usuario/${metaSeleccionada._id}`, {
             fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
             fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
             valor: modalData.valor,
             cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
+          }, {
+            headers
           });
-        }else{
-          await axios.put(`http://localhost:3000/api/objetivo_meta_usuario/${objetivoSeleccionado._id}`, {
+        } else {
+          await api.put(`api/objetivo_meta_usuario/${objetivoSeleccionado._id}`, {
             fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
             fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
             valor: modalData.valor,
             cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
+          }, {
+            headers
           });
         }
-        
       } else {
-        await axios.post('http://localhost:3000/api/objetivo_meta_usuario', {
+        await api.post('api/objetivo_meta_usuario', {
           objetivoMeta: modalData.objetivoMeta._id,
           usuario: usuarioSeleccionado,
           fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
@@ -160,8 +222,11 @@ const ObjetivosMetas = () => {
           valor: modalData.valor,
           creadoAdmin: isAdmin,
           cumplido: false,
+        }, {
+          headers
         });
       }
+  
       fetchMetas(usuarioSeleccionado);
       setModalOpen(false);
     } catch (error) {
@@ -282,9 +347,9 @@ const formatDate3 = (dateString) => {
 const eliminarRegistro = async () =>{
   try {
     if(!isAdmin){
-      await axios.delete(`http://localhost:3000/api/objetivo_meta_usuario/${metaSeleccionada._id}`);
+      await api.delete(`api/objetivo_meta_usuario/${metaSeleccionada._id}`);
     }else{
-      await axios.delete(`http://localhost:3000/api/objetivo_meta_usuario/${objetivoSeleccionado._id}`);
+      await api.delete(`api/objetivo_meta_usuario/${objetivoSeleccionado._id}`);
     }
       
     fetchMetas(usuarioSeleccionado);

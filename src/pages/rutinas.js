@@ -213,7 +213,7 @@ const Rutinas = () => {
         const token = localStorage.getItem('token'); 
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
 
-        const response = await api.get('/api/usuarios', {
+        const response = await api.get('/api/usuarios/alumnos', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
