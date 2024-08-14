@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Button, Modal, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Select, 
+import { Alert, AlertTitle, Button, Modal, Snackbar, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Select, 
   MenuItem, TextField, Checkbox, Grid, Paper, Box, CssBaseline, Typography, InputLabel, Divider, 
   FormControlLabel, FormControl  } from '@mui/material';
 
@@ -48,26 +48,16 @@ const ObjetivosMetas = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState('');
   const [availableMetas, setAvailableMetas] = useState([]);
-  const [objetivosMetas, setObjetivosMetas] = useState([]);
   const [metaSeleccionada, setMetaSeleccionada] = useState(null);
   const [objetivoSeleccionado, setObjetivoSeleccionado] = useState(null);
   const [modalData, setModalData] = useState({
     meta: '', fechaDesde: '', fechaHasta: '', valor: '', cumplido: false});
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedMetaId, setSelectedMetaId] = useState('');
-  const [fechaInicio, setFechaInicio] = useState('');
-  const [fechaFin, setFechaFin] = useState('');
-  const [valor, setValor] = useState(0);
-  const [cumplido, setCumplido] = useState('');
   const [isEdit, setIsEdit] = useState(false);
-  // const [newObjectiveMeta, setNewObjectiveMeta] = useState({
-  //   nombre: '',
-  //   fechaInicio: '',
-  //   fechaFin: '',
-  //   valor: 0,
-  //   esAdmin: false,
-  //   completado: false,
-  // });
+  const [metasCumplidas, setMetasCumplidas] = useState(true);
+  const [objetivosCumplidos, setObjetivosCumplidos] = useState(true);
+  const [alerta, setAlertOpen] = useState(false);
+  const [mensajeAlerta, setAlertMessages] = useState([]);
 
   useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -133,51 +123,72 @@ const ObjetivosMetas = () => {
 
   const handleCreateUserMeta = async () => {
     try {
+      const fechaDesde = new Date(formatDate2(modalData.fechaDesde));
+      const fechaHasta = new Date(formatDate2(modalData.fechaHasta));
 
       if (isEdit) {
         if(!isAdmin){
-          await axios.put(`http://localhost:3000/api/objetivo_meta_usuario/${metaSeleccionada._id}`, {
-            fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-            fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-            valor: modalData.valor,
-            cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
-          });
+
+          const fechaMinima = new Date(fechaDesde);
+          fechaMinima.setMonth(fechaDesde.getMonth() + 1);
+
+          const fechaMaxima = new Date(fechaDesde);
+          fechaMaxima.setMonth(fechaDesde.getMonth() + 3);
+
+          if (fechaHasta >= fechaMinima && fechaHasta <= fechaMaxima) {
+            await axios.put(`http://localhost:3000/api/objetivo_meta_usuario/${metaSeleccionada._id}`, {
+              fechaDesde: fechaDesde.toISOString(),
+              fechaHasta: fechaHasta.toISOString(),
+              valor: modalData.valor,
+              cumplido: modalData.cumplido, 
+            });
+          }else{
+            throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
+          }
         }else{
           await axios.put(`http://localhost:3000/api/objetivo_meta_usuario/${objetivoSeleccionado._id}`, {
             fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
             fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
             valor: modalData.valor,
-            cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
+            cumplido: modalData.cumplido,
           });
         }
         
       } else {
-        await axios.post('http://localhost:3000/api/objetivo_meta_usuario', {
-          objetivoMeta: modalData.objetivoMeta._id,
-          usuario: usuarioSeleccionado,
-          fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-          fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-          valor: modalData.valor,
-          creadoAdmin: isAdmin,
-          cumplido: false,
-        });
+        const fechaMinima = new Date(fechaDesde);
+        fechaMinima.setMonth(fechaDesde.getMonth() + 1);
+
+        const fechaMaxima = new Date(fechaDesde);
+        fechaMaxima.setMonth(fechaDesde.getMonth() + 3);
+
+        if (fechaHasta >= fechaMinima && fechaHasta <= fechaMaxima) {
+          await axios.post('http://localhost:3000/api/objetivo_meta_usuario', {
+            objetivoMeta: modalData.objetivoMeta._id,
+            usuario: usuarioSeleccionado,
+            fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
+            fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
+            valor: modalData.valor,
+            creadoAdmin: isAdmin,
+            cumplido: false,
+          });
+        }else{
+          throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
+        }
       }
       fetchMetas(usuarioSeleccionado);
       setModalOpen(false);
     } catch (error) {
-      console.error('Error creating user meta', error);
+      let errors;
+
+      if (error.response && error.response.data && error.response.data.error) {
+        errors = error.response.data.error;
+      } else {
+        errors = [{ message: error.message }];
+      }
+      setAlertMessages(errors);
+      setAlertOpen(true);
     }
   };
-
-  const actualizarMeta = () =>{
-    setSelectedMetaId(metaSeleccionada._id || ''); // Precargar el select con la meta seleccionada
-    //setFechaInicio(formatDate(metaSeleccionada.fechaDesde) || '');
-   // setFechaFin(formatDate(metaSeleccionada.fechaHasta) || '');
-    setValor(metaSeleccionada.valor || 0);
-    setCumplido(metaSeleccionada.cumplido || false);
-    setModalOpen(true);
-    
-  } 
 
   const abrirModal = (editado = false, meta = null) => {
     setIsEdit(editado);
@@ -211,11 +222,11 @@ const ObjetivosMetas = () => {
     } else if(name === "cumplido"){
       setModalData(prevState => ({
         ...prevState,
-        [name]: checked, // `checked` es un booleano
+        [name]: checked,
       }));
     
     } else if (name === "fechaDesde" || name === "fechaHasta") {
-      // Convertir la fecha de DD-MM-YYYY a YYYY-MM-DD
+     
       const formattedDate = formatDate3(value);
       setModalData((prevData) => ({
         ...prevData,
@@ -229,24 +240,6 @@ const ObjetivosMetas = () => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchObjetivosMetas();
-  // }, []);
-
-  // const fetchObjetivosMetas = async () => {
-  //   const response = await axios.get('/api/objetivosMetas');
-  //   setObjetivosMetas(response.data);
-  // };
-
-  // const handleCreateOrEdit = async () => {
-  //   if (selectedObjective) {
-  //     await axios.put(`/api/objetivosMetas/${selectedObjective.id}`, newObjectiveMeta);
-  //   } else {
-  //     await axios.post('/api/objetivosMetas', newObjectiveMeta);
-  //   }
-  //   fetchObjetivosMetas();
-  //   setModalOpen(false);
-  // };
   const handleUsuarioChange = async (event) => {
     let usuarioId ="";
     if(event){
@@ -266,17 +259,17 @@ const ObjetivosMetas = () => {
     const day = String(date.getUTCDate()).padStart(2, '0');
     const month = String(date.getUTCMonth() + 1).padStart(2, '0');
     const year = date.getUTCFullYear();
-    return `${day}-${month}-${year}`; // Format as DD-MM-YYYY
+    return `${day}-${month}-${year}`;
   }
 
   const formatDate2 = (dateString) => {
     const [day, month, year] = dateString.split('-');
-    return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
+    return `${year}-${month}-${day}`;
 }
 
 const formatDate3 = (dateString) => {
   const [year, month, day] = dateString.split('-');
-  return `${day}-${month}-${year}`; // Formato DD-MM-YYYY
+  return `${day}-${month}-${year}`; 
 };
 
 const eliminarRegistro = async () =>{
@@ -293,10 +286,26 @@ const eliminarRegistro = async () =>{
     console.error('Error creating user meta', error);
   }
 }
+
+const verMetasCumplidas = () => {
+  setMetasCumplidas(!metasCumplidas);
+};
+
+const verObjetivosCumplidos = () => {
+  setObjetivosCumplidos(!objetivosCumplidos);
+};
+
+const metasFiltradas = metas
+  .filter((meta) => meta.creadoAdmin === false)
+  .filter((meta) => metasCumplidas || !meta.cumplido);
   
-  const handleEdit = '';
-  const handleDelete = '';
-  const handleHideCompleted = '';
+const objetivosFiltrados = objetivos
+  .filter((objetivo) => objetivo.creadoAdmin === true)
+  .filter((objetivo) => objetivosCumplidos || !objetivo.cumplido);  
+
+const cerrarAlerta = () => {
+  setAlertOpen(false);
+};
   
   return (
     <ThemeProvider theme={tema}>
@@ -335,9 +344,10 @@ const eliminarRegistro = async () =>{
                         <Button variant="contained" color="error"onClick={() => {eliminarRegistro(objetivoSeleccionado)}} sx={{ ml: 1, mt: 2,'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}} disabled={!objetivoSeleccionado}>Eliminar</Button>
                       </Box>
                     )}
+                    <Button variant="contained"  onClick={verObjetivosCumplidos} sx={{ ml: 1, mt: 2, backgroundColor:"blue", '&:hover': {backgroundColor: "#151d4f", }}}>{objetivosCumplidos ? <i className="bi bi-eye-slash"></i> : <i className="bi bi-eye"></i>}</Button>
                   </Box>
                   <Divider sx={{ my: 2, borderColor: 'lightgray', opacity: 1 }}/>
-                  {objetivos.filter((objetivo) => objetivo.creadoAdmin === true).length === 0 ? (
+                  {objetivosFiltrados.length === 0 ? (
                     <p>Aún no tienes objetivos asignados.</p>
                   ) : (
                     <Box sx={{ maxHeight: 'calc(100vh - 250px)', overflowY: 'auto' }}>
@@ -353,11 +363,11 @@ const eliminarRegistro = async () =>{
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {objetivos.filter((objetivo) => objetivo.creadoAdmin === true).map((objetivo) => (
+                            {objetivosFiltrados.map((objetivo) => (
                               <TableRow
                                 key={objetivo._id}
                                 onClick={() => {
-                                  if (isAdmin) { // Verifica si el usuario es admin
+                                  if (isAdmin) {
                                     setObjetivoSeleccionado(objetivoSeleccionado?._id === objetivo._id ? null : objetivo);
                                   }
                                 }}
@@ -394,9 +404,10 @@ const eliminarRegistro = async () =>{
                     <Button variant="contained" color="primary"onClick={() => {abrirModal(false)}} sx={{ ml: 4, mt:2 }}>Crear</Button>
                     <Button variant="contained" color="secondary"onClick={() => {abrirModal(true, metaSeleccionada)}} sx={{ ml: 1, mt: 2, '&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd' }}} disabled={!metaSeleccionada}>Editar</Button>
                     <Button variant="contained" color="error"onClick={() => {eliminarRegistro(objetivoSeleccionado)}} sx={{ ml: 1, mt: 2,'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}} disabled={!metaSeleccionada}>Eliminar</Button>
+                    <Button variant="contained"  onClick={verMetasCumplidas} sx={{ ml: 1, mt: 2, backgroundColor:"blue", '&:hover': {backgroundColor: "#151d4f", }}}>{metasCumplidas ? <i className="bi bi-eye-slash"></i> : <i className="bi bi-eye"></i>}</Button>
                   </Box>
                   <Divider sx={{ my: 2, borderColor: 'lightgray', opacity: 1 }}/>
-                  {metas.filter((meta) => meta.creadoAdmin === false).length === 0 ? (
+                  {metasFiltradas.length === 0 ? (
                     <p>Aún no tienes metas asignadas.</p>
                   ) : (
                     <Box sx={{ maxHeight: 'calc(100vh - 250px)', overflowY: 'auto' }}>
@@ -412,7 +423,7 @@ const eliminarRegistro = async () =>{
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {metas.filter((meta) => meta.creadoAdmin === false).map((meta) => (
+                            {metasFiltradas.map((meta) => (
                               <TableRow
                                 key={meta._id}
                                 onClick={() => setMetaSeleccionada(metaSeleccionada?._id === meta._id ? null : meta)}
@@ -447,11 +458,6 @@ const eliminarRegistro = async () =>{
             ) : (
               <p>Seleccione un usuario para ver sus metas.</p>
             )}
-
-            {/* <Button onClick={() => setModalOpen(true)}>Crear</Button> */}
-            {/* <Button onClick={handleEdit} disabled={!selectedObjective}>Editar</Button> */}
-            {/* <Button onClick={handleDelete} disabled={!selectedObjective}>Eliminar</Button> */}
-            {/* <Button onClick={handleHideCompleted}>Ocultar Completadas</Button> */}
           </Box>
         </Grid>
       </Grid>
@@ -508,7 +514,7 @@ const eliminarRegistro = async () =>{
               onChange={manejarCambioDeInput}
               sx= {{
                 '& input': {
-                  color: '#000000', // Cambia el color del texto del input
+                  color: '#000000',
                 },
                 borderRadius: '2px',
                 borderWidth: '1px',
@@ -530,7 +536,7 @@ const eliminarRegistro = async () =>{
               onChange={manejarCambioDeInput}
               sx= {{
                 '& input': {
-                  color: '#000000', // Cambia el color del texto del input
+                  color: '#000000',
                 },
                 borderRadius: '2px',
                 borderWidth: '1px',
@@ -552,7 +558,7 @@ const eliminarRegistro = async () =>{
               onChange={manejarCambioDeInput}
               sx= {{
                 '& input': {
-                  color: '#000000', // Cambia el color del texto del input
+                  color: '#000000',
                 },
                 borderRadius: '2px',
                 borderWidth: '1px',
@@ -586,6 +592,21 @@ const eliminarRegistro = async () =>{
           </Box>
         </Box>
       </Modal>
+      <Snackbar
+        open={alerta}
+        autoHideDuration={6000}
+        onClose={cerrarAlerta}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={cerrarAlerta} severity="error" sx={{ width: '100%' }}>
+          <AlertTitle>Error</AlertTitle>
+          {mensajeAlerta.map((error, index) => (
+            <div key={index}>
+              {error.path && `${error.path.join('.')}: `}{error.message}
+            </div>
+          ))}
+        </Alert>
+      </Snackbar>
     </ThemeProvider>  
   );
 };
