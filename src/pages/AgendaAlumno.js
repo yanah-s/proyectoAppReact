@@ -43,7 +43,8 @@ const tema = createTheme({
       main: '#ff5252',
     },
     background: {
-      default: '#121212',
+      // default: '#121212',
+      default: '#212529',
       // paper: '#1d1d1d',
        paper: '#212529'
       
@@ -76,6 +77,8 @@ const AgendaAlumno = () => {
   const [idTurno, setIdTurno] = useState(null);
   const [mostrarFechaAgendada, setMostrarFechaAgendada] = useState(false);
   const isButtonDisabled = selectedTurnos === null || loading || mostrarFechaAgendada;
+  const [observaciones, setObservaciones] = useState('');
+const [presencial, setPresencial] = useState(false);
   console.log('isButtonDisabled:', isButtonDisabled);
   const formatFecha = (fecha) => {
     const opciones = { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'America/Montevideo' };
@@ -220,7 +223,9 @@ const AgendaAlumno = () => {
       const usuario = JSON.parse(localStorage.getItem('usuario')); 
       const dataAgenda = {
         usuarioId: usuario.id, 
-        turnoId : selectedTurnos,
+        turnoId: selectedTurnos,
+        observaciones: observaciones,
+        presencial: presencial,
       };
       const responseAgenda = await api.put('/api/agenda/',dataAgenda, {
         headers: {
@@ -277,15 +282,16 @@ const AgendaAlumno = () => {
   );
 
   const shouldDisableDate = (date) => {
-    const formattedDate = dayjs(date).format('YYYY-MM-DD');
-    const today = dayjs().startOf('day');
+    const today = dayjs().startOf('day');  // Fecha de hoy al inicio del día
+    const selectedDate = dayjs(date).startOf('day');  // Fecha seleccionada al inicio del día
   
-    // Comparar la fecha con la de hoy
-    if (dayjs(formattedDate).isBefore(today, 'day')) {
-      return true; // Deshabilitar fechas pasadas
+    // Deshabilitar fechas pasadas incluyendo hoy
+    if (selectedDate.isBefore(today, 'day') || selectedDate.isSame(today, 'day')) {
+      return true; // Deshabilitar fechas pasadas y la fecha de hoy
     }
-
-    return !disponibilidad.some(turno => dayjs(turno.fecha).format('YYYY-MM-DD') === formattedDate);
+  
+    // Verificar si la fecha está en la disponibilidad
+    return !disponibilidad.some(turno => dayjs(turno.fecha).startOf('day').isSame(selectedDate, 'day'));
   };
 
 
@@ -344,16 +350,24 @@ return (
               />
             </LocalizationProvider>
             <FormControlLabel
-              control={<Checkbox color="primary" />}
+              control={
+                <Checkbox
+                  color="primary"
+                  checked={presencial}
+                  onChange={(e) => setPresencial(e.target.checked)}
+                />
+              }
               label="Preferiría mi consulta de forma presencial"
             />
             <TextField
-              margin="normal"
-              fullWidth
-              id="observaciones"
-              label="Motivo de la consulta"
-              name="observaciones"
-              autoComplete="observaciones"
+               margin="normal"
+               fullWidth
+               id="observaciones"
+               label="Motivo de la consulta"
+               name="observaciones"
+               autoComplete="observaciones"
+               value={observaciones}
+               onChange={(e) => setObservaciones(e.target.value)}
             />
             <Button
               type="submit"

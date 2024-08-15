@@ -19,9 +19,8 @@ const tema = createTheme({
       main: '#ff5252',
     },
     background: {
-      default: '#121212',
-      // paper: '#212529'
-      paper : red,
+      default: '#212529',
+       paper: '#212529',
     },
     text: {
       primary: '#ffffff',

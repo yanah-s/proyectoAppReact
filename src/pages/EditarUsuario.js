@@ -11,7 +11,7 @@ const tema = createTheme({
     primary: { main: '#424242' },
     secondary: { main: '#757575' },
     error: { main: '#ff5252' },
-    background: { default: '#121212', paper: '#212529' },
+    background: {  default: '#212529', paper: '#212529' },
     text: { primary: '#ffffff', secondary: '#bdbdbd' },
   },
   typography: {
@@ -143,7 +143,18 @@ const EditarUsuario = () => {
 
   return (
     <ThemeProvider theme={tema}>
-      <Grid container component="main" sx={{ height: '100vh' }}>
+      {/* <Grid container component="main" sx={{ height: '100vh' }}> */}
+      <Grid 
+        container 
+        component="main" 
+        sx={{ 
+          height: '100vh',
+          backgroundImage: `url('/images/imagenLogin.png')`,
+          backgroundSize: 'cover', 
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
         <CssBaseline />
         <Grid item xs={12} sm={8} component={Paper} elevation={6} square>
           <Box

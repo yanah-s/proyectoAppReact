@@ -35,6 +35,10 @@ body {
   font-size: calc(10px + 2vmin);
   color: white;
 }
+ 
+.App-body {
+  background-color: #212529; 
+}
 
 .App-link {
   color: #61dafb;

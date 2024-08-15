@@ -17,8 +17,8 @@ const tema = createTheme({
       main: '#ff5252',
     },
     background: {
-      default: '#121212',
-      paper: '#1d1d1d',
+      default: '#212529',
+      paper: '#212529',
     },
     text: {
       primary: '#ffffff',
@@ -376,7 +376,29 @@ const eliminarRegistro = async () =>{
                 onChange={handleUsuarioChange}
                 onOpen={listarUsuarios}
                 displayEmpty
-                sx={{ backgroundColor: 'white', color: 'black !important'}}
+                // sx={{ backgroundColor: 'white', color: 'black !important'}}
+                sx={{ 
+                  // backgroundColor: '#424242', 
+                  backgroundColor: tema.palette.background.paper,
+                  color: 'white',
+                  '.MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'white',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'white',
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'white',
+                  },
+                  '.MuiSvgIcon-root ': {
+                    fill: 'white !important',
+                  },
+                  '.MuiList-root': {
+                    // backgroundColor: '#424242',
+                    backgroundColor: tema.palette.background.paper,
+                    color: 'white',
+                  },
+                }}
               >
                 <MenuItem value="" disabled>Selecciona un usuario</MenuItem>
                 {usuarios.map(usuario => (
@@ -533,23 +555,26 @@ const eliminarRegistro = async () =>{
               onChange={manejarCambioDeInput}
               disabled={isEdit}
               sx={{
-                backgroundColor: 'white',
-                color: 'black',
+                // backgroundColor: 'white',
+                backgroundColor: tema.palette.background.paper,
+                color: 'white',
                 '& .MuiSelect-select': {
-                  backgroundColor: 'white',
-                  color: 'black',
+                  // backgroundColor: 'white',
+                  backgroundColor: tema.palette.background.paper,
+                  color: 'white',
                 },
                 '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'black',
+                  borderColor: 'white',
                 },
                 '& .MuiInputLabel-root': {
-                  color: 'black !important',
+                  color: 'white !important',
                 },
                 '& .MuiMenuItem-root': {
-                  backgroundColor: 'white',
-                  color: 'black',
+                  backgroundColor: tema.palette.background.paper,
+                  color: 'white',
                   '&:hover': {
-                    backgroundColor: '#f5f5f5',
+                    // backgroundColor: '#f5f5f5',
+                    backgroundColor: tema.palette.background.paper,
                   },
                 },
                 width: '65%',
@@ -573,13 +598,14 @@ const eliminarRegistro = async () =>{
               onChange={manejarCambioDeInput}
               sx= {{
                 '& input': {
-                  color: '#000000', // Cambia el color del texto del input
+                  color: 'white', // Cambia el color del texto del input
                 },
                 borderRadius: '2px',
                 borderWidth: '1px',
                 borderColor: '#e91e63',
                 border: '1px solid',
-                backgroundColor: '#FFFFFF',
+                // backgroundColor: '#FFFFFF',
+                backgroundColor: tema.palette.background.paper,
                 width: '65%',
               }}
             />
@@ -595,13 +621,13 @@ const eliminarRegistro = async () =>{
               onChange={manejarCambioDeInput}
               sx= {{
                 '& input': {
-                  color: '#000000', // Cambia el color del texto del input
+                  color: 'white', // Cambia el color del texto del input
                 },
                 borderRadius: '2px',
                 borderWidth: '1px',
                 borderColor: '#e91e63',
                 border: '1px solid',
-                backgroundColor: '#FFFFFF',
+                backgroundColor: tema.palette.background.paper,
                 width: '65%',
               }}
             />
@@ -623,7 +649,8 @@ const eliminarRegistro = async () =>{
                 borderWidth: '1px',
                 borderColor: '#e91e63',
                 border: '1px solid',
-                backgroundColor: '#FFFFFF',
+                // backgroundColor: '#FFFFFF',
+                backgroundColor: tema.palette.background.paper,
                 width: '65%',
               }}
             />

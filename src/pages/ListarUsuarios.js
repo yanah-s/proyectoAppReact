@@ -9,6 +9,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import api from '../configuracion/axiosconfig';
 import './ListarUsuarios.css';
 
+
 import {
     Alert,
     AlertTitle,
@@ -73,7 +74,7 @@ const tema = createTheme({
             main: '#ff5252',
         },
         background: {
-            default: '#121212',
+            default: '#212529',
             paper: '#212529'
         },
         text: {
@@ -89,7 +90,7 @@ const tema = createTheme({
     },
 });
 
-const HamburgerMenu = ({ loading, onEditClick, onDeleteClick, onStudentClick }) => {
+const HamburgerMenu = ({ loading, onEditClick, onDeleteClick, onStudentClick ,showStudentOption}) => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
@@ -125,10 +126,16 @@ const HamburgerMenu = ({ loading, onEditClick, onDeleteClick, onStudentClick }) 
                     <DeleteIcon style={{ marginRight: 8 }} />
                     Eliminar
                 </MenuItem>
-                <MenuItem onClick={() => { handleClose(); onStudentClick(); }}>
+                {/* <MenuItem onClick={() => { handleClose(); onStudentClick(); }}>
                     <CheckCircleIcon style={{ marginRight: 8 }} />
                     Asignar Alumno
-                </MenuItem>
+                </MenuItem> */}
+                   {showStudentOption && (
+                    <MenuItem onClick={() => { handleClose(); onStudentClick(); }}>
+                        <CheckCircleIcon style={{ marginRight: 8 }} />
+                        Asignar Alumno
+                    </MenuItem>
+                )}
             </Menu>
         </div>
     );
@@ -138,7 +145,7 @@ const ListarUsuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
     const [usuariosFiltrados, setFilteredUsuarios] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState([]);
     const [mensaje, setMensaje] = useState(null);
     const navigate = useNavigate();
     const [openDelete, setOpenDelete] = useState(false);
@@ -197,8 +204,21 @@ const ListarUsuarios = () => {
                 }
             });
             console.log(respuesta);
-        } catch (err) {
-            console.log(err);
+        }  catch (err) {
+            let errorMsg = 'Error de conexión';
+      
+            if (err.response) {
+              if (err.response.data && err.response.data.mensaje) {
+                errorMsg = err.response.data.mensaje;
+              } else if (err.response.data && err.response.data.error) {
+                errorMsg = err.response.data.error;
+              } else if (err.response.data && err.response.data.message) {
+                errorMsg = err.response.data.message;
+              } else {
+                errorMsg = `Error: ${err.response.status} ${err.response.statusText}`;
+              }
+            }
+            setError([errorMsg]);
         }
     };
 
@@ -206,7 +226,7 @@ const ListarUsuarios = () => {
         try {
             const token = localStorage.getItem('token');
             const usuario = JSON.parse(localStorage.getItem('usuario'));
-            const respuesta = await api.put(`/api/usuarios/asignar/${id}`, {
+            const respuesta = await api.put(`/api/usuarios/asignar/${id}`, {}, { 
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'User-ID': usuario.id
@@ -214,7 +234,20 @@ const ListarUsuarios = () => {
             });
             console.log(respuesta);
         } catch (err) {
-            console.log(err);
+            let errorMsg = 'Error de conexión';
+    
+            if (err.response) {
+                if (err.response.data && err.response.data.mensaje) {
+                    errorMsg = err.response.data.mensaje;
+                } else if (err.response.data && err.response.data.error) {
+                    errorMsg = err.response.data.error;
+                } else if (err.response.data && err.response.data.message) {
+                    errorMsg = err.response.data.message;
+                } else {
+                    errorMsg = `Error: ${err.response.status} ${err.response.statusText}`;
+                }
+            }
+            setError([errorMsg]);
         }
     };
 
@@ -233,21 +266,21 @@ const ListarUsuarios = () => {
 
             setUsuarios(respuesta.data);
             setFilteredUsuarios(respuesta.data);
-        } catch (err) {
-            console.error('Error:', err);
+        }  catch (err) {
             let errorMsg = 'Error de conexión';
+      
             if (err.response) {
-                if (err.response.data && err.response.data.mensaje) {
-                    errorMsg = err.response.data.mensaje;
-                } else if (err.response.data && err.response.data.error) {
-                    errorMsg = err.response.data.error;
-                } else if (err.response.data && err.response.data.message) {
-                    errorMsg = err.response.data.message;
-                } else {
-                    errorMsg = `Error: ${err.response.status} ${err.response.statusText}`;
-                }
+              if (err.response.data && err.response.data.mensaje) {
+                errorMsg = err.response.data.mensaje;
+              } else if (err.response.data && err.response.data.error) {
+                errorMsg = err.response.data.error;
+              } else if (err.response.data && err.response.data.message) {
+                errorMsg = err.response.data.message;
+              } else {
+                errorMsg = `Error: ${err.response.status} ${err.response.statusText}`;
+              }
             }
-            setError(errorMsg);
+            setError([errorMsg]);
         } finally {
             setLoading(false);
         }
@@ -289,6 +322,7 @@ const ListarUsuarios = () => {
                         </Alert>
                     </Snackbar>
                     <Paper style={{ padding: '20px', marginTop: '20px', backgroundColor: tema.palette.background.paper }}>
+                    
                         <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
                             {/* <Typography variant="h4" style={{ color: tema.palette.text.primary, margin: '20px' }}>Listado de usuarios</Typography> */}
                             <TextField
@@ -299,34 +333,61 @@ const ListarUsuarios = () => {
                                 sx={{ backgroundColor: tema.palette.background.paper, borderRadius: '5px', margin: '20px' }}
                                 InputProps={{ style: { color: tema.palette.text.primary } }}
                             />
+                 {error && Array.isArray(error) && error.length > 0 && (
+                        <Snackbar
+                            open={error.length > 0}
+                            autoHideDuration={6000}
+                            onClose={() => setError([])}
+                        >
+                            <Alert onClose={() => setError([])} severity="error">
+                                {error[0]} {/* Muestra el primer mensaje de error */}
+                            </Alert>
+                        </Snackbar>
+              )}
+              {mensaje && <Typography color="success.main">{mensaje}</Typography>}
+                            
+                            
                         </Box>
+                        
+                        
                         <TableContainer component={Paper} style={{ maxHeight: '400px', overflowY: 'auto' }}>
                             <Table className="responsive-table">
                                 <TableHead>
                                     <TableRow>
                                         <TableCell style={{ color: tema.palette.text.primary }}>Nombre</TableCell>
                                         <TableCell style={{ color: tema.palette.text.primary }}>Email</TableCell>
-                                        <TableCell style={{ color: tema.palette.text.primary }}>Es Alumno</TableCell>
+                                        <TableCell style={{ color: tema.palette.text.primary }}>Contacto</TableCell>
+                                        <TableCell style={{ color: tema.palette.text.primary }}>Alumno</TableCell>
                                         <TableCell style={{ color: tema.palette.text.primary }}>Acciones</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {usuariosFiltrados.map(usuario => (
-                                        <TableRow key={usuario._id}>
-                                            <TableCell data-label="Nombre" style={{ color: tema.palette.text.primary }}>{usuario.nombre}</TableCell>
-                                            <TableCell data-label="Email" style={{ color: tema.palette.text.primary }}>{usuario.email}</TableCell>
-                                            <TableCell data-label="Es Alumno" style={{ color: tema.palette.text.primary }}>{mostrarAlumno(usuario.alumno)}</TableCell>
-                                            <TableCell data-label="Acciones">
-                                                <HamburgerMenu
-                                                    loading={loading}
-                                                    onEditClick={() => handleEditClick(usuario._id)}
-                                                    onDeleteClick={() => handleClickOpenDelete(usuario._id)}
-                                                    onStudentClick={() => handleClickOpenAssign(usuario._id)}
-                                                />
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
+                                {usuariosFiltrados.map(usuario => (
+                                <TableRow key={usuario._id}>
+                                <TableCell data-label="Nombre" style={{ color: tema.palette.text.primary }}>
+                                    {usuario.nombre}
+                                </TableCell>
+                                <TableCell data-label="Email" style={{ color: tema.palette.text.primary }}>
+                                    {usuario.email}
+                                </TableCell>
+                                <TableCell data-label="Telefono" style={{ color: tema.palette.text.primary }}>
+                                    {usuario.telefono}
+                                </TableCell>
+                                <TableCell data-label="Es Alumno" style={{ color: tema.palette.text.primary }}>
+                                    {mostrarAlumno(usuario.alumno)}
+                                </TableCell>
+                                <TableCell data-label="Acciones">
+                                    <HamburgerMenu
+                                    loading={loading}
+                                    onEditClick={() => handleEditClick(usuario._id)}
+                                    onDeleteClick={() => handleClickOpenDelete(usuario._id)}
+                                    onStudentClick={() => handleClickOpenAssign(usuario._id)}
+                                    showStudentOption={!usuario.alumno} // Condición para mostrar la opción de asignar como alumno
+                                    />
+                                </TableCell>
+                                </TableRow>
+                            ))}
+                            </TableBody>
                             </Table>
                         </TableContainer>
                     </Paper>
@@ -345,7 +406,7 @@ const ListarUsuarios = () => {
                     title="Asignar Alumno"
                     content="¿Estás seguro que deseas asignar este usuario como alumno?"
                 />
-            {/* </div> */}
+            
         </ThemeProvider>
     );
 };

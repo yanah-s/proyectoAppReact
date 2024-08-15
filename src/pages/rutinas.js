@@ -25,7 +25,7 @@ const tema = createTheme({
       main: '#ff5252',
     },
     background: {
-      default: '#121212',
+      default: '#212529',
       paper: '#212529' 
     },
     text: {
@@ -636,13 +636,6 @@ const Rutinas = () => {
                   <Tab eventKey="crear" title="Crear">
                     <Typography component="h1" variant="h5">Rutinas</Typography>
                     <Box sx={{ display: 'flex', width: '100%', mb: 2 }}>
-                      {/* <TextField
-                        label="Filtrar"
-                        variant="outlined"
-                        value={filter}
-                        onChange={filtrarTabla}
-                        sx={{ width: '300px', marginRight: '20px', '& .MuiInputBase-root': { backgroundColor: 'white', color:'black'}, }}
-                      /> */}
                        <TextField
                                label="Filtrar"
                                variant="outlined"
@@ -651,6 +644,8 @@ const Rutinas = () => {
                                 sx={{ backgroundColor: tema.palette.background.paper, borderRadius: '5px', width: '300px', marginRight: '20px', }}
                                 InputProps={{ style: { color: tema.palette.text.primary } }}
                       />
+
+                      
                       <Button variant="contained" color="primary" onClick={() => abrirModal(false)}>Crear</Button>
                       <Button variant="contained" color="secondary" onClick={() => abrirModal(true, rutinaSeleccionada)} disabled={!rutinaSeleccionada} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
                       <Button variant="contained" color="error" onClick={() => deshabilitarRutina(rutinaSeleccionada._id)} disabled={!rutinaSeleccionada} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>
@@ -700,20 +695,7 @@ const Rutinas = () => {
                   <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', p: 2  }}>
                     <Typography component="h1" variant="h5">Asignar Rutinas</Typography>
                     <FormControl fullWidth={false} margin="normal" sx={{ width: '300px' }}>
-                      {/* <Select
-                        value={usuarioSeleccionado || ""} 
-                        onChange={handleUsuarioChange}
-                        onOpen={listarUsuarios}
-                        displayEmpty
-                        sx={{ backgroundColor: 'white', color: 'black !important'}}
-                      >
-                        <MenuItem value="" disabled>Selecciona un usuario</MenuItem>
-                        {usuarios.map(usuario => (
-                          <MenuItem key={usuario._id} value={usuario._id}>
-                            {usuario.nombre}
-                          </MenuItem>
-                        ))}
-                      </Select> */}       <Select
+              <Select
         value={usuarioSeleccionado || ''}
         onChange={handleUsuarioChange}
         onOpen={listarUsuarios}
@@ -768,8 +750,10 @@ const Rutinas = () => {
                             variant="outlined"
                             value={filter}
                             onChange={filtrarTablaAsignar}
-                            sx={{ width: '300px', marginRight: '20px', '& .MuiInputBase-root': { backgroundColor: 'white', color: 'black'}, }}
+                            InputProps={{ style: { color: tema.palette.text.primary } }}
+                            sx={{ width: '300px', marginRight: '20px', '& .MuiInputBase-root': { backgroundColor: tema.palette.background.paper, color: 'black'}, }}
                           />
+
                           <Button variant="contained" color="primary" onClick={abrirModalAsignar}>Crear</Button>
                           <Button variant="contained" color="secondary" onClick={handleOpenModal}  disabled={selectedRow === null} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
                           <Button variant="contained" color="error" onClick={handleOpenDialog} disabled={selectedRow === null} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>
@@ -858,7 +842,7 @@ const Rutinas = () => {
                   value={modalData.ejercicios.map(ejercicio => ejercicio._id)}
                   onChange={manejarCambioDeInput}
                   displayEmpty
-                  sx={{ backgroundColor: 'white', color: 'black'}}
+                  sx={{ backgroundColor: tema.palette.background.paper, color: 'black'}}
                 >
                   <MenuItem value="" disabled>
                     Selecciona un ejercicio
@@ -1006,13 +990,13 @@ const Rutinas = () => {
                           textField: {
                             sx: {
                               '& input': {
-                                color: '#000000', 
+                                color: 'white', 
                               },
                               borderRadius: '2px',
                               borderWidth: '1px',
                               borderColor: '#e91e63',
                               border: '1px solid',
-                              backgroundColor: '#FFFFFF',
+                              backgroundColor: tema.palette.background.paper,
                               width: '45%',
                             }
                           }
@@ -1037,13 +1021,13 @@ const Rutinas = () => {
                         setSelectedRutina(e.target.value); // Actualiza solo con el ID
                       }}
                       sx={{
-                        backgroundColor: 'white',
+                        backgroundColor: tema.palette.background.paper,
                         '& .MuiSelect-select': {
-                          backgroundColor: 'white',
-                          color: 'black',
+                          backgroundColor: tema.palette.background.paper,
+                          color: 'white',
                         },
                         '& .MuiOutlinedInput-notchedOutline': {
-                          borderColor: 'black',
+                          borderColor: 'white',
                         },
                         '& .MuiInputLabel-root': {
                           color: 'black !important',
@@ -1146,6 +1130,8 @@ const Rutinas = () => {
                           },
                         }}
                       />
+
+                      
                     </TableCell>
                     <TableCell>{selectedExerciseData?.fecha || ''}</TableCell>
                   </TableRow>

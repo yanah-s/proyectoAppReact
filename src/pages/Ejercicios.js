@@ -1,12 +1,62 @@
 import { CircularProgress } from '@mui/material';
 import React, { useState, useEffect  } from 'react';
 import api from '../configuracion/axiosconfig';
-import { Alert, AlertTitle, Button, CssBaseline, TextField, Grid, Paper, Box, Snackbar, Typography,
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Modal } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import YouTube from 'react-youtube';
 import ReactPlayer from 'react-player';
+import { Modal } from '@mui/material';
 
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  CssBaseline,
+  TextField,
+  Grid,
+  Paper,
+  Box,
+  Snackbar,
+  Typography,
+  Table,
+  Dialog,
+  DialogActions,
+  TableBody,
+  TableCell,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Container
+} from '@mui/material';
+
+
+const ConfirmDialog = ({ open, handleClose, handleConfirm, title, content }) => {
+  return (
+      <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+      >
+          <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+          <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                  {content}
+              </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+              <Button onClick={handleClose} style={{ color: tema.palette.error.main }}>
+                  Cancelar
+              </Button>
+              <Button onClick={handleConfirm} style={{ color: tema.palette.success.main }} autoFocus>
+                  Confirmar
+              </Button>
+          </DialogActions>
+      </Dialog>
+  );
+};
 
 const tema = createTheme({
   palette: {
@@ -20,7 +70,7 @@ const tema = createTheme({
       main: '#ff5252',
     },
     background: {
-      default: '#121212',
+      default: '#212529',
       paper: '#212529' ,
     },
     text: {
@@ -51,10 +101,29 @@ const Ejercicios = () => {
     const [editado, setIsEdit] = useState(false);
     const [openVideoModal, setOpenVideoModal] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openAssign, setOpenAssign] = useState(false);
+    const [selectedId, setSelectedId] = useState(null);
   
     useEffect(() => {
       listarEjercicios();
     }, []);
+
+    const handleClickOpenDelete = (id) => {
+      setSelectedId(id);
+      setOpenDelete(true);
+  };
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+    setSelectedId(null);
+};  
+  const handleConfirmDelete = async () => {
+  if (selectedId !== null) {
+      await deshabilitarEjercicio(selectedId);
+      handleCloseDelete();
+      listarEjercicios();
+  }
+};
   
     const listarEjercicios = async () => {
       setLoading(true);
@@ -188,9 +257,7 @@ const Ejercicios = () => {
     };
 
     const deshabilitarEjercicio = async (id) => {
-      const confirmacion = window.confirm('¿Estás seguro de que deseas deshabilitar este ejercicio?');
-
-      if(!confirmacion) return;
+     
 
       try {
         const token = localStorage.getItem('token'); 
@@ -236,7 +303,16 @@ const Ejercicios = () => {
                             />
                   <Button variant="contained" color="primary" onClick={() => abrirModal(false)}>Crear</Button>
                   <Button variant="contained" color="secondary" onClick={() => abrirModal(true, ejercicioSeleccionado)} disabled={!ejercicioSeleccionado} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
-                  <Button variant="contained" color="error" onClick={() => deshabilitarEjercicio(ejercicioSeleccionado._id)} disabled={!ejercicioSeleccionado} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>
+                  <Button variant="contained" color="error" onClick={() =>  handleClickOpenDelete(ejercicioSeleccionado._id)} disabled={!ejercicioSeleccionado} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>
+              
+
+                  <ConfirmDialog
+                    open={openDelete}
+                    handleClose={handleCloseDelete}
+                    handleConfirm={handleConfirmDelete}
+                    title="Confirmar Eliminación"
+                    content="¿Estás seguro que deseas eliminar este ejercicio?"
+                />
                 </Box>
                 {loading ? (
                   <CircularProgress />

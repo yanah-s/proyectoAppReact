@@ -46,6 +46,7 @@
 
 #boton_hamburguesa {
     background-color: black; 
+    /* background-color: '#212529';  */
     border-color: white; 
     transition: 1s;
 }

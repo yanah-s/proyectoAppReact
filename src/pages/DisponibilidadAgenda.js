@@ -92,7 +92,7 @@ const DisponibilidadAgenda = () => {
             'User-ID': usuario.id
           }
         });
-        console.log(response.data); // Verifica que recibas los datos correctos
+        console.log("respuesta disponibilidad total" + response.data); 
   
         // Establecer la disponibilidad en el estado
         setDisponibilidad(response.data);
@@ -295,7 +295,7 @@ return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={12} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
               my: 8,
@@ -351,17 +351,17 @@ return (
           <ul className="nav nav-tabs nav-justified">
           <li className="nav-item">
             <a className={`nav-link ${activeTab === 'table1' ? 'active' : ''}`} href="#" onClick={() => handleTabClick('table1')}>
-              Nueva disponibilidad
+              Nueva
             </a>
           </li>
           <li className="nav-item">
             <a className={`nav-link ${activeTab === 'table2' ? 'active' : ''}`} href="#" onClick={() => handleTabClick('table2')}>
-              Disponibilidad Actual
+               Actual
             </a>
           </li>
           <li className="nav-item">
             <a className={`nav-link ${activeTab === 'table3' ? 'active' : ''}`} href="#" onClick={() => handleTabClick('table3')}>
-              Turnos Ocupados
+               Ocupados
             </a>
           </li>
         </ul>
@@ -375,7 +375,6 @@ return (
                       <TableCell style={{ color: tema.palette.text.primary }}>Día</TableCell>
                       <TableCell style={{ color: tema.palette.text.primary }}>Hora Inicio</TableCell>
                       <TableCell style={{ color: tema.palette.text.primary }}>Hora Fin</TableCell>
-                      <TableCell style={{ color: tema.palette.text.primary }}>Quitar</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -441,6 +440,7 @@ return (
                       <TableCell style={{ color: tema.palette.text.primary }}>Hora Fin</TableCell>
                       <TableCell style={{ color: tema.palette.text.primary }}>Cliente</TableCell>
                       <TableCell style={{ color: tema.palette.text.primary }}>Observaciones</TableCell>
+                      <TableCell style={{ color: tema.palette.text.primary }}>Presencial</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -451,8 +451,8 @@ return (
                     <TableCell>{item.hora_hasta ? dayjs(item.hora_hasta).format('HH:mm') : ''}</TableCell>
                     {/* <TableCell>{item.usuario ? `${item.usuario.nombre}` : 'Sin asignar'}</TableCell> */}
                     <TableCell>{item.usuario ? item.usuario.nombre : 'Sin asignar'}</TableCell>
-                    <TableCell>{item.observaciones ? item.observaciones: ''}</TableCell>
-                    {/* <TableCell>{item.observaciones ? item.observaciones: ''}</TableCell> */}
+                    <TableCell>{item.observacion ? item.observacion: ''}</TableCell>
+                    <TableCell>{item.presencial ?  `Si` : 'No'}</TableCell> 
                   </TableRow>
                 ))}
                   </TableBody>
@@ -484,7 +484,7 @@ return (
               Horas disponibles para el {fechaSeleccionada && fechaSeleccionada.format('YYYY-MM-DD')}
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Selecciona disponibilidad AM
+              Selecciona hora de inicio
             </Typography>
             <TimePicker
               label="Selecciona una hora"
@@ -492,7 +492,7 @@ return (
               onChange={handleTimeChangeAM}
               renderInput={(params) => <TextField {...params} />}
             />
-            <Typography id="modal-modal-description">Selecciona disponibilidad PM</Typography>
+            <Typography id="modal-modal-description">Selecciona hora de fin</Typography>
             <TimePicker
               label="Selecciona una hora"
               value={selectPM}

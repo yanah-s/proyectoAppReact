@@ -16,7 +16,7 @@ const tema = createTheme({
             main: '#ff5252', // Rojo claro
         },
         background: {
-            default: '#121212', // Fondo casi negro
+            default: '#212529; ', // Fondo casi negro
             paper: '#212529' , // Fondo de papel gris oscuro
         },
         text: {

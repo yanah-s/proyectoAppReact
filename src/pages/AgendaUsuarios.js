@@ -41,7 +41,7 @@ const tema = createTheme({
       main: '#ff5252',
     },
     background: {
-      default: '#121212',
+      default: '#212529',
       // paper: '#1d1d1d',
       paper: '#212529'
       
@@ -68,6 +68,8 @@ const AgendaUsuarios = () => {
   const [error, setError] = useState([]);
   const [mensaje, setMensaje] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [observaciones, setObservaciones] = useState('');
+  const [presencial, setPresencial] = useState(false);
   const [formulario, setFormulario] = useState({
     nombre: '',
     email: '',
@@ -91,66 +93,7 @@ const AgendaUsuarios = () => {
     fetchDisponibilidad();
   }, []);
  
-  // const handleSubmitUsuario = async (e) => {
-    
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   setError([]);
-  //   setMensaje(null);
-    
-    
-  //   try {
-      
-  //     if (formulario.nombre === '' || formulario.email === '' || formulario.fNacimiento === '' || formulario.password === '' || formulario.password2 === '' || formulario.telefono === '') {
-  //       const errorMsg = "Revise su formulario";
-  //       setError([errorMsg]);
-  //       setLoading(false);
-  //       return; 
-  //     }
-  //     const coincide = validarPassword(formulario.password, formulario.password2);
-  //     if (!coincide) {
 
-  //       const errorMsg = "Las contraseñas no coinciden";
-  //       setError([errorMsg]);
-  //       return;
-  //     }
-  //       if (Object.keys(selectedTurnos).length === 0) {
-  //         const errorMsg = "Debe seleccionar un turno en la agenda";
-  //         setError([errorMsg]);
-  //         return;
-  //       }
-  //       const respuestaUsuario = await api.post('/api/usuarios/', formulario);
-  //       const dataAgenda = {
-  //         usuarioId: respuestaUsuario.data.value._id, 
-  //         turnoId : selectedTurnos,
-  //       };
-  //       const responseAgenda = await api.put('/api/agenda/',dataAgenda, {
-  //         headers: {
-  //             'Content-Type': 'application/json'
-  //         }
-  //       });
-  //       setMensaje('Usuario registrado y turno agendado exitosamente.');
-  //       navigate('/login');
-  //     }
-  //      catch (err) {
-  //     let errorMsg = 'Error de conexión';
-
-  //     if (err.response) {
-  //       if (err.response.data && err.response.data.errors) {
-  //         setError(err.response.data.errors);
-  //       } else if (err.response.data && err.response.data.message) {
-  //         setError([err.response.data.message]);
-  //       } else {
-  //         errorMsg = `Error: ${err.response.status} ${err.response.statusText}`;
-  //         setError([errorMsg]);
-  //       }
-  //     } else {
-  //       setError([errorMsg]);
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleSubmitUsuario = async (e) => {
     e.preventDefault(); 
@@ -184,12 +127,12 @@ const AgendaUsuarios = () => {
       const respuestaUsuario = await api.post('/api/usuarios/', formulario);
       console.log('Usuario creado:', respuestaUsuario.data);
   
-      // Preparar datos para la segunda petición
       const dataAgenda = {
         usuarioId: respuestaUsuario.data.value._id, 
         turnoId: selectedTurnos,
+        observaciones: observaciones,
+        presencial: presencial,
       };
-  
       console.log('Datos para agendar:', dataAgenda);
   
       // Segunda petición: Agendar turno
@@ -202,8 +145,12 @@ const AgendaUsuarios = () => {
       console.log('Respuesta de agenda:', responseAgenda.data);
   
       // Mensaje de éxito y redirección
-      setMensaje('Usuario registrado y turno agendado exitosamente.');
-      navigate('/login');
+setMensaje('Usuario registrado y turno agendado exitosamente.');
+
+// Espera 2 segundos (2000 milisegundos) antes de redirigir
+setTimeout(() => {
+  navigate('/login');
+}, 3000);
   
     } catch (err) {
       console.log('Error:', err);  // Log adicional para depurar errores
@@ -266,27 +213,39 @@ const AgendaUsuarios = () => {
     dayjs(turno.fecha).isSame(fechaSeleccionada, 'day')
   );
 
+
   const shouldDisableDate = (date) => {
-    const formattedDate = dayjs(date).format('YYYY-MM-DD');
-    const today = dayjs().startOf('day');
+    const today = dayjs().startOf('day');  // Fecha de hoy al inicio del día
+    const selectedDate = dayjs(date).startOf('day');  // Fecha seleccionada al inicio del día
   
-    // Comparar la fecha con la de hoy
-    if (dayjs(formattedDate).isBefore(today, 'day')) {
-      return true; // Deshabilitar fechas pasadas
+    // Deshabilitar fechas pasadas incluyendo hoy
+    if (selectedDate.isBefore(today, 'day') || selectedDate.isSame(today, 'day')) {
+      return true; // Deshabilitar fechas pasadas y la fecha de hoy
     }
-
-    return !disponibilidad.some(turno => dayjs(turno.fecha).format('YYYY-MM-DD') === formattedDate);
+  
+    // Verificar si la fecha está en la disponibilidad
+    return !disponibilidad.some(turno => dayjs(turno.fecha).startOf('day').isSame(selectedDate, 'day'));
   };
-
-
-
 
 return (
   <ThemeProvider theme={tema}>
     <CssBaseline />
-  
+{/*   
     <Grid container component="main" sx={{ height: '100vh',
-       justifyContent: 'center', alignItems: 'center' }}>
+       justifyContent: 'center', alignItems: 'center', }}> */}
+ <Grid 
+        container 
+        component="main" 
+        sx={{ 
+          justifyContent: 'center', alignItems: 'center',
+          height: '100vh',
+          backgroundImage: `url('/images/agenda.jpg')`,
+          backgroundSize: 'cover', 
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+
 
 
       <Grid item xs={12} md={8} component={Paper} elevation={6} square>
@@ -315,16 +274,24 @@ return (
               />
             </LocalizationProvider>
             <FormControlLabel
-              control={<Checkbox color="primary" />}
+              control={
+                <Checkbox
+                  color="primary"
+                  checked={presencial}
+                  onChange={(e) => setPresencial(e.target.checked)}
+                />
+              }
               label="Preferiría mi consulta de forma presencial"
             />
             <TextField
-              margin="normal"
-              fullWidth
-              id="observaciones"
-              label="Observaciones"
-              name="observaciones"
-              autoComplete="observaciones"
+               margin="normal"
+               fullWidth
+               id="observaciones"
+               label="Motivo de la consulta"
+               name="observaciones"
+               autoComplete="observaciones"
+               value={observaciones}
+               onChange={(e) => setObservaciones(e.target.value)}
             />
             {error.length > 0 && (
               <Alert severity="error">
@@ -337,8 +304,20 @@ return (
         </Box>
       </Grid>
 
-      <Grid container component="main" sx={{ height: '100vh',
-       justifyContent: 'center', alignItems: 'center' }}>
+      {/* <Grid container component="main" sx={{ height: '100vh',
+       justifyContent: 'center', alignItems: 'center' }}> */}
+       <Grid 
+        container 
+        component="main" 
+        sx={{ 
+          justifyContent: 'center', alignItems: 'center',
+          height: '100vh',
+          backgroundImage: `url('/images/agenda.jpg')`,
+          backgroundSize: 'cover', 
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
         <Grid item xs={12} md={8} component={Paper} elevation={6} square>
 
                 <form onSubmit={handleSubmitUsuario} noValidate>
