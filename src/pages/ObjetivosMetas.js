@@ -58,6 +58,7 @@ const ObjetivosMetas = () => {
   const [objetivosCumplidos, setObjetivosCumplidos] = useState(true);
   const [alerta, setAlertOpen] = useState(false);
   const [mensajeAlerta, setAlertMessages] = useState([]);
+  const [botonCrear, setBotonCrear] = useState('');
 
   useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -186,7 +187,7 @@ const headers = {
       const fechaHasta = new Date(formatDate2(modalData.fechaHasta));
 
       if (isEdit) {
-        if(!isAdmin){
+        if(metaSeleccionada !== null){
 
           const fechaMinima = new Date(fechaDesde);
           fechaMinima.setMonth(fechaDesde.getMonth() + 1);
@@ -206,8 +207,10 @@ const headers = {
           }else{
             throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
           }
-        }else{
+
+        }else if(objetivoSeleccionado !== null && isAdmin){
           await api.put(`api/objetivo_meta_usuario/${objetivoSeleccionado._id}`, {
+
             fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
             fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
             valor: modalData.valor,
@@ -215,16 +218,33 @@ const headers = {
           }, {
             headers
           });
+
         }
       } else {
 
-        const fechaMinima = new Date(fechaDesde);
-        fechaMinima.setMonth(fechaDesde.getMonth() + 1);
+        if(botonCrear === "crearMeta"){
+          const fechaMinima = new Date(fechaDesde);
+          fechaMinima.setMonth(fechaDesde.getMonth() + 1);
 
-        const fechaMaxima = new Date(fechaDesde);
-        fechaMaxima.setMonth(fechaDesde.getMonth() + 3);
 
-        if (fechaHasta >= fechaMinima && fechaHasta <= fechaMaxima) {
+          const fechaMaxima = new Date(fechaDesde);
+          fechaMaxima.setMonth(fechaDesde.getMonth() + 3);
+          
+          if (fechaHasta >= fechaMinima && fechaHasta <= fechaMaxima) {
+            await axios.post('http://localhost:3000/api/objetivo_meta_usuario', {
+              objetivoMeta: modalData.objetivoMeta._id,
+              usuario: usuarioSeleccionado,
+              fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
+              fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
+              valor: modalData.valor,
+              creadoAdmin: false,
+              cumplido: false,
+            });
+
+          }else{
+            throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
+          }
+        }else{
           await api.post('api/objetivo_meta_usuario', {
             objetivoMeta: modalData.objetivoMeta._id,
             usuario: usuarioSeleccionado,
@@ -236,11 +256,10 @@ const headers = {
           }, {
             headers
           });
-        }else{
-          throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
         }
+        
       }
-  
+      setBotonCrear('');
       fetchMetas(usuarioSeleccionado);
       setModalOpen(false);
     } catch (error) {
@@ -427,7 +446,7 @@ const cerrarAlerta = () => {
                     <Typography component="h1" variant="h5" sx={{ pl: 4, mt:1 }}>Objetivos</Typography>
                     {isAdmin && (
                       <Box>
-                        <Button variant="contained" color="primary"onClick={() => {abrirModal(false)}} sx={{ ml: 4, mt:2 }}>Crear</Button>
+                        <Button variant="contained" color="primary"onClick={() => {abrirModal(false); setBotonCrear('crearObjetivo');}} sx={{ ml: 4, mt:2 }}>Crear</Button>
                         <Button variant="contained" color="secondary"onClick={() => {abrirModal(true, objetivoSeleccionado)}} sx={{ ml: 1, mt:2, '&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd' }}} disabled={!objetivoSeleccionado}>Editar</Button>
                         <Button variant="contained" color="error"onClick={() => {eliminarRegistro(objetivoSeleccionado)}} sx={{ ml: 1, mt: 2,'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}} disabled={!objetivoSeleccionado}>Eliminar</Button>
                       </Box>
@@ -457,6 +476,7 @@ const cerrarAlerta = () => {
                                 onClick={() => {
                                   if (isAdmin) {
                                     setObjetivoSeleccionado(objetivoSeleccionado?._id === objetivo._id ? null : objetivo);
+                                    setMetaSeleccionada(null);
                                   }
                                 }}
                                 selected={objetivoSeleccionado?._id === objetivo._id}
@@ -489,7 +509,7 @@ const cerrarAlerta = () => {
                 <Box sx={{ border: '1px solid lightgray', borderRadius: 2 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Typography component="h1" variant="h5" sx={{ pl: 4, mt:1 }}>Metas</Typography>
-                    <Button variant="contained" color="primary"onClick={() => {abrirModal(false)}} sx={{ ml: 4, mt:2 }}>Crear</Button>
+                    <Button variant="contained" color="primary"onClick={() => {abrirModal(false); setBotonCrear('crearMeta')}} sx={{ ml: 4, mt:2 }} id="crearMeta">Crear</Button>
                     <Button variant="contained" color="secondary"onClick={() => {abrirModal(true, metaSeleccionada)}} sx={{ ml: 1, mt: 2, '&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd' }}} disabled={!metaSeleccionada}>Editar</Button>
                     <Button variant="contained" color="error"onClick={() => {eliminarRegistro(objetivoSeleccionado)}} sx={{ ml: 1, mt: 2,'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}} disabled={!metaSeleccionada}>Eliminar</Button>
                     <Button variant="contained"  onClick={verMetasCumplidas} sx={{ ml: 1, mt: 2, backgroundColor:"blue", '&:hover': {backgroundColor: "#151d4f", }}}>{metasCumplidas ? <i className="bi bi-eye-slash"></i> : <i className="bi bi-eye"></i>}</Button>
@@ -514,7 +534,14 @@ const cerrarAlerta = () => {
                             {metasFiltradas.map((meta) => (
                               <TableRow
                                 key={meta._id}
-                                onClick={() => setMetaSeleccionada(metaSeleccionada?._id === meta._id ? null : meta)}
+                                onClick={() => {
+                                  if (isAdmin) {
+                                    setMetaSeleccionada(metaSeleccionada?._id === meta._id ? null : meta);
+                                    setObjetivoSeleccionado(null);
+                                  }else{
+                                   setMetaSeleccionada(metaSeleccionada?._id === meta._id ? null : meta)}
+                                  }
+                                }
                                 selected={metaSeleccionada?._id === meta._id}
                               >
                                 <TableCell>{meta.objetivoMeta.nombre}</TableCell>
