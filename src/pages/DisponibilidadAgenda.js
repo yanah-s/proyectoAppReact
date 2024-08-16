@@ -86,7 +86,7 @@ const DisponibilidadAgenda = () => {
         const token = localStorage.getItem('token'); 
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
         console.log("usuarioid   :" + usuario.id + "token" + token);
-        const response = await api.get('api/agenda/turnos', {
+        const response = await api.get('/api/agenda/turnos', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
@@ -245,7 +245,7 @@ const DisponibilidadAgenda = () => {
       const usuario = JSON.parse(localStorage.getItem('usuario'));
       console.log("usuarioid   :" + usuario.id + "token" + token);
 
-      await api.post('api/agenda/', formulario, {
+      await api.post('/api/agenda/', formulario, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'User-ID': usuario.id

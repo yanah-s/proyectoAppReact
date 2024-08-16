@@ -78,7 +78,7 @@ const ObjetivosMetas = () => {
     try {
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario')); 
-      const response =await api.get('api/objetivo_meta', {
+      const response =await api.get('/api/objetivo_meta', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'User-ID': usuario.id
@@ -95,7 +95,7 @@ const ObjetivosMetas = () => {
     try {
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario')); 
-      const response = await api.get('api/objetivo_meta_usuario/usuario', {
+      const response = await api.get('/api/objetivo_meta_usuario/usuario', {
         params: { usuario: usuarioId },
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -124,7 +124,6 @@ const ObjetivosMetas = () => {
     try {
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario'));
-      // const response = await api.get('api/usuarios', {
       const response = await api.get('/api/usuarios/alumnos', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -231,7 +230,7 @@ const headers = {
           fechaMaxima.setMonth(fechaDesde.getMonth() + 3);
           
           if (fechaHasta >= fechaMinima && fechaHasta <= fechaMaxima) {
-            await axios.post('http://localhost:3000/api/objetivo_meta_usuario', {
+            await api.post('/api/objetivo_meta_usuario', {
               objetivoMeta: modalData.objetivoMeta._id,
               usuario: usuarioSeleccionado,
               fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
@@ -245,7 +244,7 @@ const headers = {
             throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
           }
         }else{
-          await api.post('api/objetivo_meta_usuario', {
+          await api.post('/api/objetivo_meta_usuario', {
             objetivoMeta: modalData.objetivoMeta._id,
             usuario: usuarioSeleccionado,
             fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),

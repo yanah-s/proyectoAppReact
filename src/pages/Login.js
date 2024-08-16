@@ -77,7 +77,7 @@ const Login = () => {
     setMensaje(null);
 
     try {
-      const response = await api.post('api/autentificacion', formulario);
+      const response = await api.post('/api/autentificacion', formulario);
       console.log('Respuesta:', response);
       const isAdmin = response.data.usuario.admin;
       console.log('isAdmin:', isAdmin);

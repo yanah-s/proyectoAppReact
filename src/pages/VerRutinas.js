@@ -79,7 +79,7 @@ const VerRutinas = () => {
       if (!usuarioId) {
         throw new Error('El ID del usuario no está definido');
       }
-      const response = await api.get('api/rutina_ej_alumno/usuario', {
+      const response = await api.get('/api/rutina_ej_alumno/usuario', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'usuario': usuario.id
