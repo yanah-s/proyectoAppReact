@@ -49,6 +49,32 @@ const tema = createTheme({
   },
 });
 
+const ConfirmDialog = ({ open, handleClose, handleConfirm, title, content }) => {
+  return (
+      <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+      >
+          <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+          <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                  {content}
+              </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+              <Button onClick={handleClose} style={{ color: tema.palette.error.main }}>
+                  Cancelar
+              </Button>
+              <Button onClick={handleConfirm} style={{ color: tema.palette.success.main }} autoFocus>
+                  Confirmar
+              </Button>
+          </DialogActions>
+      </Dialog>
+  );
+};
+
 const Rutinas = () => {
     const [activeTab, setActiveTab] = useState('crear');
     const [rutinas, setRutinas] = useState([]);
@@ -83,6 +109,9 @@ const Rutinas = () => {
     const [usuarios, setUsuarios] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [ejerciciosUsuario, setEjerciciosUsuario] = useState([]);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openAssign, setOpenAssign] = useState(false);
+    const [selectedId, setSelectedId] = useState(null);
   
     useEffect(() => {
       listarRutinas();
@@ -111,6 +140,23 @@ const Rutinas = () => {
         setEjerciciosFiltrados([]);
       }
     }, [categoria]);
+
+
+    const handleClickOpenDelete = (id) => {
+      setSelectedId(id);
+      setOpenDelete(true);
+  };
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+    setSelectedId(null);
+};  
+  const handleConfirmDelete = async () => {
+  if (selectedId !== null) {
+      await deshabilitarRutina(selectedId);
+      handleCloseDelete();
+      listarRutinas();
+  }
+};
 
     const manejarCambioCategoria = async (event) => {
       const newCategoria = event.target.value;
@@ -604,9 +650,9 @@ const Rutinas = () => {
     };
 
     const deshabilitarRutina = async (id) => {
-      const confirmacion = window.confirm('¿Estás seguro de que deseas deshabilitar esta rutina?');
+      // const confirmacion = window.confirm('¿Estás seguro de que deseas deshabilitar esta rutina?');
 
-      if(!confirmacion) return;
+      // if(!confirmacion) return;
 
       try {
         const token = localStorage.getItem('token'); 
@@ -648,7 +694,7 @@ const Rutinas = () => {
                       
                       <Button variant="contained" color="primary" onClick={() => abrirModal(false)}>Crear</Button>
                       <Button variant="contained" color="secondary" onClick={() => abrirModal(true, rutinaSeleccionada)} disabled={!rutinaSeleccionada} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
-                      <Button variant="contained" color="error" onClick={() => deshabilitarRutina(rutinaSeleccionada._id)} disabled={!rutinaSeleccionada} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>
+                      <Button variant="contained" color="error" onClick={() => handleClickOpenDelete(rutinaSeleccionada._id)} disabled={!rutinaSeleccionada} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>
                     </Box>
                     {loading ? (
                       <CircularProgress />
@@ -842,7 +888,7 @@ const Rutinas = () => {
                   value={modalData.ejercicios.map(ejercicio => ejercicio._id)}
                   onChange={manejarCambioDeInput}
                   displayEmpty
-                  sx={{ backgroundColor: tema.palette.background.paper, color: 'black'}}
+                  sx={{ backgroundColor: tema.palette.background.paper, color: 'white'}}
                 >
                   <MenuItem value="" disabled>
                     Selecciona un ejercicio
@@ -1091,7 +1137,7 @@ const Rutinas = () => {
                         onChange={(e) => setSelectedExerciseData(prev => ({ ...prev, series: e.target.value }))}
                         sx={{
                           '& .MuiInputBase-input': {
-                            padding: '4px 0 5px !important', // Ajusta el padding aquí
+                            padding: '4px 0 5px !important', 
                           },
                         }}
                       />
@@ -1115,7 +1161,7 @@ const Rutinas = () => {
                         onChange={(e) => setSelectedExerciseData(prev => ({ ...prev, peso: e.target.value }))}
                         sx={{
                           '& .MuiInputBase-input': {
-                            padding: '4px 0 5px !important', // Ajusta el padding aquí
+                            padding: '4px 0 5px !important', 
                           },
                         }}
                       />
@@ -1126,7 +1172,7 @@ const Rutinas = () => {
                         onChange={(e) => setSelectedExerciseData(prev => ({ ...prev, observaciones: e.target.value }))}
                         sx={{
                           '& .MuiInputBase-input': {
-                            padding: '4px 0 5px !important', // Ajusta el padding aquí
+                            padding: '4px 0 5px !important', 
                           },
                         }}
                       />
@@ -1142,7 +1188,7 @@ const Rutinas = () => {
               </Box>
             </Box>
           </Modal>
-          <Dialog
+          {/* <Dialog
             open={isDialogOpen}
             onClose={handleCloseDialog}
           >
@@ -1160,7 +1206,14 @@ const Rutinas = () => {
                 Confirmar
               </Button>
             </DialogActions>
-          </Dialog>
+          </Dialog> */}
+            <ConfirmDialog
+                    open={openDelete}
+                    handleClose={handleCloseDelete}
+                    handleConfirm={handleConfirmDelete}
+                    title="Confirmar Eliminación"
+                    content="¿Estás seguro que deseas eliminar esta rutina?"
+                />
           <Snackbar
             open={alerta}
             autoHideDuration={6000}
