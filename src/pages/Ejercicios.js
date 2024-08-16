@@ -144,10 +144,9 @@ const Ejercicios = () => {
         console.log(formattedData.otrosMusculos);
       }
       try {
+        const token = localStorage.getItem('token'); 
+        const usuario = JSON.parse(localStorage.getItem('usuario')); 
         if (editado) {
-          const token = localStorage.getItem('token'); 
-          const usuario = JSON.parse(localStorage.getItem('usuario')); 
-          console.log("usuarioid   :" + usuario.id + "token" + token);
         
           await axios.put(`http://localhost:3000/api/ejercicio/${modalData._id}`, formattedData, {
             headers: {
@@ -156,10 +155,6 @@ const Ejercicios = () => {
             }
           });
         } else { 
-          const token = localStorage.getItem('token'); 
-          const usuario = JSON.parse(localStorage.getItem('usuario')); 
-          console.log("usuarioid   :" + usuario.id + "token" + token);
-        
           await axios.post('http://localhost:3000/api/ejercicio', formattedData, {
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -170,7 +165,7 @@ const Ejercicios = () => {
         listarEjercicios();
         cerrarModal();
       } catch (error) {
-        
+        console.log(error.response);
         const errors = error.response && error.response.data && error.response.data.error 
           ? error.response.data.error 
           : [{ message: 'Error desconocido al procesar la solicitud.' }];
