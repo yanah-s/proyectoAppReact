@@ -68,6 +68,9 @@ const Notificaciones = () => {
         }
         if (notification.message.includes('rutina') && admin) {
             navigate('/rutinas');  
+        }
+        if (notification.message.includes('objetivos') && !admin) {
+            navigate('/objetivos-metas');  
         } 
     };
     const open = Boolean(anchorEl);
