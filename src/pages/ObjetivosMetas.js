@@ -136,134 +136,239 @@ const ObjetivosMetas = () => {
     }
   };
 
+
+
   // const handleCreateUserMeta = async () => {
   //   try {
+  //   const token = localStorage.getItem('token'); 
+  //   const usuario = JSON.parse(localStorage.getItem('usuario')); 
+
+  //     const fechaDesde = new Date(formatDate2(modalData.fechaDesde));
+  //     const fechaHasta = new Date(formatDate2(modalData.fechaHasta));
 
   //     if (isEdit) {
-  //       if(!isAdmin){
-  //         await axios.put(`http://localhost:3000/api/objetivo_meta_usuario/${metaSeleccionada._id}`, {
-  //           fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-  //           fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-  //           valor: modalData.valor,
-  //           cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
-  //         });
-  //       }else{
-  //         await axios.put(`http://localhost:3000/api/objetivo_meta_usuario/${objetivoSeleccionado._id}`, {
-  //           fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-  //           fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-  //           valor: modalData.valor,
-  //           cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
-  //         });
+  //       if(metaSeleccionada !== null){
+
+  //         const fechaMinima = new Date(fechaDesde);
+  //         fechaMinima.setMonth(fechaDesde.getMonth() + 1);
+
+  //         const fechaMaxima = new Date(fechaDesde);
+  //         fechaMaxima.setMonth(fechaDesde.getMonth() + 3);
+
+  //         if (fechaHasta >= fechaMinima && fechaHasta <= fechaMaxima) {
+  //           await api.put(`api/objetivo_meta_usuario/${metaSeleccionada._id}`, {
+  //             fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
+  //             fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
+  //             valor: modalData.valor,
+  //             cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
+  //               headers: {
+  //                 'Authorization': `Bearer ${token}`,
+  //                 'User-ID': usuario.id
+  //               }
+  //             });
+  //         }else{
+  //           throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
+  //         }
+
+  //       }else if(objetivoSeleccionado !== null && isAdmin){
+  //         await api.put(
+  //           `api/objetivo_meta_usuario/${objetivoSeleccionado._id}`,
+  //           {
+  //             fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
+  //             fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
+  //             valor: modalData.valor,
+  //             cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
+  //           },
+  //           {
+  //             headers: {
+  //               'Authorization': `Bearer ${token}`,
+  //               'User-ID': usuario.id
+  //             }
+  //           }
+  //         );
+  //       } else {
+
+  //       if(botonCrear === "crearMeta"){
+  //         const fechaMinima = new Date(fechaDesde);
+  //         fechaMinima.setMonth(fechaDesde.getMonth() + 1);
+
+
+  //         const fechaMaxima = new Date(fechaDesde);
+  //         fechaMaxima.setMonth(fechaDesde.getMonth() + 3);
+          
+  //         if (fechaHasta >= fechaMinima && fechaHasta <= fechaMaxima) {
+  //           await api.post(
+  //             '/api/objetivo_meta_usuario',
+  //             {
+  //               objetivoMeta: modalData.objetivoMeta._id,
+  //               usuario: usuarioSeleccionado,
+  //               fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
+  //               fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
+  //               valor: modalData.valor,
+  //               creadoAdmin: false,
+  //               cumplido: false,
+  //             },
+  //             {
+  //               headers: {
+  //                 'Authorization': `Bearer ${token}`,
+  //                 'User-ID': usuario.id,
+  //               },
+  //             }
+  //           );
+  //         }
+
+  //         }else{
+  //           throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
+  //         }
+
+  //         await api.post(
+  //           '/api/objetivo_meta_usuario',
+  //           {
+  //             objetivoMeta: modalData.objetivoMeta._id,
+  //             usuario: usuarioSeleccionado,
+  //             fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
+  //             fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
+  //             valor: modalData.valor,
+  //             creadoAdmin: isAdmin,
+  //             cumplido: false,
+  //           },
+  //           {
+  //             headers: {
+  //               'Authorization': `Bearer ${token}`,
+  //               'User-ID': usuario.id,
+  //             },
+  //           }
+  //         );
   //       }
-        
+      
+  //       // Reseteo de estado y llamadas a funciones
+  //       setBotonCrear('');
+  //       fetchMetas(usuarioSeleccionado);
+  //       setModalOpen(false);
+  //     } catch (error) {
+  //     let errors;
+
+  //     if (error.response && error.response.data && error.response.data.error) {
+  //       errors = error.response.data.error;
   //     } else {
-  //       await axios.post('http://localhost:3000/api/objetivo_meta_usuario', {
-  //         objetivoMeta: modalData.objetivoMeta._id,
-  //         usuario: usuarioSeleccionado,
-  //         fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-  //         fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-  //         valor: modalData.valor,
-  //         creadoAdmin: isAdmin,
-  //         cumplido: false,
-  //       });
+  //       errors = [{ message: error.message }];
   //     }
-  //     fetchMetas(usuarioSeleccionado);
-  //     setModalOpen(false);
-  //   } catch (error) {
-  //     console.error('Error creating user meta', error);
+  //     setAlertMessages(errors);
+  //     setAlertOpen(true);
   //   }
   // };
-
   const handleCreateUserMeta = async () => {
     try {
-const token = localStorage.getItem('token'); 
-const usuario = JSON.parse(localStorage.getItem('usuario')); 
-const headers = {
-  'Authorization': `Bearer ${token}`,
-  'User-ID': usuario.id
-};
+      const token = localStorage.getItem('token'); 
+      const usuario = JSON.parse(localStorage.getItem('usuario')); 
+  
       const fechaDesde = new Date(formatDate2(modalData.fechaDesde));
       const fechaHasta = new Date(formatDate2(modalData.fechaHasta));
-
+  
       if (isEdit) {
-        if(metaSeleccionada !== null){
-
+        if (metaSeleccionada !== null) {
           const fechaMinima = new Date(fechaDesde);
           fechaMinima.setMonth(fechaDesde.getMonth() + 1);
-
+  
           const fechaMaxima = new Date(fechaDesde);
           fechaMaxima.setMonth(fechaDesde.getMonth() + 3);
-
+  
           if (fechaHasta >= fechaMinima && fechaHasta <= fechaMaxima) {
-            await api.put(`api/objetivo_meta_usuario/${metaSeleccionada._id}`, {
-              fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-              fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-              valor: modalData.valor,
-              cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
-            }, {
-              headers
-            });
-          }else{
+            await api.put(
+              `api/objetivo_meta_usuario/${metaSeleccionada._id}`,
+              {
+                fechaDesde: fechaDesde.toISOString(),
+                fechaHasta: fechaHasta.toISOString(),
+                valor: modalData.valor,
+                cumplido: modalData.cumplido,
+              },
+              {
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'User-ID': usuario.id,
+                },
+              }
+            );
+          } else {
             throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
           }
-
-        }else if(objetivoSeleccionado !== null && isAdmin){
-          await api.put(`api/objetivo_meta_usuario/${objetivoSeleccionado._id}`, {
-
-            fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-            fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-            valor: modalData.valor,
-            cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
-          }, {
-            headers
-          });
-
+        } else if (objetivoSeleccionado !== null && isAdmin) {
+          await api.put(
+            `api/objetivo_meta_usuario/${objetivoSeleccionado._id}`,
+            {
+              fechaDesde: fechaDesde.toISOString(),
+              fechaHasta: fechaHasta.toISOString(),
+              valor: modalData.valor,
+              cumplido: modalData.cumplido,
+            },
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'User-ID': usuario.id,
+              },
+            }
+          );
         }
       } else {
-
-        if(botonCrear === "crearMeta"){
+        if (botonCrear === "crearMeta") {
           const fechaMinima = new Date(fechaDesde);
           fechaMinima.setMonth(fechaDesde.getMonth() + 1);
-
-
+  
           const fechaMaxima = new Date(fechaDesde);
           fechaMaxima.setMonth(fechaDesde.getMonth() + 3);
-          
+  
           if (fechaHasta >= fechaMinima && fechaHasta <= fechaMaxima) {
-            await api.post('/api/objetivo_meta_usuario', {
-              objetivoMeta: modalData.objetivoMeta._id,
-              usuario: usuarioSeleccionado,
-              fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-              fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-              valor: modalData.valor,
-              creadoAdmin: false,
-              cumplido: false,
-            });
-
-          }else{
+            await api.post(
+              '/api/objetivo_meta_usuario',
+              {
+                objetivoMeta: modalData.objetivoMeta._id,
+                usuario: usuarioSeleccionado,
+                fechaDesde: fechaDesde.toISOString(),
+                fechaHasta: fechaHasta.toISOString(),
+                valor: modalData.valor,
+                creadoAdmin: false,
+                cumplido: false,
+              },
+              {
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'User-ID': usuario.id,
+                },
+              }
+            );
+          } else {
             throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
           }
-        }else{
-          await api.post('/api/objetivo_meta_usuario', {
-            objetivoMeta: modalData.objetivoMeta._id,
-            usuario: usuarioSeleccionado,
-            fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-            fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-            valor: modalData.valor,
-            creadoAdmin: isAdmin,
-            cumplido: false,
-          }, {
-            headers
-          });
+        } else {
+          await api.post(
+            '/api/objetivo_meta_usuario',
+            {
+              objetivoMeta: modalData.objetivoMeta._id,
+              usuario: usuarioSeleccionado,
+              fechaDesde: fechaDesde.toISOString(),
+              fechaHasta: fechaHasta.toISOString(),
+              valor: modalData.valor,
+              creadoAdmin: isAdmin,
+              cumplido: false,
+            },
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'User-ID': usuario.id,
+              },
+            }
+          );
         }
-        
       }
+  
+      // Reseteo de estado y llamadas a funciones
       setBotonCrear('');
       fetchMetas(usuarioSeleccionado);
       setModalOpen(false);
+  
     } catch (error) {
       let errors;
-
+  
       if (error.response && error.response.data && error.response.data.error) {
         errors = error.response.data.error;
       } else {
@@ -356,18 +461,25 @@ const formatDate3 = (dateString) => {
   return `${day}-${month}-${year}`; 
 };
 
-const eliminarRegistro = async () =>{
+const eliminarRegistro = async () => {
   try {
-    if(!isAdmin){
-      await api.delete(`api/objetivo_meta_usuario/${metaSeleccionada._id}`);
-    }else{
-      await api.delete(`api/objetivo_meta_usuario/${objetivoSeleccionado._id}`);
+    const token = localStorage.getItem('token'); 
+    const usuario = JSON.parse(localStorage.getItem('usuario')); 
+    const headers = {
+      'Authorization': `Bearer ${token}`,
+      'User-ID': usuario.id,
+    };
+
+    if (!isAdmin) {
+      await api.delete(`api/objetivo_meta_usuario/${metaSeleccionada._id}`, { headers });
+    } else {
+      await api.delete(`api/objetivo_meta_usuario/${objetivoSeleccionado._id}`, { headers });
     }
-      
+    
     fetchMetas(usuarioSeleccionado);
 
   } catch (error) {
-    console.error('Error creating user meta', error);
+    console.error('Error al eliminar el registro:', error);
   }
 }
 
