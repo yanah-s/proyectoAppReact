@@ -2,16 +2,13 @@ import React, { useState, useEffect  } from 'react';
 import api from '../configuracion/axiosconfig';
 import { Alert, AlertTitle, Button, CssBaseline, CircularProgress, TextField, Grid, Paper, Box, Snackbar, Typography,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Modal, MenuItem, Select, FormControl, InputLabel, 
-    Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton} from '@mui/material';
-import ClearIcon from '@mui/icons-material/Clear';
+    Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { format } from 'date-fns';
 import { Tabs, Tab } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Api, AppRegistration } from '@mui/icons-material';
 
 const tema = createTheme({
   palette: {
@@ -321,11 +318,10 @@ const Rutinas = () => {
       setOpenAsignarModal(true);
     }
 
-    const handleOpenModal = () => {
-      const selectedData = userExercisesData[selectedRow];
+    const handleOpenModal = (exerciseData) => {
       setSelectedExerciseData({
-        ...selectedData,
-        fecha: formatDate(selectedData.fecha)
+        ...exerciseData,
+        fecha: formatDate(exerciseData.fecha),
       });
       setIsModalOpen(true);
     };
@@ -412,9 +408,10 @@ const Rutinas = () => {
       if (selectedRow !== null) {
         try {
           const selectedData = userExercisesData[selectedRow];
+          console.log(selectedData);
           const token = localStorage.getItem('token'); 
           const usuario = JSON.parse(localStorage.getItem('usuario'));
-          await api.delete(`/api/rutina_ej_alumno/${selectedData._id}`, {
+          await api.delete(`/api/rutina_ej_alumno/${selectedRow}`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'User-ID': usuario.id
@@ -431,8 +428,10 @@ const Rutinas = () => {
       }
     };
 
-    const handleOpenDialog = () => {
+    const handleOpenDialog = (id) => {
+      console.log(id);
       setIsDialogOpen(true);
+      setSelectedRow(id);
     };
   
     const handleCloseDialog = () => {
@@ -476,51 +475,6 @@ const Rutinas = () => {
       } else {
         setUserExercisesDataFiltrado(userExercisesData);
       }
-    };
-
-    const handleRowSelect = (index) => {
-      if (selectedRow === index) {
-        setSelectedRow(null);  
-      } else {
-        setSelectedRow(index); 
-      }
-    };
-  
-    const handleEditClick = () => {
-      setIsEditing(true);
-    };
-  
-    const handleSaveClick = async () => {
-      setIsEditing(false);
-      if (selectedRow !== null) {
-        const updatedExercise = userExercisesData[selectedRow];
-        try {
-          const token = localStorage.getItem('token'); 
-        const usuario = JSON.parse(localStorage.getItem('usuario'));
-         
-          await api.put(
-            `/api/rutina_ej_alumno/${updatedExercise._id}`, 
-            updatedExercise,
-            {
-              headers: {
-                'Authorization': `Bearer ${token}`,
-                'User-ID': usuario.id
-              }
-            }
-          );
-        
-        console.log('Updated successfully');
-        } catch (error) {
-          console.error('Error updating exercise:', error);
-        }
-      }
-      setIsEditing(false);
-    };
-  
-    const handleFieldChange = (index, field, value) => {
-      const updatedData = [...userExercisesData];
-      updatedData[index][field] = value;
-      setUserExercisesData(updatedData);
     };
   
     const abrirModal = async (editado = false, rutina = null) => {
@@ -570,14 +524,6 @@ const Rutinas = () => {
     const cerrarModal = () => {
       setOpenModal(false);
       setSelectedRutina(null);
-    };
-    const menuProps = {
-      PaperProps: {
-        style: {
-          backgroundColor: 'white',
-          color: 'black',
-        },
-      },
     };
 
     const manejarCambioDeInput = (e) => {
@@ -682,19 +628,15 @@ const Rutinas = () => {
                   <Tab eventKey="crear" title="Crear">
                     <Typography component="h1" variant="h5">Rutinas</Typography>
                     <Box sx={{ display: 'flex', width: '100%', mb: 2 }}>
-                       <TextField
-                               label="Filtrar"
-                               variant="outlined"
-                               value={filter}
-                               onChange={filtrarTabla}
-                                sx={{ backgroundColor: tema.palette.background.paper, borderRadius: '5px', width: '300px', marginRight: '20px', }}
-                                InputProps={{ style: { color: tema.palette.text.primary } }}
+                      <TextField
+                        label="Filtrar"
+                        variant="outlined"
+                        value={filter}
+                        onChange={filtrarTabla}
+                        sx={{ backgroundColor: tema.palette.background.paper, borderRadius: '5px', width: '300px', marginRight: '20px', }}
+                        InputProps={{ style: { color: tema.palette.text.primary } }}
                       />
-
-                      
                       <Button variant="contained" color="primary" onClick={() => abrirModal(false)}>Crear</Button>
-                      <Button variant="contained" color="secondary" onClick={() => abrirModal(true, rutinaSeleccionada)} disabled={!rutinaSeleccionada} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
-                      <Button variant="contained" color="error" onClick={() => handleClickOpenDelete(rutinaSeleccionada._id)} disabled={!rutinaSeleccionada} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>
                     </Box>
                     {loading ? (
                       <CircularProgress />
@@ -708,6 +650,7 @@ const Rutinas = () => {
                                   <TableCell>Nombre</TableCell>
                                   <TableCell>Categoría</TableCell>
                                   <TableCell>Ejercicios</TableCell>
+                                  <TableCell>Acciones</TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
@@ -726,6 +669,25 @@ const Rutinas = () => {
                                           ))}
                                       </div>
                                     </TableCell>
+                                    <TableCell>
+                                      <Button 
+                                        variant="contained" 
+                                        color="secondary" 
+                                        onClick={() => abrirModal(true, rutina)} 
+                                        sx={{'&:hover': {backgroundColor: '#636363'}}}
+                                      >
+                                        <i className="bi bi-pencil"></i>
+                                      </Button>
+
+                                      <Button 
+                                        variant="contained" 
+                                        color="error" 
+                                        onClick={() => handleClickOpenDelete(rutina._id)} 
+                                        sx={{'&:hover': {backgroundColor: '#9e2828'}}}
+                                      >
+                                        <i className="bi bi-trash3"></i>
+                                      </Button>
+                                    </TableCell>
                                   </TableRow>
                                 ))}
                               </TableBody>
@@ -741,51 +703,51 @@ const Rutinas = () => {
                   <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', p: 2  }}>
                     <Typography component="h1" variant="h5">Asignar Rutinas</Typography>
                     <FormControl fullWidth={false} margin="normal" sx={{ width: '300px' }}>
-              <Select
-        value={usuarioSeleccionado || ''}
-        onChange={handleUsuarioChange}
-        onOpen={listarUsuarios}
-        displayEmpty
-        sx={{ 
-          backgroundColor: '#424242', 
-          color: 'white',
-          '.MuiOutlinedInput-notchedOutline': {
-            borderColor: 'white',
-          },
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'white',
-          },
-          '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'white',
-          },
-          '.MuiSvgIcon-root ': {
-            fill: 'white !important',
-          },
-          '.MuiList-root': {
-            backgroundColor: '#424242',
-            color: 'white',
-          },
-        }}
-        disabled={loading}
-      >
-        <MenuItem value="" disabled>Selecciona un usuario</MenuItem>
-        {usuarios.map((usuario) => (
-          <MenuItem 
-            key={usuario._id} 
-            value={usuario._id}
-            sx={{
-              backgroundColor: '#424242', 
-              color: 'white',
-              '&:hover': {
-                backgroundColor: '#424242',
-                color: 'white',
-              },
-            }}
-          >
-            {usuario.nombre}
-          </MenuItem>
-        ))}
-      </Select>
+                      <Select
+                        value={usuarioSeleccionado || ''}
+                        onChange={handleUsuarioChange}
+                        onOpen={listarUsuarios}
+                        displayEmpty
+                        sx={{ 
+                          backgroundColor: '#424242', 
+                          color: 'white',
+                          '.MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'white',
+                          },
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'white',
+                          },
+                          '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'white',
+                          },
+                          '.MuiSvgIcon-root ': {
+                            fill: 'white !important',
+                          },
+                          '.MuiList-root': {
+                            backgroundColor: '#424242',
+                            color: 'white',
+                          },
+                        }}
+                        disabled={loading}
+                      >
+                        <MenuItem value="" disabled>Selecciona un usuario</MenuItem>
+                        {usuarios.map((usuario) => (
+                          <MenuItem 
+                            key={usuario._id} 
+                            value={usuario._id}
+                            sx={{
+                              backgroundColor: '#424242', 
+                              color: 'white',
+                              '&:hover': {
+                                backgroundColor: '#424242',
+                                color: 'white',
+                              },
+                            }}
+                          >
+                            {usuario.nombre}
+                          </MenuItem>
+                        ))}
+                      </Select>
                     </FormControl>
                     {usuarioSeleccionado && (
                       <>
@@ -801,8 +763,6 @@ const Rutinas = () => {
                           />
 
                           <Button variant="contained" color="primary" onClick={abrirModalAsignar}>Crear</Button>
-                          <Button variant="contained" color="secondary" onClick={handleOpenModal}  disabled={selectedRow === null} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
-                          <Button variant="contained" color="error" onClick={handleOpenDialog} disabled={selectedRow === null} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>
                         </Box>
                         <Box sx={{ flex: 1, overflowY: 'auto' }}>
                           <TableContainer component={Paper} sx={{ width: '100%' }}>
@@ -816,14 +776,13 @@ const Rutinas = () => {
                                   <TableCell>Peso</TableCell>
                                   <TableCell>Observaciones</TableCell>
                                   <TableCell>Fecha</TableCell>
+                                  <TableCell>Acciones</TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
                                 {userExercisesDataFiltrado.map((ejercicio, index) => (
                                   <TableRow 
                                     key={ejercicio._id}
-                                    onClick={() => handleRowSelect(index)}
-                                    selected={index === selectedRow}
                                   >
                                     <TableCell>{ejercicio.rutina.nombre}</TableCell>
                                     <TableCell>{ejercicio.ejercicio.nombre}</TableCell>
@@ -831,13 +790,30 @@ const Rutinas = () => {
                                     <TableCell>{ejercicio.repeticiones}</TableCell>
                                     <TableCell>{ejercicio.peso}</TableCell>
                                     <TableCell>
-                                    <Typography>
                                         {ejercicio.observaciones.split('\n\n').map((line, index) => (
-                                          <p key={index}>{line}</p>
+                                          <Typography key={index}>{line}</Typography>
                                         ))}
-                                      </Typography>
                                     </TableCell>
                                     <TableCell>{formatDate(ejercicio.fecha) || ''}</TableCell>
+                                    <TableCell>
+                                      <Button 
+                                        variant="contained" 
+                                        color="secondary" 
+                                        onClick={() => handleOpenModal(ejercicio)} 
+                                        sx={{'&:hover': {backgroundColor: '#636363'}}}
+                                      >
+                                        <i className="bi bi-pencil"></i>
+                                      </Button>
+                                            
+                                      <Button 
+                                        variant="contained" 
+                                        color="error" 
+                                        onClick={() => handleOpenDialog(ejercicio._id)} 
+                                        sx={{'&:hover': {backgroundColor: '#9e2828'}}}
+                                      >
+                                        <i className="bi bi-trash3"></i>
+                                      </Button>
+                                    </TableCell>
                                   </TableRow>
                                 ))}
                               </TableBody>
@@ -1188,32 +1164,34 @@ const Rutinas = () => {
               </Box>
             </Box>
           </Modal>
-          {/* <Dialog
-            open={isDialogOpen}
-            onClose={handleCloseDialog}
-          >
-            <DialogTitle sx={{ mb: 2, backgroundColor: 'transparent' }}>Confirmar Eliminación</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                ¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button variant="contained" onClick={handleCloseDialog} color="primary">
-                Cancelar
-              </Button>
-              <Button variant="contained" onClick={handleDelete} color="error">
-                Confirmar
-              </Button>
-            </DialogActions>
-          </Dialog> */}
-            <ConfirmDialog
-                    open={openDelete}
-                    handleClose={handleCloseDelete}
-                    handleConfirm={handleConfirmDelete}
-                    title="Confirmar Eliminación"
-                    content="¿Estás seguro que deseas eliminar esta rutina?"
-                />
+          {
+            <Dialog
+              open={isDialogOpen}
+              onClose={handleCloseDialog}
+            >
+              <DialogTitle sx={{ mb: 2, backgroundColor: 'transparent' }}>Confirmar Eliminación</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  ¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button variant="contained" onClick={handleCloseDialog} color="primary">
+                  Cancelar
+                </Button>
+                <Button variant="contained" onClick={handleDelete} color="error">
+                  Confirmar
+                </Button>
+              </DialogActions>
+            </Dialog> 
+          }
+          <ConfirmDialog
+            open={openDelete}
+            handleClose={handleCloseDelete}
+            handleConfirm={handleConfirmDelete}
+            title="Confirmar Eliminación"
+            content="¿Estás seguro que deseas eliminar esta rutina?"
+          />
           <Snackbar
             open={alerta}
             autoHideDuration={6000}

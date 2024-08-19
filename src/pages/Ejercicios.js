@@ -28,7 +28,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Container
 } from '@mui/material';
 
 
@@ -89,7 +88,6 @@ const tema = createTheme({
 const Ejercicios = () => {
     const [ejercicios, setEjercicios] = useState([]);
     const [ejerciciosFiltrados, setFilteredEjercicios] = useState([]);
-    const [ejercicioSeleccionado, setSelectedEjercicio] = useState(null);
     const [filter, setFilter] = useState('');
     const [loading, setLoading] = useState(false);
     const [openModal, setOpenModal] = useState(false);
@@ -102,7 +100,6 @@ const Ejercicios = () => {
     const [openVideoModal, setOpenVideoModal] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
     const [openDelete, setOpenDelete] = useState(false);
-    const [openAssign, setOpenAssign] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
   
     useEffect(() => {
@@ -284,27 +281,15 @@ const Ejercicios = () => {
               <Box sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Typography component="h1" variant="h5">Ejercicios</Typography>
                 <Box sx={{ display: 'flex', width: '100%', mb: 2 }}>
-                  {/* <TextField
+                  <TextField
                     label="Filtrar"
                     variant="outlined"
                     value={filter}
                     onChange={filtrarTabla}
-                    sx={{ width: '300px', marginRight: '20px', '& .MuiInputBase-root': { backgroundColor: 'white',}, }}
-                  /> */}
-
-                    <TextField
-                                label="Filtrar"
-                                variant="outlined"
-                                value={filter}
-                                onChange={filtrarTabla}
-                                sx={{ backgroundColor: tema.palette.background.paper, borderRadius: '5px', width: '300px', marginRight: '20px', }}
-                                InputProps={{ style: { color: tema.palette.text.primary } }}
-                            />
+                    sx={{ backgroundColor: tema.palette.background.paper, borderRadius: '5px', width: '300px', marginRight: '20px', }}
+                    InputProps={{ style: { color: tema.palette.text.primary } }}
+                  />
                   <Button variant="contained" color="primary" onClick={() => abrirModal(false)}>Crear</Button>
-                  <Button variant="contained" color="secondary" onClick={() => abrirModal(true, ejercicioSeleccionado)} disabled={!ejercicioSeleccionado} sx={{'&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd'}}}>Editar</Button>
-                  <Button variant="contained" color="error" onClick={() =>  handleClickOpenDelete(ejercicioSeleccionado._id)} disabled={!ejercicioSeleccionado} sx={{'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}}>Eliminar</Button>
-              
-
                   <ConfirmDialog
                     open={openDelete}
                     handleClose={handleCloseDelete}
@@ -327,14 +312,13 @@ const Ejercicios = () => {
                             <TableCell>Otros Músculos</TableCell>
                             <TableCell>Descripción</TableCell>
                             <TableCell>Video</TableCell>
+                            <TableCell>Acciones</TableCell> 
                           </TableRow>
                         </TableHead>
                         <TableBody>
                           {ejerciciosFiltrados.map((ejercicio) => (
                             <TableRow
                               key={ejercicio._id}
-                              onClick={() => setSelectedEjercicio(ejercicioSeleccionado?._id === ejercicio._id ? null : ejercicio)}
-                              selected={ejercicioSeleccionado?._id === ejercicio._id}
                             >
                               <TableCell>{ejercicio.nombre}</TableCell>
                               <TableCell>{ejercicio.categoria}</TableCell>
@@ -353,6 +337,25 @@ const Ejercicios = () => {
                                 ) : (
                                   <span>No hay video disponible</span>
                                 )}
+                              </TableCell>
+                              <TableCell>
+                                <Button 
+                                  variant="contained" 
+                                  color="secondary" 
+                                  onClick={() => abrirModal(true, ejercicio)} 
+                                  sx={{'&:hover': {backgroundColor: '#636363'}}}
+                                >
+                                  <i className="bi bi-pencil"></i>
+                                </Button>
+
+                                <Button 
+                                  variant="contained" 
+                                  color="error" 
+                                  onClick={() => handleClickOpenDelete(ejercicio._id)} 
+                                  sx={{'&:hover': {backgroundColor: '#9e2828'}}}
+                                >
+                                  <i className="bi bi-trash3"></i>
+                                </Button>
                               </TableCell>
                             </TableRow>
                           ))}
