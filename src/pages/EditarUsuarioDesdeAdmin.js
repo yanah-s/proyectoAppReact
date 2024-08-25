@@ -166,6 +166,16 @@ const EditarUsuarioDesdeAdmin = () => {
                 value={formulario.nombre}
                 onChange={eventoCambio}
                 disabled
+                sx={{
+                  '& .MuiInputBase-input.Mui-disabled': {
+                    color: '#B0B0B0 !important', 
+                    opacity: '1 !important',
+                    '-webkit-text-fill-color': '#B0B0B0 !important',
+                  },
+                  '& .MuiInputLabel-root.Mui-disabled': {
+                    color: '#B0B0B0', 
+                  },
+                }}
               />
               <TextField
                 margin="normal"

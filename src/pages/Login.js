@@ -158,6 +158,7 @@ const Login = () => {
                 autoComplete="email"
                 value={formulario.email}
                 onChange={eventoCambio}
+                InputLabelProps={{ shrink: true }} 
               />
               <TextField
                 margin="normal"
@@ -170,6 +171,7 @@ const Login = () => {
                 autoComplete="current-password"
                 value={formulario.password}
                 onChange={eventoCambio}
+                InputLabelProps={{ shrink: true }} 
               />
               <Button
                 type="submit"

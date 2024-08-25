@@ -63,7 +63,6 @@ const ConfirmDialog = ({ open, handleClose, handleConfirm, title, content }) => 
 
 const tema = createTheme({
     palette: {
-        mode: 'dark',
         primary: {
             main: '#424242',
         },
@@ -253,7 +252,7 @@ const ListarUsuarios = () => {
 
     const traerUsuarios = async () => {
         setLoading(true);
-        setError(null);
+        setError([]);
         try {
             const token = localStorage.getItem('token');
             const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -333,23 +332,8 @@ const ListarUsuarios = () => {
                                 sx={{ backgroundColor: tema.palette.background.paper, borderRadius: '5px', margin: '20px' }}
                                 InputProps={{ style: { color: tema.palette.text.primary } }}
                             />
-                 {error && Array.isArray(error) && error.length > 0 && (
-                        <Snackbar
-                            open={error.length > 0}
-                            autoHideDuration={6000}
-                            onClose={() => setError([])}
-                        >
-                            <Alert onClose={() => setError([])} severity="error">
-                                {error[0]} {/* Muestra el primer mensaje de error */}
-                            </Alert>
-                        </Snackbar>
-              )}
-              {mensaje && <Typography color="success.main">{mensaje}</Typography>}
-                            
                             
                         </Box>
-                        
-                        
                         <TableContainer component={Paper} style={{ maxHeight: '400px', overflowY: 'auto' }}>
                             <Table className="responsive-table">
                                 <TableHead>
@@ -390,6 +374,16 @@ const ListarUsuarios = () => {
                             </TableBody>
                             </Table>
                         </TableContainer>
+                        <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
+                            {error.length > 0 && (
+                                <Alert severity="error">
+                                {error.map((e, i) => (
+                                    <div key={i}>{e}</div>
+                                ))}
+                                </Alert>
+                            )}
+                            {mensaje && <Typography color="success.main">{mensaje}</Typography>}
+                        </Box>
                     </Paper>
                 </Container>
                 <ConfirmDialog

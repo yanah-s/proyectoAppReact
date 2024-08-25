@@ -2,8 +2,6 @@ import { CircularProgress } from '@mui/material';
 import React, { useState, useEffect  } from 'react';
 import api from '../configuracion/axiosconfig';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import YouTube from 'react-youtube';
-import ReactPlayer from 'react-player';
 import { Modal } from '@mui/material';
 
 import {
@@ -177,16 +175,6 @@ const Ejercicios = () => {
       setOpenModal(false);
     };
 
-    const abrirVideoModal = (videoUrl) => {
-      setVideoUrl(videoUrl);
-      setOpenVideoModal(true);
-    };
-
-    const cerrarVideoModal = () => {
-      setVideoUrl('');
-      setOpenVideoModal(false);
-    };
-  
     const manejarCambioDeInput = (e) => {
       const { name, value } = e.target;
       if (name === 'otrosMusculos') {
@@ -279,7 +267,6 @@ const Ejercicios = () => {
             <CssBaseline />
             <Grid item xs={12} component={Paper} elevation={6} square>
               <Box sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Typography component="h1" variant="h5">Ejercicios</Typography>
                 <Box sx={{ display: 'flex', width: '100%', mb: 2 }}>
                   <TextField
                     label="Filtrar"
@@ -327,13 +314,13 @@ const Ejercicios = () => {
                               <TableCell>{ejercicio.descripcion}</TableCell>
                               <TableCell>
                                 {ejercicio.video ? (
-                                  <ReactPlayer
-                                    url={`https://www.youtube.com/watch?v=${ejercicio.video.split('v=')[1]}`}
-                                    controls
-                                    width="120px"
-                                    height="90px"
-                                    onClick={() => abrirVideoModal(ejercicio.video)}
-                                  />
+                                  <a href={`https://www.youtube.com/watch?v=${ejercicio.video.split('v=')[1]}`} target="_blank" rel="noopener noreferrer">
+                                    <img
+                                      src={`https://img.youtube.com/vi/${ejercicio.video.split('v=')[1]}/hqdefault.jpg`} // Miniatura del video
+                                      alt="Miniatura del video"
+                                      style={{ width: '120px', height: '90px', cursor: 'pointer' }} // Ajusta el tamaño según tus necesidades
+                                    />
+                                  </a>
                                 ) : (
                                   <span>No hay video disponible</span>
                                 )}
@@ -385,6 +372,16 @@ const Ejercicios = () => {
                 value={modalData.nombre}
                 onChange={manejarCambioDeInput}
                 disabled={editado}
+                sx={{
+                  '& .MuiInputBase-input.Mui-disabled': {
+                    color: '#B0B0B0 !important', 
+                    opacity: '1 !important',
+                    '-webkit-text-fill-color': '#B0B0B0 !important',
+                  },
+                  '& .MuiInputLabel-root.Mui-disabled': {
+                    color: '#B0B0B0', 
+                  },
+                }}
               />
               <TextField
                 margin="normal"
@@ -459,14 +456,6 @@ const Ejercicios = () => {
             </Box>
           </Modal>
 
-          <Modal open={openVideoModal} onClose={cerrarVideoModal}>
-            <Box sx={{ width: '100%', maxWidth: '800px', maxHeight: '100vh', overflowY: 'auto', mx: 'auto', my: 'auto' }}>
-              <Typography variant="h5" align="center" mb={2}>Video del Ejercicio</Typography>
-              <Box display="flex" justifyContent="center">
-                <YouTube videoId={videoUrl.split('v=')[1]} opts={{ width: '800', height: '480' }} />
-              </Box>
-            </Box>
-          </Modal>
           <Snackbar
             open={alerta}
             autoHideDuration={6000}

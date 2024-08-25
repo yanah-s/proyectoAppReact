@@ -626,7 +626,6 @@ const Rutinas = () => {
               <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', height: '100%', p: 2  }}>
                 <Tabs activeKey={activeTab} onSelect={handleTabSelect} className="mb-3">
                   <Tab eventKey="crear" title="Crear">
-                    <Typography component="h1" variant="h5">Rutinas</Typography>
                     <Box sx={{ display: 'flex', width: '100%', mb: 2 }}>
                       <TextField
                         label="Filtrar"
@@ -701,7 +700,6 @@ const Rutinas = () => {
                   </Tab>
                   <Tab eventKey="asignar" title="Asignar">
                   <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', p: 2  }}>
-                    <Typography component="h1" variant="h5">Asignar Rutinas</Typography>
                     <FormControl fullWidth={false} margin="normal" sx={{ width: '300px' }}>
                       <Select
                         value={usuarioSeleccionado || ''}
@@ -709,7 +707,8 @@ const Rutinas = () => {
                         onOpen={listarUsuarios}
                         displayEmpty
                         sx={{ 
-                          backgroundColor: '#424242', 
+                          // backgroundColor: '#424242', 
+                          backgroundColor: tema.palette.background.paper,
                           color: 'white',
                           '.MuiOutlinedInput-notchedOutline': {
                             borderColor: 'white',
@@ -724,7 +723,8 @@ const Rutinas = () => {
                             fill: 'white !important',
                           },
                           '.MuiList-root': {
-                            backgroundColor: '#424242',
+                            // backgroundColor: '#424242',
+                            backgroundColor: tema.palette.background.paper,
                             color: 'white',
                           },
                         }}
@@ -736,12 +736,9 @@ const Rutinas = () => {
                             key={usuario._id} 
                             value={usuario._id}
                             sx={{
-                              backgroundColor: '#424242', 
+                              backgroundColor: '#2f353b', 
                               color: 'white',
-                              '&:hover': {
-                                backgroundColor: '#424242',
-                                color: 'white',
-                              },
+                              
                             }}
                           >
                             {usuario.nombre}
@@ -751,7 +748,6 @@ const Rutinas = () => {
                     </FormControl>
                     {usuarioSeleccionado && (
                       <>
-                        <Typography variant="h6"> Usuario: {usuarios.find(u => u._id === usuarioSeleccionado)?.nombre} </Typography>
                         <Box sx={{ display: 'flex', width: '100%', mb: 2 }}>
                           <TextField
                             label="Filtrar"
@@ -843,6 +839,16 @@ const Rutinas = () => {
                 value={modalData.nombre}
                 onChange={manejarCambioDeInput}
                 disabled={editado}
+                sx={{
+                  '& .MuiInputBase-input.Mui-disabled': {
+                    color: '#B0B0B0 !important', 
+                    opacity: '1 !important',
+                    '-webkit-text-fill-color': '#B0B0B0 !important',
+                  },
+                  '& .MuiInputLabel-root.Mui-disabled': {
+                    color: '#B0B0B0', 
+                  },
+                }}
               />
               <TextField
                 margin="normal"
@@ -875,11 +881,8 @@ const Rutinas = () => {
                       value={ejercicio._id}
                       sx={{
                         '&.Mui-selected': {
-                          backgroundColor: '#273C75', 
+                          backgroundColor: '#2f353b', 
                           color: 'white', 
-                        },
-                        '&.Mui-selected:hover': {
-                          backgroundColor: 'blue',
                         },
                       }}
                     >

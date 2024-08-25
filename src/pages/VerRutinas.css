@@ -1,0 +1,13 @@
+.custom-datepicker .MuiInputBase-root {
+    width: 200px;
+}
+
+.custom-datepicker .MuiSvgIcon-root {
+  color: white;
+}
+.MuiPickersArrowSwitcher-button {
+    color: white !important;
+}
+.MuiPickersCalendarHeader-switchViewButton{
+    color:white !important;
+}

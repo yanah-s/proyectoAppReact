@@ -82,7 +82,7 @@ const AvancesUsuarios = () => {
   const menuProps = {
     PaperProps: {
       style: {
-        backgroundColor: '#424242',
+        backgroundColor: '#28282e',
         color: 'white',
       },
     },
@@ -94,13 +94,12 @@ const AvancesUsuarios = () => {
       <Box sx={{ padding: 3 }}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
           <FormControl sx={{ width: '300px', mb: 3 }}>
-            {/* <InputLabel sx={{ color: 'white' }}>Selecciona un usuario</InputLabel> */}
-            {/* <Select
+            <Select
               value={usuarioSeleccionado || ''}
               onChange={handleUsuarioChange}
               displayEmpty
               sx={{ 
-                backgroundColor: '#424242', 
+                backgroundColor: tema.palette.background.paper,
                 color: 'white',
                 '.MuiOutlinedInput-notchedOutline': {
                   borderColor: 'white',
@@ -113,47 +112,28 @@ const AvancesUsuarios = () => {
                 },
                 '.MuiSvgIcon-root ': {
                   fill: 'white !important',
-                }
+                },
+                '.MuiList-root': {
+                  backgroundColor: tema.palette.background.paper,
+                  color: 'white',
+                },
               }}
               disabled={loading}
+              MenuProps={menuProps}
             >
               <MenuItem value="" disabled>Selecciona un usuario</MenuItem>
               {usuarios.map((usuario) => (
-                <MenuItem key={usuario._id} value={usuario._id}>
+                <MenuItem key={usuario._id} value={usuario._id} 
+                  sx={{
+                    backgroundColor: '#2f353b', 
+                    color: 'white',
+                  
+                  }}
+                >
                   {usuario.nombre}
                 </MenuItem>
               ))}
-            </Select> */}
-                  <Select
-        value={usuarioSeleccionado || ''}
-        onChange={handleUsuarioChange}
-        displayEmpty
-        sx={{ 
-          backgroundColor: '#424242', 
-          color: 'white',
-          '.MuiOutlinedInput-notchedOutline': {
-            borderColor: 'white',
-          },
-          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'white',
-          },
-          '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'white',
-          },
-          '.MuiSvgIcon-root ': {
-            fill: 'white !important',
-          },
-        }}
-        disabled={loading}
-        MenuProps={menuProps}
-      >
-        <MenuItem value="" disabled>Selecciona un usuario</MenuItem>
-        {usuarios.map((usuario) => (
-          <MenuItem key={usuario._id} value={usuario._id}>
-            {usuario.nombre}
-          </MenuItem>
-        ))}
-      </Select>
+            </Select>
           </FormControl>
         </Box>
 
@@ -164,7 +144,7 @@ const AvancesUsuarios = () => {
         ) : (
           <Grid container spacing={4} sx={{ marginTop: 2 }}>
             <Grid item xs={12} md={6}>
-              <Paper sx={{ padding: 3, backgroundColor: '#2c2c2c' }}>
+              <Paper sx={{ padding: 3, backgroundColor: '#2f353b' }}>
                 <Typography variant="h5" gutterBottom>
                   Progresión KG
                 </Typography>
@@ -172,13 +152,13 @@ const AvancesUsuarios = () => {
               </Paper>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Paper sx={{ padding: 3, backgroundColor: '#2c2c2c', marginBottom: 2 }}>
+              <Paper sx={{ padding: 3, backgroundColor: '#2f353b', marginBottom: 2 }}>
                 {/* <Typography variant="h5" gutterBottom>
                   Porcentaje de Asistencia
                 </Typography> */}
                 <PorcentajeAsitencia id={usuarioSeleccionado} />
               </Paper>
-              <Paper sx={{ padding: 3, backgroundColor: '#2c2c2c' }}>
+              <Paper sx={{ padding: 3, backgroundColor: '#2f353b' }}>
                 <Typography variant="h5" gutterBottom>
                   Peso corporal
                 </Typography>

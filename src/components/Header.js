@@ -104,7 +104,7 @@ const Header = () => {
           >
             <div className="offcanvas-header">
               {isAuthenticated && (
-                <li className="nav-item" style={{ display: 'flex', alignItems: 'center' }}>
+                <li className="nav-item" data-bs-dismiss="offcanvas" style={{ display: 'flex', alignItems: 'center' }}>
                   {profileImage && (
                     <Avatar src={profileImage} alt="Profile Image" sx={{ width: 40, height: 40, marginRight: '8px' }} />
                   )}
@@ -115,54 +115,54 @@ const Header = () => {
             </div>
             <div className="offcanvas-body d-flex flex-column">
               <ul className="nav flex-column flex-grow-1" id="pestañas_hamburguesa">
-                <li className="nav-item">
+                <li className="nav-item" data-bs-dismiss="offcanvas">
                   <Link className="nav-link" to="/"><i className="bi bi-house-door"></i> Inicio </Link>
                 </li>
                 {!isAuthenticated && (
                   <>
-                    <li className="nav-item">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
                       <Link className="nav-link" to="/Login"><i className="bi bi-box-arrow-in-right"></i> Ingresar </Link>
                     </li>
 
-                    <li className="nav-item">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
                       <Link className="nav-link" to="/AgendaUsuarios"><i className="bi bi-calendar-week"></i> Agenda</Link>
                     </li>
                   </>
                 )}
                 {isAuthenticated && isAdmin && (
                   <>
-                    <li className="nav-item">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
                       <Link className="nav-link" to="/DisponibilidadAgenda"><i className="bi bi-calendar2-check"></i> Disponibilidad</Link>
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
                       <Link className="nav-link" to="/ListarUsuarios"><i className="bi bi-person-lines-fill"></i> Listar Usuarios</Link>
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
                       <Link className="nav-link" to="/ejercicios"> <img src="/iconos/ejercicio.png" alt="Ejercicio Icono" style={{ width: '25px' }} /> Ejercicios</Link>
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
                       <Link className="nav-link" to="/rutinas"> <img src="/iconos/rutina.png" alt="Rutina Icono" style={{ width: '25px' }} /> Rutinas</Link>
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
                       <Link className="nav-link" to="/AvancesUsuarios"> <i className="bi-bar-chart-line"></i> Avances </Link>
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
                     <Link className="nav-link" to="/objetivos-metas" ><i className="bi bi-trophy"></i> Objetivos-Metas</Link>
                   </li>
                   </>
                 )}
                 {isAuthenticated && !isAdmin && (
                   <>
-                    <li className="nav-item">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
                       <Link className="nav-link" to="/verRutinas" ><img src="/iconos/rutina.png" alt="Rutina Icono" style={{ width: '25px' }} /> Ver Rutinas</Link>
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
                       <Link className="nav-link" to="/Avances"><i className="bi-bar-chart-line"></i> Avances </Link>
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
                       <Link className="nav-link" to="/AgendaAlumno"><i className="bi bi-calendar-week"></i> Agendar consulta </Link>
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
                   <Link className="nav-link" to="/objetivos-metas" ><i className="bi bi-trophy"></i> Objetivos-Metas</Link>
                 </li>
                   </>
@@ -174,7 +174,7 @@ const Header = () => {
                     {/* <li className="nav-item">
                   <Link className="nav-link" to="/objetivos-metas" ><i className="bi bi-trophy"></i> Objetivos-Metas</Link>
                 </li> */}
-                  <li className="nav-item">
+                  <li className="nav-item" data-bs-dismiss="offcanvas">
                     <Link className="nav-link" to="/" onClick={handleLogout}><i className="bi bi-lock"></i> Cerrar Sesion</Link>
                   </li>
                 </ul>

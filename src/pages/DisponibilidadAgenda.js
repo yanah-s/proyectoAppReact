@@ -17,7 +17,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
+  TableRow
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import dayjs from 'dayjs';
@@ -490,7 +490,24 @@ return (
               label="Selecciona una hora"
               value={selectAM}
               onChange={handleTimeChangeAM}
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <params.InputProps.endAdornment.type
+                        {...params.InputProps.endAdornment.props}
+                        sx={{
+                          '& [data-testid="ClockIcon"]': {
+                            color: 'white', // Cambia el color del ícono
+                          },
+                        }}
+                      />
+                    ),
+                  }}
+                />
+              )}
             />
             <Typography id="modal-modal-description">Selecciona hora de fin</Typography>
             <TimePicker

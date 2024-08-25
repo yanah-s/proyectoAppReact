@@ -46,7 +46,7 @@ const Avances = () => {
                 </Typography>
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={6}>
-                        <Paper sx={{ padding: 3, backgroundColor: '#2c2c2c' }}>
+                        <Paper sx={{ padding: 3, backgroundColor: '#2f353b' }}>
                             <Typography variant="h5" gutterBottom>
                                 Progresión KG
                             </Typography>
@@ -54,13 +54,13 @@ const Avances = () => {
                         </Paper>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <Paper sx={{ padding: 3, backgroundColor: '#2c2c2c', marginBottom: 2 }}>
+                        <Paper sx={{ padding: 3, backgroundColor: '#2f353b', marginBottom: 2 }}>
                             {/* <Typography variant="h5" gutterBottom>
                                 Porcentaje de Asistencia
                             </Typography> */}
                             <PorcentajeAsitencia />
                         </Paper>
-                        <Paper sx={{ padding: 3, backgroundColor: '#2c2c2c' }}>
+                        <Paper sx={{ padding: 3, backgroundColor: '#2f353b' }}>
                             <Typography variant="h5" gutterBottom>
                                 Peso corporal
                             </Typography>

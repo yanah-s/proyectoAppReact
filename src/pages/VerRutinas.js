@@ -9,6 +9,7 @@ import api from '../configuracion/axiosconfig';
 import YouTube from 'react-youtube';
 import ReactPlayer from 'react-player';
 import { red } from '@mui/material/colors';
+import './VerRutinas.css';
 
 const tema = createTheme({
     palette: {
@@ -210,46 +211,24 @@ const VerRutinas = () => {
               <Typography variant="h5" component="h1" gutterBottom>
                 Visualizar Rutinas
               </Typography>
-              {/* <DatePicker
+              <DatePicker
                 value={selectedDate}
                 onChange={handleDateChange}
-                renderInput={(params) => <TextField {...params} />}
-                slotProps={{
-                  textField: {
-                    sx: {
-                      '& input': {
-                        color: '#000000',
-                      },
-                      borderRadius: '2px',
-                      borderWidth: '1px',
-                      borderColor: '#e91e63',
-                      border: '1px solid',
-                      backgroundColor: '#FFFFFF',
-                      width: '300px',
-                    }
-                  }
+                sx={{
+                  '& .MuiInputBase-root': {
+                    width: '200px', // Ajusta el ancho del DatePicker
+                  },
+                  '& .MuiSvgIcon-root': {
+                    color: 'white', // Cambia el color del ícono del calendario
+                  },
+                  '& .MuiDateCalendar-root': {
+                    backgroundColor: 'white', // Cambia el fondo del calendario desplegable a blanco
+                  },
+                  '& .MuiPickersDay-root': {
+                    color: 'black', // Cambia el color de los números de los días a negro
+                  },
                 }}
-              /> */}
-                <DatePicker
-                value={selectedDate}
-                onChange={handleDateChange}
-                renderInput={(params) => (
-                  <TextField 
-                    {...params} 
-                    sx={{ 
-                      backgroundColor: tema.palette.background.paper, 
-                      borderRadius: '5px', 
-                      margin: '20px' 
-                    }}
-                    InputProps={{ 
-                      ...params.InputProps, // Asegúrate de propagar las propiedades necesarias
-                      style: { 
-                        color: tema.palette.text.primary 
-                      } 
-                    }}
-                  />
-                )}
-                />
+              />
               <List>
                 {Object.values(exercisesByRutina).map((rutinaData) => (
                   <React.Fragment key={rutinaData.rutinaId}>

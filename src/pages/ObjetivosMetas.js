@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Alert, AlertTitle, Button, Modal, Snackbar, Table, TableContainer, TableHead, TableRow, TableBody, TableCell, Select, 
   MenuItem, TextField, Checkbox, Grid, Paper, Box, CssBaseline, Typography, InputLabel, Divider, 
   FormControlLabel, FormControl  } from '@mui/material';
+import './ObjetivosMetas.css';
 
 const tema = createTheme({
   palette: {
@@ -62,7 +63,6 @@ const ObjetivosMetas = () => {
 
   useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
-    console.log(usuario);
     if(usuario.admin){
       setIsAdmin(true);
 
@@ -379,7 +379,7 @@ const ObjetivosMetas = () => {
     }
   };
 
-  const abrirModal = (editado = false, meta = null) => {
+  const abrirModal = (editado = false, meta = null, esMeta) => {
     setIsEdit(editado);
     if (editado && meta) {
       const metaFormateada = {
@@ -387,12 +387,17 @@ const ObjetivosMetas = () => {
         fechaDesde: formatDate(meta.fechaDesde),
         fechaHasta: formatDate(meta.fechaHasta),
       };
+      if(esMeta){
+        setMetaSeleccionada(meta);
+      }else{
+        setObjetivoSeleccionado(meta);
+      }
       setModalData(metaFormateada);
     } else {
       setModalData({
         objetivoMeta: '',
-        fechaDesde: '',
-        fechaHasta: '',
+        //fechaDesde: '',
+        //fechaHasta: '',
         valor: '',
         cumplido: false,
       });
@@ -461,7 +466,7 @@ const formatDate3 = (dateString) => {
   return `${day}-${month}-${year}`; 
 };
 
-const eliminarRegistro = async () => {
+const eliminarRegistro = async (dato) => {
   try {
     const token = localStorage.getItem('token'); 
     const usuario = JSON.parse(localStorage.getItem('usuario')); 
@@ -470,11 +475,7 @@ const eliminarRegistro = async () => {
       'User-ID': usuario.id,
     };
 
-    if (!isAdmin) {
-      await api.delete(`api/objetivo_meta_usuario/${metaSeleccionada._id}`, { headers });
-    } else {
-      await api.delete(`api/objetivo_meta_usuario/${objetivoSeleccionado._id}`, { headers });
-    }
+    await api.delete(`api/objetivo_meta_usuario/${dato._id}`, { headers });
     
     fetchMetas(usuarioSeleccionado);
 
@@ -558,8 +559,6 @@ const cerrarAlerta = () => {
                     {isAdmin && (
                       <Box>
                         <Button variant="contained" color="primary"onClick={() => {abrirModal(false); setBotonCrear('crearObjetivo');}} sx={{ ml: 4, mt:2 }}>Crear</Button>
-                        <Button variant="contained" color="secondary"onClick={() => {abrirModal(true, objetivoSeleccionado)}} sx={{ ml: 1, mt:2, '&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd' }}} disabled={!objetivoSeleccionado}>Editar</Button>
-                        <Button variant="contained" color="error"onClick={() => {eliminarRegistro(objetivoSeleccionado)}} sx={{ ml: 1, mt: 2,'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}} disabled={!objetivoSeleccionado}>Eliminar</Button>
                       </Box>
                     )}
                     <Button variant="contained"  onClick={verObjetivosCumplidos} sx={{ ml: 1, mt: 2, backgroundColor:"blue", '&:hover': {backgroundColor: "#151d4f", }}}>{objetivosCumplidos ? <i className="bi bi-eye-slash"></i> : <i className="bi bi-eye"></i>}</Button>
@@ -578,19 +577,15 @@ const cerrarAlerta = () => {
                               <TableCell>Fecha Fin</TableCell>
                               <TableCell>Valor</TableCell>
                               <TableCell>Completado</TableCell>
+                              {isAdmin &&(
+                                <TableCell>Acciones</TableCell>
+                              )}
                             </TableRow>
                           </TableHead>
                           <TableBody>
                             {objetivosFiltrados.map((objetivo) => (
                               <TableRow
                                 key={objetivo._id}
-                                onClick={() => {
-                                  if (isAdmin) {
-                                    setObjetivoSeleccionado(objetivoSeleccionado?._id === objetivo._id ? null : objetivo);
-                                    setMetaSeleccionada(null);
-                                  }
-                                }}
-                                selected={objetivoSeleccionado?._id === objetivo._id}
                               >
                                 <TableCell>{objetivo.objetivoMeta.nombre}</TableCell>
                                 <TableCell>{formatDate(objetivo.fechaDesde)}</TableCell>
@@ -609,6 +604,31 @@ const cerrarAlerta = () => {
                                     }}
                                   />
                                 </TableCell>
+                                {isAdmin && (
+                                  <TableCell>
+                                    <Button
+                                      variant="contained"
+                                      color="secondary"
+                                      onClick={() => abrirModal(true, objetivo, false)}
+                                      sx={{
+                                        '&:hover': { backgroundColor: '#636363' }
+                                      }}
+                                    >
+                                      <i className="bi bi-pencil"></i>
+                                    </Button>
+
+                                    <Button
+                                      variant="contained"
+                                      color="error"
+                                      onClick={() => eliminarRegistro(objetivo)}
+                                      sx={{
+                                        '&:hover': { backgroundColor: '#9e2828' }
+                                      }}
+                                    >
+                                      <i className="bi bi-trash3"></i>
+                                    </Button>
+                                  </TableCell>
+                                )}
                               </TableRow>
                             ))}
                           </TableBody>
@@ -621,8 +641,6 @@ const cerrarAlerta = () => {
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Typography component="h1" variant="h5" sx={{ pl: 4, mt:1 }}>Metas</Typography>
                     <Button variant="contained" color="primary"onClick={() => {abrirModal(false); setBotonCrear('crearMeta')}} sx={{ ml: 4, mt:2 }} id="crearMeta">Crear</Button>
-                    <Button variant="contained" color="secondary"onClick={() => {abrirModal(true, metaSeleccionada)}} sx={{ ml: 1, mt: 2, '&.Mui-disabled': {backgroundColor: '#757575', color: '#bdbdbd' }}} disabled={!metaSeleccionada}>Editar</Button>
-                    <Button variant="contained" color="error"onClick={() => {eliminarRegistro(objetivoSeleccionado)}} sx={{ ml: 1, mt: 2,'&.Mui-disabled': {backgroundColor: '#ff5252', color: '#ff8a80'}}} disabled={!metaSeleccionada}>Eliminar</Button>
                     <Button variant="contained"  onClick={verMetasCumplidas} sx={{ ml: 1, mt: 2, backgroundColor:"blue", '&:hover': {backgroundColor: "#151d4f", }}}>{metasCumplidas ? <i className="bi bi-eye-slash"></i> : <i className="bi bi-eye"></i>}</Button>
                   </Box>
                   <Divider sx={{ my: 2, borderColor: 'lightgray', opacity: 1 }}/>
@@ -639,21 +657,13 @@ const cerrarAlerta = () => {
                               <TableCell>Fecha Fin</TableCell>
                               <TableCell>Valor</TableCell>
                               <TableCell>Completado</TableCell>
+                              <TableCell>Acciones</TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
                             {metasFiltradas.map((meta) => (
                               <TableRow
                                 key={meta._id}
-                                onClick={() => {
-                                  if (isAdmin) {
-                                    setMetaSeleccionada(metaSeleccionada?._id === meta._id ? null : meta);
-                                    setObjetivoSeleccionado(null);
-                                  }else{
-                                   setMetaSeleccionada(metaSeleccionada?._id === meta._id ? null : meta)}
-                                  }
-                                }
-                                selected={metaSeleccionada?._id === meta._id}
                               >
                                 <TableCell>{meta.objetivoMeta.nombre}</TableCell>
                                 <TableCell>{formatDate(meta.fechaDesde)}</TableCell>
@@ -671,6 +681,25 @@ const cerrarAlerta = () => {
                                       },
                                     }}
                                   />
+                                </TableCell>
+                                <TableCell>
+                                  <Button 
+                                    variant="contained" 
+                                    color="secondary" 
+                                    onClick={() => abrirModal(true, meta, true)} 
+                                    sx={{'&:hover': {backgroundColor: '#636363'}}}
+                                  >
+                                    <i className="bi bi-pencil"></i>
+                                  </Button>
+                                        
+                                  <Button 
+                                    variant="contained" 
+                                    color="error" 
+                                    onClick={() => eliminarRegistro(meta)} 
+                                    sx={{'&:hover': {backgroundColor: '#9e2828'}}}
+                                  >
+                                    <i className="bi bi-trash3"></i>
+                                  </Button>
                                 </TableCell>
                               </TableRow>
                             ))}
@@ -700,11 +729,9 @@ const cerrarAlerta = () => {
               onChange={manejarCambioDeInput}
               disabled={isEdit}
               sx={{
-                // backgroundColor: 'white',
                 backgroundColor: tema.palette.background.paper,
                 color: 'white',
                 '& .MuiSelect-select': {
-                  // backgroundColor: 'white',
                   backgroundColor: tema.palette.background.paper,
                   color: 'white',
                 },
@@ -718,9 +745,11 @@ const cerrarAlerta = () => {
                   backgroundColor: tema.palette.background.paper,
                   color: 'white',
                   '&:hover': {
-                    // backgroundColor: '#f5f5f5',
                     backgroundColor: tema.palette.background.paper,
                   },
+                },
+                '& .MuiSelect-icon': {
+                  color: 'white',
                 },
                 width: '65%',
               }}
@@ -739,20 +768,19 @@ const cerrarAlerta = () => {
               id="fechaDesde"
               name="fechaDesde"
               autoComplete="fechaDesde"
-              value={formatDate2(modalData.fechaDesde)}
+              value={modalData.fechaDesde ? formatDate2(modalData.fechaDesde) : undefined}
               onChange={manejarCambioDeInput}
               sx= {{
                 '& input': {
-
-                  // color: 'white', // Cambia el color del texto del input
-
-                  color: '#000000',
+                  color: 'white',
+                },
+                '& ::-webkit-calendar-picker-indicator': {
+                  filter: 'invert(1) !important',
                 },
                 borderRadius: '2px',
                 borderWidth: '1px',
                 borderColor: '#e91e63',
                 border: '1px solid',
-                // backgroundColor: '#FFFFFF',
                 backgroundColor: tema.palette.background.paper,
                 width: '65%',
               }}
@@ -765,14 +793,14 @@ const cerrarAlerta = () => {
               id="fechaHasta"
               name="fechaHasta"
               autoComplete="fechaHasta"
-              value={formatDate2(modalData.fechaHasta)}
+              value={modalData.fechaHasta ? formatDate2(modalData.fechaHasta) : undefined}
               onChange={manejarCambioDeInput}
               sx= {{
                 '& input': {
-
-                  // color: 'white', // Cambia el color del texto del input
-
-                  color: '#000000',
+                  color: 'white',
+                },
+                '& ::-webkit-calendar-picker-indicator': {
+                  filter: 'invert(1) !important',
                 },
                 borderRadius: '2px',
                 borderWidth: '1px',
@@ -794,13 +822,12 @@ const cerrarAlerta = () => {
               onChange={manejarCambioDeInput}
               sx= {{
                 '& input': {
-                  color: '#000000',
+                  color: 'white',
                 },
                 borderRadius: '2px',
                 borderWidth: '1px',
                 borderColor: '#e91e63',
                 border: '1px solid',
-                // backgroundColor: '#FFFFFF',
                 backgroundColor: tema.palette.background.paper,
                 width: '65%',
               }}
