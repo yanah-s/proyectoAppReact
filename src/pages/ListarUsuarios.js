@@ -202,7 +202,7 @@ const ListarUsuarios = () => {
                     'User-ID': usuario.id
                 }
             });
-            console.log(respuesta);
+          
         }  catch (err) {
             let errorMsg = 'Error de conexión';
       
@@ -231,7 +231,7 @@ const ListarUsuarios = () => {
                     'User-ID': usuario.id
                 }
             });
-            console.log(respuesta);
+         
         } catch (err) {
             let errorMsg = 'Error de conexión';
     

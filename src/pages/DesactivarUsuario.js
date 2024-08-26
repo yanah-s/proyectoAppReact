@@ -21,7 +21,7 @@ const DesactivarUsuario = () => {
         setLoading(true);
         setError(null);
         setMensaje(null);
-        console.log('Llamada a la API');
+       
         try {
 
             const token = localStorage.getItem('token'); 
@@ -32,7 +32,7 @@ const DesactivarUsuario = () => {
               'User-ID': usuario.id
             }
           });
-           console.log('Respuesta:', respuesta.data);
+        
             setMensaje('Usuario eliminado exitosamente.');
         }  catch (err) {
             console.error('Error:', err);
@@ -55,7 +55,7 @@ const DesactivarUsuario = () => {
             setError(errorMsg);
         } finally {
             setLoading(false);
-            console.log('Finalizado exitosamente');
+         
         }
     };
 

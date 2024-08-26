@@ -125,7 +125,6 @@ const Ejercicios = () => {
       try {
         const token = localStorage.getItem('token'); 
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
-        console.log("usuarioid   :" + usuario.id + "token" + token);
 
         const response = await api.get('/api/ejercicio', {
           headers: {
@@ -195,7 +194,7 @@ const Ejercicios = () => {
 
       if (editado) {
         delete formattedData.nombre;
-        console.log(formattedData.otrosMusculos);
+    
       }
       try {
         const token = localStorage.getItem('token'); 
@@ -211,7 +210,6 @@ const Ejercicios = () => {
         } else { 
           const token = localStorage.getItem('token'); 
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
-          console.log("usuarioid   :" + usuario.id + "token" + token);
         
           await api.post('/api/ejercicio', formattedData, {
             headers: {
@@ -223,7 +221,7 @@ const Ejercicios = () => {
         listarEjercicios();
         cerrarModal();
       } catch (error) {
-        console.log(error.response);
+    
         const errors = error.response && error.response.data && error.response.data.error 
           ? error.response.data.error 
           : [{ message: 'Error desconocido al procesar la solicitud.' }];
@@ -246,7 +244,6 @@ const Ejercicios = () => {
       try {
         const token = localStorage.getItem('token'); 
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
-        console.log("usuarioid   :" + usuario.id + "token" + token);
         
         await api.put(`/api/ejercicio/${id}/deshabilitar`, null, {
           headers: {

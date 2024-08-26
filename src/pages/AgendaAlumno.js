@@ -79,7 +79,7 @@ const AgendaAlumno = () => {
   const isButtonDisabled = selectedTurnos === null || loading || mostrarFechaAgendada;
   const [observaciones, setObservaciones] = useState('');
 const [presencial, setPresencial] = useState(false);
-  console.log('isButtonDisabled:', isButtonDisabled);
+  
   const formatFecha = (fecha) => {
     const opciones = { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'America/Montevideo' };
     return new Intl.DateTimeFormat('es-ES', opciones).format(new Date(fecha));
@@ -135,8 +135,7 @@ const [presencial, setPresencial] = useState(false);
             }
         });
         if(responseAgenda.status != 204){
-        console.log(usuario.id);
-        console.log(responseAgenda.data);
+       
         setTurnoUsuario(responseAgenda.data);
         setFechaUsuario(responseAgenda.data.fecha);
         setHoraUsuario(responseAgenda.data.hora_desde);
@@ -145,7 +144,7 @@ const [presencial, setPresencial] = useState(false);
    
         }
         else {
-          console.log("No hay turnos agendados para el usuario.");
+          
           setMostrarFechaAgendada(false);
         }
            
@@ -172,7 +171,7 @@ const [presencial, setPresencial] = useState(false);
       try {
         const token = localStorage.getItem('token'); 
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
-        console.log("mandando en params" + usuario.id + idTurno);
+     
         const responseAgenda = await api.put('/api/agenda/eliminar/', 
           { 
             usuarioId: usuario.id,
@@ -301,7 +300,7 @@ return (
   <ThemeProvider theme={tema}>
     <CssBaseline />
   
-    <Grid container component="main" sx={{ height: '100vh',
+    <Grid container  sx={{ height: '100vh',
        justifyContent: 'center', alignItems: 'center' }}>
 
 

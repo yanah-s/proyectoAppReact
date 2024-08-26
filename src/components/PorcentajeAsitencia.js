@@ -14,25 +14,9 @@ function PorcentajeAsistencia({ id }) {
   }, []);
 
     async function obtenerDatos() {
-      console.log("id recibido" + id);
+   
       try {
-        // const token = localStorage.getItem('token'); 
-        // const usuario = JSON.parse(localStorage.getItem('usuario'));
         
-        // if (!usuario || !usuario.id) {
-        //   throw new Error('No se encontró el usuario en el localStorage.');
-        // }
-
-        // const respuesta = await api.get('/api/rutina_ej_alumno/porcentaje', {
-        //   headers: {
-        //     'Authorization': `Bearer ${token}`,
-        //   },
-        //   params: {
-        //     usuario: usuario.id
-        //   }
-        // });
-        // console.log(respuesta.data);
-        // setDatos(Math.round(respuesta.data.porcentaje)); 
         const token = localStorage.getItem('token');
         const usuarioId = id || JSON.parse(localStorage.getItem('usuario')).id;
 
@@ -49,7 +33,7 @@ function PorcentajeAsistencia({ id }) {
             usuario: usuarioId,
           },
         });
-        console.log(respuesta.data);
+      
         setDatos(Math.round(respuesta.data.porcentaje));
       } catch (error) {
         console.error('Error al obtener los datos:', error);

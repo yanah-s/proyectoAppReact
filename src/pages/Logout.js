@@ -20,7 +20,6 @@ const Logout = () => {
 
         const response = await api.post('/api/logout', body, config);
 
-        console.log('Respuesta:', response);
         localStorage.removeItem('token');
         localStorage.removeItem('usuario');
         localStorage.removeItem('admin');

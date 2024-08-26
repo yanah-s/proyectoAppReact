@@ -125,7 +125,7 @@ const AgendaUsuarios = () => {
   
       // Primera petición: Crear usuario
       const respuestaUsuario = await api.post('/api/usuarios/', formulario);
-      console.log('Usuario creado:', respuestaUsuario.data);
+    
   
       const dataAgenda = {
         usuarioId: respuestaUsuario.data.value._id, 
@@ -133,7 +133,7 @@ const AgendaUsuarios = () => {
         observaciones: observaciones,
         presencial: presencial,
       };
-      console.log('Datos para agendar:', dataAgenda);
+      
   
       // Segunda petición: Agendar turno
       const responseAgenda = await api.put('/api/agenda/', dataAgenda, {
@@ -142,9 +142,6 @@ const AgendaUsuarios = () => {
         }
       });
   
-      console.log('Respuesta de agenda:', responseAgenda.data);
-  
-      // Mensaje de éxito y redirección
 setMensaje('Usuario registrado y turno agendado exitosamente.');
 
 // Espera 2 segundos (2000 milisegundos) antes de redirigir
@@ -153,7 +150,7 @@ setTimeout(() => {
 }, 3000);
   
     } catch (err) {
-      console.log('Error:', err);  // Log adicional para depurar errores
+    
       let errorMsg = 'Error de conexión';
   
       if (err.response) {
@@ -230,23 +227,21 @@ setTimeout(() => {
 return (
   <ThemeProvider theme={tema}>
     <CssBaseline />
-{/*   
-    <Grid container component="main" sx={{ height: '100vh',
-       justifyContent: 'center', alignItems: 'center', }}> */}
  <Grid 
         container 
-        component="main" 
-        sx={{ 
-          justifyContent: 'center', alignItems: 'center',
+        component="div"
+         
+        sx={{
+          justifyContent: 'center',
+          alignItems: 'center',
           height: '100vh',
-          backgroundImage: `url('/images/agenda.jpg')`,
-          backgroundSize: 'cover', 
+          // backgroundImage: `url('/images/agenda.jpg')`,
+          backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          backgroundRepeat: 'repeat',
+          backgroundColor: 'transparent',
         }}
       >
-
-
 
       <Grid item xs={12} md={8} component={Paper} elevation={6} square>
         <Box
@@ -304,20 +299,18 @@ return (
         </Box>
       </Grid>
 
-      {/* <Grid container component="main" sx={{ height: '100vh',
-       justifyContent: 'center', alignItems: 'center' }}> */}
-       <Grid 
+       {/* <Grid 
         container 
-        component="main" 
+        // component="main" 
         sx={{ 
           justifyContent: 'center', alignItems: 'center',
           height: '100vh',
-          backgroundImage: `url('/images/agenda.jpg')`,
+          // backgroundImage: `url('/images/agenda.jpg')`,
           backgroundSize: 'cover', 
           backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          // backgroundRepeat: 'repeat'
         }}
-      >
+      > */}
         <Grid item xs={12} md={8} component={Paper} elevation={6} square>
 
                 <form onSubmit={handleSubmitUsuario} noValidate>
@@ -413,13 +406,7 @@ return (
                   >
                     {loading ? <CircularProgress size={24} color="inherit" /> : 'Registrar'}
                   </Button>
-                  {/* {error.length > 0 && (
-                    <Typography color="error">
-                      {error.map((e, i) => (
-                        <div key={i}>{e}</div>
-                      ))}
-                    </Typography>
-                  )} */}
+                  
                    {error.length > 0 && (
                     <Alert severity="error">
                       {error.map((e, i) => (
@@ -430,8 +417,8 @@ return (
                   {mensaje && <Typography color="success.main">{mensaje}</Typography>}
                 </form>
         </Grid>
-      </Grid>
-      </Grid>
+      {/* </Grid> */}
+</Grid>
       <Modal
         open={openModal}
         onClose={handleCloseModal}

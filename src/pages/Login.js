@@ -78,19 +78,19 @@ const Login = () => {
 
     try {
       const response = await api.post('/api/autentificacion', formulario);
-      console.log('Respuesta:', response);
+ 
       const isAdmin = response.data.usuario.admin;
-      console.log('isAdmin:', isAdmin);
+  
       setMensaje('Ingreso con éxito.');
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('usuario', JSON.stringify(response.data.usuario));
       localStorage.setItem('admin', isAdmin.toString());
       window.dispatchEvent(new Event('sesionIniciada'));
       if (response.data.usuario.mensaje) { 
-        console.log(response.data.usuario.mensaje);
+   
         localStorage.setItem('motivacionMessage', response.data.usuario.mensaje);
       } else {
-        console.log("no tiene mensaje");
+       console.error("sin mensaje");
       }
   
       navigate('/');
@@ -111,7 +111,6 @@ const Login = () => {
       setError([errorMsg]);
     } finally {
       setLoading(false);
-      console.log('Finalizado exitosamente');
     }
   };
 

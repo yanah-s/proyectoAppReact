@@ -104,7 +104,7 @@ const VerRutinas = () => {
         ejercicio.ejercicios.map((ej) => {
             acc[rutinaId].ejercicios.push(ej)
         })
-        //console.log(acc);
+        //(acc);
         return acc;
       }, {});
       

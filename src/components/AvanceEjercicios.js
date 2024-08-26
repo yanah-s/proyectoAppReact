@@ -15,15 +15,12 @@ const AvanceEjercicios = ({ id }) => {
   const usuario = JSON.parse(localStorage.getItem('usuario')); 
 
   
-  // const sePuedeHabilitar = fechaUltimoEjercicio ? ((hoy - fechaUltimoEjercicio) / (1000 * 60 * 60 * 24)) >= 1 : true;
-
   const sePuedeHabilitar = usuario.alumno === true && (fechaUltimoEjercicio ? ((hoy - fechaUltimoEjercicio) / (1000 * 60 * 60 * 24)) >= 7 : true);
 
 
   useEffect(() => {
     listarEjercicios();
-    console.log(sePuedeHabilitar);
-    console.log(fechaUltimoEjercicio);
+   
   }, []);
 
 
@@ -67,12 +64,6 @@ const AvanceEjercicios = ({ id }) => {
 
   
   const obtenerAvances = async () => {
-    console.log("id recibido" + id);
-    // const token = localStorage.getItem('token');
-    // const usuario = JSON.parse(localStorage.getItem('usuario'));
-
-    // // Usa el id del prop si está disponible, de lo contrario usa el del localStorage
-    // const usuarioId = id || usuario.id;
 
     const token = localStorage.getItem('token');
     const usuarioId = id || JSON.parse(localStorage.getItem('usuario')).id;
@@ -149,7 +140,7 @@ const AvanceEjercicios = ({ id }) => {
           'User-ID': usuario.id
         }
       });
-      console.log('Avance registrado:', response.data);
+  
       obtenerAvances();
     } catch (err) {
       console.error('Error registrando avance:', err);
@@ -194,9 +185,6 @@ const AvanceEjercicios = ({ id }) => {
           onChange={handlePesoChange}
         />
       )}
-        {/* <Button variant="contained" color="primary" onClick={registrarAvance} sx={{ width: '45%' }}>
-          Registrar
-        </Button> */}
       {mostrarComponentes && (
               <Button
         variant="contained"

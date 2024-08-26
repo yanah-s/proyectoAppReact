@@ -114,7 +114,7 @@ const Rutinas = () => {
       listarRutinas();
       //listarUsuarios();
       if (categoria) {
-        console.log("Fetching ejercicios for categoría:", categoria);
+      
         const token = localStorage.getItem('token'); 
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
         api.get(`/api/ejercicio/categoria`, {
@@ -127,7 +127,7 @@ const Rutinas = () => {
           }
         })
           .then(response => {
-            console.log("Ejercicios fetched:", response.data);
+          
             setEjerciciosFiltrados(response.data);
           })
           .catch(error => {
@@ -165,8 +165,7 @@ const Rutinas = () => {
         try {
           const token = localStorage.getItem('token'); 
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
-          console.log("usuarioid   :" + usuario.id + "token" + token);
-          
+         
           const response = await api.get('/api/ejercicio/categoria', {
             params: { 
               categoria: newCategoria 
@@ -195,7 +194,7 @@ const Rutinas = () => {
         usuarioId = usuarioSeleccionado;
       }
     
-      console.log(usuarioId);
+     
       if (usuarioId) {
         try { 
           const token = localStorage.getItem('token'); 
@@ -209,7 +208,6 @@ const Rutinas = () => {
               usuario: usuarioId
             }
           });
-          console.log(response);
           setUserExercisesData(response.data);
           setUserExercisesDataFiltrado(response.data);
         } catch (error) {
@@ -232,7 +230,7 @@ const Rutinas = () => {
       try {
         const token = localStorage.getItem('token'); 
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
-        console.log("usuarioid   :" + usuario.id + "token" + token);
+     
 
         const response = await api.get('/api/rutinas', {
           headers: {
@@ -240,7 +238,7 @@ const Rutinas = () => {
             'User-ID': usuario.id
           }
         });
-        console.log(usuario);
+      
         const rutinas = response.data.filter(rutina => rutina.disponible);
         setRutinas(rutinas);
         setFilteredRutinas(rutinas);
@@ -408,7 +406,6 @@ const Rutinas = () => {
       if (selectedRow !== null) {
         try {
           const selectedData = userExercisesData[selectedRow];
-          console.log(selectedData);
           const token = localStorage.getItem('token'); 
           const usuario = JSON.parse(localStorage.getItem('usuario'));
           await api.delete(`/api/rutina_ej_alumno/${selectedRow}`, {
@@ -429,7 +426,7 @@ const Rutinas = () => {
     };
 
     const handleOpenDialog = (id) => {
-      console.log(id);
+   
       setIsDialogOpen(true);
       setSelectedRow(id);
     };
@@ -461,7 +458,7 @@ const Rutinas = () => {
       setFilter(value);
       if (value.length >= 3) {
         const filtered = userExercisesData.filter(ejercicio =>{
-          console.log(ejercicio);
+         
           const rutina = ejercicio.rutina.nombre?.toLowerCase().includes(value.toLowerCase());
           const nombre = ejercicio.ejercicio.nombre?.toLowerCase().includes(value.toLowerCase());
           const series = ejercicio.series?.toString().toLowerCase().includes(value.toLowerCase());
@@ -489,7 +486,7 @@ const Rutinas = () => {
           
           const token = localStorage.getItem('token'); 
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
-          console.log("usuarioid   :" + usuario.id + "token" + token);
+        
       
           const response = await api.get('/api/ejercicio/categoria', {
             params: { categoria: rutina.categoria },
@@ -551,13 +548,11 @@ const Rutinas = () => {
         delete formattedData.nombre;
       }
 
-      console.log(formattedData);
-    
       try {
         if (editado) {
           const token = localStorage.getItem('token'); 
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
-          console.log("usuarioid   :" + usuario.id + "token" + token);
+        
         
           await api.put(`/api/rutinas/${modalData._id}`, formattedData, {
             headers: {
@@ -568,7 +563,7 @@ const Rutinas = () => {
         } else {
           const token = localStorage.getItem('token'); 
           const usuario = JSON.parse(localStorage.getItem('usuario')); 
-          console.log("usuarioid   :" + usuario.id + "token" + token);
+          
         
           await api.post('/api/rutinas', formattedData, {
             headers: {
@@ -603,7 +598,7 @@ const Rutinas = () => {
       try {
         const token = localStorage.getItem('token'); 
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
-        console.log("usuarioid   :" + usuario.id + "token" + token);
+     
         
         await api.put(`/api/rutinas/${id}/deshabilitar`, null, {
           headers: {
@@ -620,7 +615,7 @@ const Rutinas = () => {
   
     return (
         <ThemeProvider theme={tema}>
-          <Grid container component="main" sx={{ overflow: 'hidden' }}>
+          <Grid container sx={{ overflow: 'hidden' }}>
             <CssBaseline />
             <Grid item xs={12} component={Paper} elevation={6} square sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', height: '100%', p: 2  }}>

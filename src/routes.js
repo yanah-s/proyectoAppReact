@@ -23,7 +23,7 @@ import ObjetivosMetas from './pages/ObjetivosMetas';
 const AppRoutes = () => {
   //  const isAuthenticated = !!localStorage.getItem('token');
   //  const isAdmin =  localStorage.getItem('admin') === 'true';
-  //  console.log(isAdmin + isAuthenticated);
+  //  (isAdmin + isAuthenticated);
     return (
      
       <Router>

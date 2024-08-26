@@ -26,10 +26,11 @@ const Header = () => {
       });
 
       if (respuesta.data.valor.profileImage) {
-        setProfileImage(`http://localhost:3000/${respuesta.data.valor.profileImage}`);
+        const imageUrl = `${process.env.REACT_APP_API_BASE_URL}/${respuesta.data.valor.profileImage}`;
+        setProfileImage(imageUrl);
       }
     } catch (err) {
-      console.log('Error al obtener los datos del usuario.');
+    console.error("error obteniendo datos usuario");
     } finally {
       setLoading(false);
     }

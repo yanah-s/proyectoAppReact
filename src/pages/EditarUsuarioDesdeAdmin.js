@@ -74,7 +74,8 @@ const EditarUsuarioDesdeAdmin = () => {
         });
 
         if (respuesta.data.valor.profileImage) {
-          setPreview(`http://localhost:3000/${respuesta.data.valor.profileImage}`);
+          const imageUrl = `${process.env.REACT_APP_API_BASE_URL}/${respuesta.data.valor.profileImage}`;
+          setPreview(imageUrl);
         }
       } catch (err) {
         setError('Error al obtener los datos del usuario.');
@@ -135,7 +136,7 @@ const EditarUsuarioDesdeAdmin = () => {
 
   return (
     <ThemeProvider theme={tema}>
-    <Grid container component="main" sx={{ height: '100vh' }}>
+    <Grid container  sx={{ height: '100vh' }}>
       <CssBaseline />
       <Grid item xs={12} sm={8} component={Paper} elevation={6} square>
         <Box

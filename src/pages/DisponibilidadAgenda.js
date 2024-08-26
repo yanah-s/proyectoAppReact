@@ -85,22 +85,19 @@ const DisponibilidadAgenda = () => {
 
         const token = localStorage.getItem('token'); 
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
-        console.log("usuarioid   :" + usuario.id + "token" + token);
+     
         const response = await api.get('/api/agenda/turnos', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
           }
         });
-        console.log("respuesta disponibilidad total" + response.data); 
-  
-        // Establecer la disponibilidad en el estado
         setDisponibilidad(response.data);
   
         // Filtrar turnos ocupados
         const ocupados = response.data.filter(item => item.usuario !== null);
         setTurnosOcupados(ocupados);
-         console.log("turnos ocupados" + ocupados.usuario);
+        
         // Filtrar turnos libres
         const libres = response.data.filter(item => item.usuario === null);
         setTurnosLibres(libres);
@@ -243,8 +240,7 @@ const DisponibilidadAgenda = () => {
       if(Object.keys(formulario.datos).length > 0){
       const token = localStorage.getItem('token'); 
       const usuario = JSON.parse(localStorage.getItem('usuario'));
-      console.log("usuarioid   :" + usuario.id + "token" + token);
-
+   
       await api.post('/api/agenda/', formulario, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -309,7 +305,7 @@ return (
               <DateCalendar
                 value={fechaSeleccionada}
                 onChange={(newValue) => {
-                  console.log(newValue);
+                  // (newValue);
                   setFechaSeleccionada(newValue);
                   eventoFechaClick(newValue);
                 }}

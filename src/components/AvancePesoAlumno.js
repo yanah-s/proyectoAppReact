@@ -1,60 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import { Select, MenuItem, FormControl, InputLabel, Button, TextField } from '@mui/material';
-// import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Area } from 'recharts';
-// import api from '../configuracion/axiosconfig';
-
-// const AvanceEjercicios = () => {
-//   const [formulario, setFormulario] = useState({ peso: '' });
-//   const [avances, setAvances] = useState([]);
-//   const [fechaUltimoPeso, setFechaUltimoPeso] = useState(null);
-//   const hoy = new Date();
-  
-//   const sePuedeHabilitar = fechaUltimoPeso ? ((hoy - fechaUltimoPeso) / (1000 * 60 * 60 * 24)) >= 1 : true;
-
-//   useEffect(() => {
-//     obtenerAvances();
-  
-//   }, []);
-
-
-
-//   const obtenerAvances = async () => {
-//     const token = localStorage.getItem('token');
-//     const usuario = JSON.parse(localStorage.getItem('usuario'));
-
-//     try {
-//       const response = await api.get(`/api/avances/usuarioPeso`, {
-//         headers: {
-//           'Authorization': `Bearer ${token}`,
-//           'User-ID': usuario.id
-//         }
-//       });
-  
-//       if (!response.data || response.data.length === 0) {
-//         // No hay avances, permitir el registro
-//         setFechaUltimoPeso(null);
-//         setAvances([]);
-//         return;
-//       }
-  
-//       const avances = response.data.map(avance => ({
-//         fecha: new Date(avance.fecha).toLocaleDateString(),
-//         valorNumerico: avance.valorNumerico,
-//       }));
-  
-//       // Obtener la fecha del último registro
-//       const ultimoPeso = response.data[response.data.length - 1];
-//       if (ultimoPeso) {
-//         setFechaUltimoPeso(new Date(ultimoPeso.fecha));
-//       }
-  
-//       setAvances(avances);
-//     } catch (err) {
-//       console.error('Error obteniendo avances:', err);
-//     }
-//   };
-  
-
 import React, { useState, useEffect } from 'react';
 import { Select, MenuItem, FormControl, InputLabel, Button, TextField } from '@mui/material';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Area } from 'recharts';
@@ -68,9 +11,7 @@ const AvanceEjercicios = ({ id }) => {
   const mostrarComponentes = id === undefined || id === null;
   const usuario = JSON.parse(localStorage.getItem('usuario')); 
   
-  // // Verifica si se puede habilitar basado en la fecha del último peso
-  // const sePuedeHabilitar = fechaUltimoPeso ? ((hoy - fechaUltimoPeso) / (1000 * 60 * 60 * 24)) >= 1 : true;
- 
+
   const sePuedeHabilitar = usuario.alumno === true && (fechaUltimoPeso ? ((hoy - fechaUltimoPeso) / (1000 * 60 * 60 * 24)) >= 7 : true);
 
   useEffect(() => {
@@ -78,13 +19,7 @@ const AvanceEjercicios = ({ id }) => {
   }, [id]); 
 
   const obtenerAvances = async () => {
-    console.log("id recibido" + id);
-    // const token = localStorage.getItem('token');
-    // const usuario = JSON.parse(localStorage.getItem('usuario'));
-
-    // // Usa el id del prop si está disponible, de lo contrario usa el del localStorage
-    // const usuarioId = id || usuario.id;
-
+   
     const token = localStorage.getItem('token');
     const usuarioId = id || JSON.parse(localStorage.getItem('usuario')).id;
 
@@ -146,7 +81,7 @@ const AvanceEjercicios = ({ id }) => {
           'User-ID': usuario.id
         }
       });
-      console.log('Avance registrado:', response.data);
+    
       setFormulario((prevFormulario) => ({
         ...prevFormulario,
         peso: ''

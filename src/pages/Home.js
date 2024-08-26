@@ -85,7 +85,7 @@ const Home = () => {
       <footer className="row text-center colorPrincipal">
         {/* <nav className="navbar">
           <div className="social-icons">
-            <div className="icon-container">
+            {/* <div className="icon-container">
               <FontAwesomeIcon icon={faGoogle} style={{ color: '#dd4b39' }} />
             </div>
             <div className="icon-container">
@@ -93,9 +93,9 @@ const Home = () => {
             </div>
             <div className="icon-container">
               <FontAwesomeIcon icon={faLinkedinIn} style={{ color: '#0082ca' }} />
-            </div>
-          </div>
-        </nav> */}
+            </div> */}
+          {/* </div>
+        </nav> */} 
       </footer>
     </main>
   );

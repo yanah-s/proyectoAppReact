@@ -137,126 +137,6 @@ const ObjetivosMetas = () => {
   };
 
 
-
-  // const handleCreateUserMeta = async () => {
-  //   try {
-  //   const token = localStorage.getItem('token'); 
-  //   const usuario = JSON.parse(localStorage.getItem('usuario')); 
-
-  //     const fechaDesde = new Date(formatDate2(modalData.fechaDesde));
-  //     const fechaHasta = new Date(formatDate2(modalData.fechaHasta));
-
-  //     if (isEdit) {
-  //       if(metaSeleccionada !== null){
-
-  //         const fechaMinima = new Date(fechaDesde);
-  //         fechaMinima.setMonth(fechaDesde.getMonth() + 1);
-
-  //         const fechaMaxima = new Date(fechaDesde);
-  //         fechaMaxima.setMonth(fechaDesde.getMonth() + 3);
-
-  //         if (fechaHasta >= fechaMinima && fechaHasta <= fechaMaxima) {
-  //           await api.put(`api/objetivo_meta_usuario/${metaSeleccionada._id}`, {
-  //             fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-  //             fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-  //             valor: modalData.valor,
-  //             cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
-  //               headers: {
-  //                 'Authorization': `Bearer ${token}`,
-  //                 'User-ID': usuario.id
-  //               }
-  //             });
-  //         }else{
-  //           throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
-  //         }
-
-  //       }else if(objetivoSeleccionado !== null && isAdmin){
-  //         await api.put(
-  //           `api/objetivo_meta_usuario/${objetivoSeleccionado._id}`,
-  //           {
-  //             fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-  //             fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-  //             valor: modalData.valor,
-  //             cumplido: modalData.cumplido, // Este sería el checkbox "cumplida"
-  //           },
-  //           {
-  //             headers: {
-  //               'Authorization': `Bearer ${token}`,
-  //               'User-ID': usuario.id
-  //             }
-  //           }
-  //         );
-  //       } else {
-
-  //       if(botonCrear === "crearMeta"){
-  //         const fechaMinima = new Date(fechaDesde);
-  //         fechaMinima.setMonth(fechaDesde.getMonth() + 1);
-
-
-  //         const fechaMaxima = new Date(fechaDesde);
-  //         fechaMaxima.setMonth(fechaDesde.getMonth() + 3);
-          
-  //         if (fechaHasta >= fechaMinima && fechaHasta <= fechaMaxima) {
-  //           await api.post(
-  //             '/api/objetivo_meta_usuario',
-  //             {
-  //               objetivoMeta: modalData.objetivoMeta._id,
-  //               usuario: usuarioSeleccionado,
-  //               fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-  //               fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-  //               valor: modalData.valor,
-  //               creadoAdmin: false,
-  //               cumplido: false,
-  //             },
-  //             {
-  //               headers: {
-  //                 'Authorization': `Bearer ${token}`,
-  //                 'User-ID': usuario.id,
-  //               },
-  //             }
-  //           );
-  //         }
-
-  //         }else{
-  //           throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
-  //         }
-
-  //         await api.post(
-  //           '/api/objetivo_meta_usuario',
-  //           {
-  //             objetivoMeta: modalData.objetivoMeta._id,
-  //             usuario: usuarioSeleccionado,
-  //             fechaDesde: new Date(formatDate2(modalData.fechaDesde)).toISOString(),
-  //             fechaHasta: new Date(formatDate2(modalData.fechaHasta)).toISOString(),
-  //             valor: modalData.valor,
-  //             creadoAdmin: isAdmin,
-  //             cumplido: false,
-  //           },
-  //           {
-  //             headers: {
-  //               'Authorization': `Bearer ${token}`,
-  //               'User-ID': usuario.id,
-  //             },
-  //           }
-  //         );
-  //       }
-      
-  //       // Reseteo de estado y llamadas a funciones
-  //       setBotonCrear('');
-  //       fetchMetas(usuarioSeleccionado);
-  //       setModalOpen(false);
-  //     } catch (error) {
-  //     let errors;
-
-  //     if (error.response && error.response.data && error.response.data.error) {
-  //       errors = error.response.data.error;
-  //     } else {
-  //       errors = [{ message: error.message }];
-  //     }
-  //     setAlertMessages(errors);
-  //     setAlertOpen(true);
-  //   }
-  // };
   const handleCreateUserMeta = async () => {
     try {
       const token = localStorage.getItem('token'); 
@@ -506,7 +386,7 @@ const cerrarAlerta = () => {
   
   return (
     <ThemeProvider theme={tema}>
-      <Grid container component="main" sx={{ height: '100vh' }}>
+      <Grid container  sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid item xs={12} component={Paper} elevation={6} square sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', height: '100%', p: 2  }}>

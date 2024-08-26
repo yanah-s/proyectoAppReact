@@ -55,10 +55,11 @@ const EditarUsuario = () => {
       },
     })
       .then(response => {
-        console.log('foto subida', response.data);
+      
         setMensaje('Imagen subida con éxito');
-        const imageUrl = `http://localhost:3000/${response.data.file.path}`;
-        console.log(imageUrl);
+        // const imageUrl = `http://localhost:3000/${response.data.file.path}`;
+        const imageUrl = `${process.env.REACT_APP_API_BASE_URL}/${response.data.file.path}`;
+        
         setPreview(imageUrl);
       })
       .catch(error => {
@@ -81,7 +82,7 @@ const EditarUsuario = () => {
         const respuesta = await api.get(`/api/usuarios/${usuario.id}`, {
           headers: { 'Authorization': `Bearer ${token}` },
         });
-        console.log(respuesta);
+      
 
         setFormulario({
           nombre: respuesta.data.valor.nombre || '',
@@ -91,8 +92,9 @@ const EditarUsuario = () => {
         });
 
         if (respuesta.data.valor.profileImage) {
-          console.log(respuesta.data.valor.profileImage);
-          setPreview(`http://localhost:3000/${respuesta.data.valor.profileImage}`);
+        
+          const imageUrl = `${process.env.REACT_APP_API_BASE_URL}/${respuesta.data.valor.profileImage}`;
+          setPreview(imageUrl);
         }
       } catch (err) {
         setError('Error al obtener los datos del usuario.');
@@ -143,13 +145,12 @@ const EditarUsuario = () => {
 
   return (
     <ThemeProvider theme={tema}>
-      {/* <Grid container component="main" sx={{ height: '100vh' }}> */}
       <Grid 
         container 
-        component="main" 
+        // component="main" 
         sx={{ 
           height: '100vh',
-          backgroundImage: `url('/images/imagenLogin.png')`,
+          // backgroundImage: `url('/images/imagenLogin.png')`,
           backgroundSize: 'cover', 
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'

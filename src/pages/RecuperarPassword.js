@@ -26,10 +26,10 @@ const RecuperarPassword = ({ handleClose }) => {
     setLoading(true);
     setError(null);
     setMensaje(null);
-    console.log('Llamada a la API');
+  
     try {
       const respuesta = await api.post('/api/usuarios/recuperar-passw', formulario);
-      console.log('Respuesta:', respuesta.data);
+     
       setMensaje('Solicitud de recuperación enviada.');
     } catch (err) {
       console.error('Error:', err);
@@ -50,7 +50,7 @@ const RecuperarPassword = ({ handleClose }) => {
       setError(errorMsg);
     } finally {
       setLoading(false);
-      console.log('Finalizado exitosamente');
+      
     }
   };
 
