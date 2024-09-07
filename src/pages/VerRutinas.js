@@ -265,13 +265,15 @@ const VerRutinas = () => {
                                   <TableCell>{ejercicio?.descripcion || 'No disponible'}</TableCell>
                                   <TableCell>
                                     {ejercicio.video ? (
-                                      <ReactPlayer
-                                        url={`https://www.youtube.com/watch?v=${ejercicio.video.split('v=')[1]}`}
-                                        controls
-                                        width="120px"
-                                        height="90px"
-                                        onClick={() => abrirVideoModal(ejercicio.video)}
-                                      />
+                                      <div onClick={() => abrirVideoModal(ejercicio.video)}>
+                                        <img 
+                                          src={`https://img.youtube.com/vi/${ejercicio.video.split('v=')[1]}/0.jpg`} 
+                                          alt="Video thumbnail"
+                                          width="120px"
+                                          height="90px"
+                                          style={{ cursor: 'pointer' }}
+                                        />
+                                      </div>
                                     ) : (
                                       <span>No hay video disponible</span>
                                     )}

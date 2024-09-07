@@ -60,6 +60,7 @@ const ObjetivosMetas = () => {
   const [alerta, setAlertOpen] = useState(false);
   const [mensajeAlerta, setAlertMessages] = useState([]);
   const [botonCrear, setBotonCrear] = useState('');
+  const [botonEditar, setBotonEditar] = useState('');
 
   useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
@@ -172,6 +173,7 @@ const ObjetivosMetas = () => {
           } else {
             throw new Error('Las metas deben tener un margen de fecha de 1 a 3 meses');
           }
+          setMetaSeleccionada(null);
         } else if (objetivoSeleccionado !== null && isAdmin) {
           await api.put(
             `api/objetivo_meta_usuario/${objetivoSeleccionado._id}`,
@@ -188,6 +190,7 @@ const ObjetivosMetas = () => {
               },
             }
           );
+          setObjetivoSeleccionado(null);
         }
       } else {
         if (botonCrear === "crearMeta") {
@@ -243,6 +246,7 @@ const ObjetivosMetas = () => {
   
       // Reseteo de estado y llamadas a funciones
       setBotonCrear('');
+      setBotonEditar('');
       fetchMetas(usuarioSeleccionado);
       setModalOpen(false);
   
@@ -276,8 +280,6 @@ const ObjetivosMetas = () => {
     } else {
       setModalData({
         objetivoMeta: '',
-        //fechaDesde: '',
-        //fechaHasta: '',
         valor: '',
         cumplido: false,
       });
@@ -489,7 +491,7 @@ const cerrarAlerta = () => {
                                     <Button
                                       variant="contained"
                                       color="secondary"
-                                      onClick={() => abrirModal(true, objetivo, false)}
+                                      onClick={() => {abrirModal(true, objetivo, false); setBotonEditar('editarObjetivo')}}
                                       sx={{
                                         '&:hover': { backgroundColor: '#636363' }
                                       }}
@@ -566,7 +568,7 @@ const cerrarAlerta = () => {
                                   <Button 
                                     variant="contained" 
                                     color="secondary" 
-                                    onClick={() => abrirModal(true, meta, true)} 
+                                    onClick={() => {abrirModal(true, meta, true); setBotonEditar('editarMeta')}} 
                                     sx={{'&:hover': {backgroundColor: '#636363'}}}
                                   >
                                     <i className="bi bi-pencil"></i>
@@ -596,10 +598,11 @@ const cerrarAlerta = () => {
           </Box>
         </Grid>
       </Grid>
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <Box sx={{ ...modalStyle, width: '50%', maxWidth: '1000px', maxHeight: '80vh', overflowY: 'auto' }}>
-          <Typography variant="h6" component="h2" sx={{ mb: 2, backgroundColor: 'transparent', textAlign: 'center' }}>Crear Meta</Typography>
-            <InputLabel>Seleccionar Meta</InputLabel>
+      <Modal open={modalOpen} onClose={() => {setModalOpen(false); setMetaSeleccionada(null); setObjetivoSeleccionado(null); setBotonCrear(''); setBotonEditar('');}}>
+        <Box sx={{ ...modalStyle, width: '80%', maxWidth: '1000px', maxHeight: '80vh', overflowY: 'auto' }}>
+          {/* if(botonCrear ) */}
+          <Typography variant="h6" component="h2" sx={{ mb: 2, backgroundColor: 'transparent', textAlign: 'center' }}>{botonCrear === 'crearMeta' && !isEdit ? 'Crear Meta' : botonEditar === 'editarMeta' && isEdit ? 'Editar Meta' : botonCrear === 'crearObjetivo' && !isEdit ? 'Crear Objetivo' : 'Editar Objetivo'}</Typography>
+            <InputLabel>{botonCrear === 'crearMeta' || botonEditar === 'editarMeta'? 'Seleccionar Meta' : 'Seleccionar Objetivo'}</InputLabel>
             <Select
               required
               id="meta"
@@ -634,7 +637,7 @@ const cerrarAlerta = () => {
                 width: '65%',
               }}
             >
-              <MenuItem value="" disabled>Select a meta</MenuItem>
+              <MenuItem value="" disabled>Seleccione una opción</MenuItem>
               {availableMetas.map((meta) => (
                 <MenuItem key={meta._id} value={meta._id}>{meta.nombre}</MenuItem>
               ))}
@@ -731,7 +734,7 @@ const cerrarAlerta = () => {
               </Box>
             )}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-            <Button onClick={() => setModalOpen(false)} color="error" variant="outlined">Cancelar</Button>
+            <Button onClick={() => {setModalOpen(false); setMetaSeleccionada(null); setObjetivoSeleccionado(null); setBotonCrear(''); setBotonEditar('');}} color="error" variant="outlined">Cancelar</Button>
             <Button onClick={handleCreateUserMeta} variant="contained" color="primary">{isEdit ? 'Editar' : 'Guardar'}</Button>
           </Box>
         </Box>

@@ -1,6 +1,7 @@
 import { CircularProgress } from '@mui/material';
 import React, { useState, useEffect  } from 'react';
 import api from '../configuracion/axiosconfig';
+import YouTube from 'react-youtube';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Modal } from '@mui/material';
 
@@ -111,14 +112,14 @@ const Ejercicios = () => {
   const handleCloseDelete = () => {
     setOpenDelete(false);
     setSelectedId(null);
-};  
+  };  
   const handleConfirmDelete = async () => {
-  if (selectedId !== null) {
-      await deshabilitarEjercicio(selectedId);
-      handleCloseDelete();
-      listarEjercicios();
-  }
-};
+    if (selectedId !== null) {
+        await deshabilitarEjercicio(selectedId);
+        handleCloseDelete();
+        listarEjercicios();
+    }
+  };
   
     const listarEjercicios = async () => {
       setLoading(true);
@@ -257,6 +258,16 @@ const Ejercicios = () => {
         throw err;
       }
     };
+
+    const abrirVideoModal = (videoUrl) => {
+      setVideoUrl(videoUrl);
+      setOpenVideoModal(true);
+    };
+
+    const cerrarVideoModal = () => {
+      setVideoUrl('');
+      setOpenVideoModal(false);
+    };
   
     return (
         <ThemeProvider theme={tema}>
@@ -280,7 +291,7 @@ const Ejercicios = () => {
                     handleConfirm={handleConfirmDelete}
                     title="Confirmar Eliminación"
                     content="¿Estás seguro que deseas eliminar este ejercicio?"
-                />
+                  />
                 </Box>
                 {loading ? (
                   <CircularProgress />
@@ -311,13 +322,15 @@ const Ejercicios = () => {
                               <TableCell>{ejercicio.descripcion}</TableCell>
                               <TableCell>
                                 {ejercicio.video ? (
-                                  <a href={`https://www.youtube.com/watch?v=${ejercicio.video.split('v=')[1]}`} target="_blank" rel="noopener noreferrer">
-                                    <img
-                                      src={`https://img.youtube.com/vi/${ejercicio.video.split('v=')[1]}/hqdefault.jpg`} // Miniatura del video
-                                      alt="Miniatura del video"
-                                      style={{ width: '120px', height: '90px', cursor: 'pointer' }} // Ajusta el tamaño según tus necesidades
+                                  <div onClick={() => abrirVideoModal(ejercicio.video)}>
+                                    <img 
+                                      src={`https://img.youtube.com/vi/${ejercicio.video.split('v=')[1]}/0.jpg`} 
+                                      alt="Video thumbnail"
+                                      width="120px"
+                                      height="90px"
+                                      style={{ cursor: 'pointer' }}
                                     />
-                                  </a>
+                                  </div>
                                 ) : (
                                   <span>No hay video disponible</span>
                                 )}
@@ -452,7 +465,14 @@ const Ejercicios = () => {
               </Box>
             </Box>
           </Modal>
-
+          <Modal open={openVideoModal} onClose={cerrarVideoModal}>
+            <Box sx={{ width: '100%', maxWidth: '800px', maxHeight: '100vh', overflowY: 'auto', mx: 'auto', my: 'auto' }}>
+              <Typography variant="h5" align="center" mb={2}>Video del Ejercicio</Typography>
+              <Box display="flex" justifyContent="center">
+                <YouTube videoId={videoUrl.split('v=')[1]} opts={{ width: '800', height: '480' }} />
+              </Box>
+            </Box>
+          </Modal>
           <Snackbar
             open={alerta}
             autoHideDuration={6000}

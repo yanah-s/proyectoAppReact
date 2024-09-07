@@ -9,6 +9,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { Tabs, Tab } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './Rutinas.css';
 
 const tema = createTheme({
   palette: {
@@ -821,7 +822,7 @@ const Rutinas = () => {
           </Grid>
           <Modal open={openModal} onClose={cerrarModal}>
             <Box sx={{ ...modalStyle, width: '80%', maxWidth: '600px', maxHeight: '80vh', overflowY: 'auto' }}>
-              <Typography component="h2" variant="h6" sx={{ mb: 2, backgroundColor: 'transparent' }}>{editado ? 'Editar Ejercicio' : 'Crear Ejercicio'}</Typography>
+              <Typography component="h2" variant="h6" sx={{ mb: 2, backgroundColor: 'transparent' }}>{editado ? 'Editar Rutina' : 'Crear Rutina'}</Typography>
               <TextField
                 margin="normal"
                 required
