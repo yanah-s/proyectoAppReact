@@ -1,36 +1,18 @@
-/* button {
-    padding: 10px 20px;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 0;
-    border: none;
-    background: none;
-    font-size: 24px;
-    font-weight: bold;
-    color: #ffffff;
-    cursor: pointer;
-  }
-  
-  .close-button:hover {
-    color: #ff0000;
-  } */
+
 /* Motivacion.css */
+.motivacion-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .motivacion-modal {
-  outline: none;
+  z-index: 1000; 
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .motivacion-content {
@@ -41,6 +23,7 @@
   color: #FFFFFF;
   max-width: 450px;
   width: 80%;
+  position: relative; 
 }
 
 .close-button {

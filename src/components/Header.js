@@ -10,31 +10,46 @@ import Notificaciones from './Notificaciones';
 import Avatar from '@mui/material/Avatar';
 import api from '../configuracion/axiosconfig';
 
+
+
+
 const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isReadyForInstall, setIsReadyForInstall] = React.useState(false);
 
-  const obtenerDatosUsuario = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const usuario = JSON.parse(localStorage.getItem('usuario'));
+useEffect(() => {
+  window.addEventListener("beforeinstallprompt", (event) => {
+    // Prevent the mini-infobar from appearing on mobile.
+    event.preventDefault();
+    console.log("👍", "beforeinstallprompt", event);
+    // Stash the event so it can be triggered later.
+    window.deferredPrompt = event;
+    // Remove the 'hidden' class from the install button container.
+    setIsReadyForInstall(true);
+  });
+}, []);
 
-      const respuesta = await api.get(`/api/usuarios/${usuario.id}`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-
-      if (respuesta.data.valor.profileImage) {
-        const imageUrl = `${process.env.REACT_APP_API_BASE_URL}/${respuesta.data.valor.profileImage}`;
-        setProfileImage(imageUrl);
-      }
-    } catch (err) {
-    console.error("error obteniendo datos usuario");
-    } finally {
-      setLoading(false);
+  async function downloadApp() {
+    console.log("butInstall-clicked");
+    const promptEvent = window.deferredPrompt;
+    if (!promptEvent) {
+      // The deferred prompt isn't available.
+      console.log("oops, no prompt event guardado en window");
+      return;
     }
-  };
+   
+    promptEvent.prompt();
+   
+    const result = await promptEvent.userChoice;
+    console.log("userChoice", result);
+   
+    window.deferredPrompt = null;
+    // Hide the install button.
+    setIsReadyForInstall(false);
+  }
 
   useEffect(() => {
     // Función para actualizar el estado de autenticación y administrador desde localStorage
@@ -45,8 +60,37 @@ const Header = () => {
       setIsAdmin(admin);
     };
 
-    // Actualizar al montar el componente
+    // Función para obtener datos del usuario
+    const obtenerDatosUsuario = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+        if (!token || !usuario) {
+          setLoading(false);
+          return;
+        }
+        const respuesta = await api.get(`/api/usuarios/${usuario.id}`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+
+
+        if (respuesta.data.valor && respuesta.data.valor.profileImage) {
+          const imageUrl = `${process.env.REACT_APP_API_BASE_URL}/${respuesta.data.valor.profileImage}`;
+          setProfileImage(imageUrl);
+        }
+      } catch (err) {
+        console.error("Error obteniendo datos del usuario", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Actualizar estado al montar el componente
     updateAuthState();
+
+    // Obtener datos del usuario al montar el componente
+    obtenerDatosUsuario();
 
     // Escuchar la señal de inicio de sesión
     const handleSesionIniciada = () => {
@@ -55,9 +99,6 @@ const Header = () => {
     };
 
     window.addEventListener('sesionIniciada', handleSesionIniciada);
-
-    // Obtener datos del usuario al montar el componente
-    obtenerDatosUsuario();
 
     return () => {
       window.removeEventListener('sesionIniciada', handleSesionIniciada);
@@ -128,6 +169,17 @@ const Header = () => {
                     <li className="nav-item" data-bs-dismiss="offcanvas">
                       <Link className="nav-link" to="/AgendaUsuarios"><i className="bi bi-calendar-week"></i> Agenda</Link>
                     </li>
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
+                    <li className="nav-item" data-bs-dismiss="offcanvas">
+                    {isReadyForInstall ? (
+                      <a href="#" onClick={downloadApp} className="nav-link">
+                        ¡Descarga la App!
+                      </a>
+                    ) : (
+                      <span className="nav-link disabled">¡Descarga la App!</span>
+                    )}
+                  </li>
+                  </li>
                   </>
                 )}
                 {isAuthenticated && isAdmin && (
