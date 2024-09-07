@@ -390,7 +390,7 @@ return (
                     required
                     fullWidth
                     name="password2"
-                    label="Password"
+                    label="Repetir password"
                     type="password"
                     id="password2"
                     autoComplete="new-password"
