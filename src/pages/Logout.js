@@ -23,7 +23,7 @@ const Logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('usuario');
         localStorage.removeItem('admin');
-        navigate('/');
+        navigate('/Login');
       } catch (err) {
         console.error('Error:', err);
       }

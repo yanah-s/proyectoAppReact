@@ -28,6 +28,12 @@ import { DatePicker } from '@mui/x-date-pickers';
 import './DisponibilidadAgenda.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { isToday, set } from 'date-fns';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+
+
+
 const tema = createTheme({
   palette: {
     primary: {
@@ -75,41 +81,61 @@ const DisponibilidadAgenda = () => {
   const [mensaje, setMensaje] = useState(null);
   const [mensajeTabla, setMensajeTabla] = useState(null);
   const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
-
   const [activeTab, setActiveTab] = useState('table2');
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
 
 
-  useEffect(() => {
+  
+
+  
     const fetchDisponibilidad = async () => {
       try {
-
         const token = localStorage.getItem('token'); 
         const usuario = JSON.parse(localStorage.getItem('usuario')); 
-     
+    
         const response = await api.get('/api/agenda/turnos', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'User-ID': usuario.id
           }
         });
-        setDisponibilidad(response.data);
-  
-        // Filtrar turnos ocupados
-        const ocupados = response.data.filter(item => item.usuario !== null);
+    
+        console.log('Datos recibidos del backend:', response.data);
+    
+        // Convertir fechas a la zona horaria de Buenos Aires
+        const turnosConvertidos = response.data.map(turno => ({
+          ...turno,
+          hora_desde: dayjs(turno.hora_desde).tz('America/Argentina/Buenos_Aires').format('YYYY-MM-DD HH:mm:ss'),
+          hora_hasta: dayjs(turno.hora_hasta).tz('America/Argentina/Buenos_Aires').format('YYYY-MM-DD HH:mm:ss'),
+        }));
+    
+        console.log('Turnos convertidos:', turnosConvertidos);
+    
+        // Actualizar el estado de la disponibilidad
+        setDisponibilidad(turnosConvertidos);
+      
+    
+        // Filtrar turnos ocupados y libres sobre los turnos convertidos
+        const ocupados = turnosConvertidos.filter(item => item.usuario !== null);
         setTurnosOcupados(ocupados);
-        
-        // Filtrar turnos libres
-        const libres = response.data.filter(item => item.usuario === null);
+    
+        const libres = turnosConvertidos.filter(item => item.usuario === null);
         setTurnosLibres(libres);
-  
+    
       } catch (error) {
         console.error('Error al obtener la disponibilidad de agenda:', error);
       }
     };
   
-    fetchDisponibilidad();
-  }, []);
+    useEffect(() => {
+      fetchDisponibilidad(); 
+      
+    }, []);
   
+    useEffect(() => {
+      console.log('Fecha seleccionada:', fechaSeleccionada);
+    }, [fechaSeleccionada]);
 
   const eventoFechaClick = (date) => {
     setFechaSeleccionada(date);
@@ -127,28 +153,24 @@ const DisponibilidadAgenda = () => {
   const handleTimeChangePM = (newValue) => {
     setSelectPM(newValue);
   };
-  const shouldDisableDate = (date) => {
-    const formattedDate = dayjs(date).format('YYYY-MM-DD');
-    const today = dayjs().startOf('day');
-  
-    // Comparar la fecha con la de hoy
-    if (dayjs(formattedDate).isBefore(today, 'day')) {
-      return true; // Deshabilitar fechas pasadas
-    }
-  
-    // Verificar si disponibilidad es un array y no está vacío
-    if (!Array.isArray(disponibilidad) || disponibilidad.length === 0) {
-      return false; // Habilitar la fecha si disponibilidad no está definido o vacío
-    }
-  
-    // Verificar si la fecha está en disponibilidad
-    const fechaEnDisponibilidad = disponibilidad.some(turno => dayjs(turno.fecha).isSame(formattedDate, 'day'));
-    
-    if (fechaEnDisponibilidad) {
-      return true; // Deshabilitar fechas que ya están en disponibilidad
-    }
-    // Habilitar la fecha si no está en disponibilidad y es de hoy en adelante
-    return false;
+const shouldDisableDate = (date) => {
+  const formattedDate = dayjs(date).format('YYYY-MM-DD');
+  const today = dayjs().startOf('day');
+
+  if (dayjs(formattedDate).isBefore(today, 'day')) {
+    return true; // Deshabilitar fechas pasadas
+  }
+
+  if (!Array.isArray(disponibilidad) || disponibilidad.length === 0) {
+    return false; // Habilitar la fecha si disponibilidad no está definido o vacío
+  }
+
+  const fechaEnDisponibilidad = disponibilidad.some(turno => dayjs(turno.fecha).isSame(formattedDate, 'day'));
+
+  if (fechaEnDisponibilidad) {
+    return true; // Deshabilitar fechas que ya están en disponibilidad
+  }
+  return false;
 };
 
   const quitarTurnoDeAgenda = async (idTurno, index) => {
@@ -202,10 +224,12 @@ const DisponibilidadAgenda = () => {
       return;
     }
 
-    // Combinar fecha seleccionada con hora de inicio y fin
     const fechaStr = fechaSeleccionada.format('YYYY-MM-DD');
-    const newHoraInicio = dayjs(fechaStr + 'T' + dayjs(selectAM).format('HH:mm:ss'));
-    const newHoraFin = dayjs(fechaStr + 'T' + dayjs(selectPM).format('HH:mm:ss'));
+   const fechaHoraStr = dayjs(`${fechaSeleccionada}`).add(12,'hour');
+    // const fechaHora = dayjs(fechaHoraStr);
+  const newHoraInicio = dayjs(`${fechaStr}T${dayjs(selectAM).format('HH:mm:ss')}`).utc();
+  const newHoraFin = dayjs(`${fechaStr}T${dayjs(selectPM).format('HH:mm:ss')}`).utc();
+
 
     if (newHoraInicio.isAfter(newHoraFin)) {
       setError(['Horario incorrecto, verifique disponibilidad']);
@@ -213,10 +237,9 @@ const DisponibilidadAgenda = () => {
     }
 
     setFormulario((prevFormulario) => ({
-      ...prevFormulario,
       datos: {
         ...prevFormulario.datos,
-        [fechaSeleccionada.format('YYYY-MM-DD')]: {
+        [fechaHoraStr]: {
           hora_desde: newHoraInicio.format(), 
           hora_hasta: newHoraFin.format(),
         },
@@ -255,6 +278,7 @@ const DisponibilidadAgenda = () => {
       const nuevosDatos = { ...formulario.datos };
       Object.keys(nuevosDatos).forEach(key => delete nuevosDatos[key]);
       setFormulario({ datos: nuevosDatos });
+      fetchDisponibilidad(); 
       }else{
         setError(['Debe seleccionar turnos en la agenda']);
       }
@@ -284,6 +308,7 @@ const DisponibilidadAgenda = () => {
     setActiveTab(tabId);
     setMensaje(null);
     setError([]);
+    fetchDisponibilidad();
   };
 
 return (
@@ -441,6 +466,7 @@ return (
                   </TableHead>
                   <TableBody>
                   {turnosOcupados.map((item, index) => (
+                  
                   <TableRow key={index}>
                     <TableCell>{dayjs(item.fecha).format('DD/MM/YYYY')}</TableCell>
                     <TableCell>{item.hora_desde ? dayjs(item.hora_desde).format('HH:mm') : ''}</TableCell>
